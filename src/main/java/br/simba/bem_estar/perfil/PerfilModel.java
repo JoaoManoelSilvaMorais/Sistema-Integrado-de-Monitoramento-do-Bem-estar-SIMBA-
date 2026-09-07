@@ -8,20 +8,24 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-@Entity 
+
+
+
+
+@Entity(name = "tb_perfil")
 public class PerfilModel {
     
 
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private UserModel user;
+    private Long idUser;
     private double peso;
     private double altura;
     private Integer idade;
-    public PerfilModel(Long id, UserModel user, double peso, double altura, Integer idade) {
+    public PerfilModel(Long id, Long idUser, double peso, double altura, Integer idade) {
         this.id = id;
-        this.user = user;
+        this.idUser = idUser;
         this.peso = peso;
         this.altura = altura;
         this.idade = idade;
@@ -32,11 +36,11 @@ public class PerfilModel {
     public void setId(Long id) {
         this.id = id;
     }
-    public UserModel getUser() {
-        return user;
+    public Long getIdUser() {
+        return idUser;
     }
-    public void setUser(UserModel user) {
-        this.user = user;
+    public void setIdUser(Long idUser) {
+        this.idUser = idUser;
     }
     public double getPeso() {
         return peso;

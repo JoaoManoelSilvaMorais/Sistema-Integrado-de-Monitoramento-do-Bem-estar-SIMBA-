@@ -1,6 +1,6 @@
 package br.simba.bem_estar.perfil;
 
-import org.springframework.boot.security.autoconfigure.SecurityProperties.User;
+
 import org.springframework.web.bind.annotation.RestController;
 
 import br.simba.bem_estar.user.UserModel;

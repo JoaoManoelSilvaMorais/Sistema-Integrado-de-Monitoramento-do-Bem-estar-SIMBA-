@@ -17,13 +17,13 @@ public class PerfilController {
     private PerfilRepository perfilRepository;
 
 
-    @PostMapping("/perfil")
+    @PostMapping("/")
     public PerfilModel createPerfil(@RequestBody PerfilModel perfilModel){
         return perfilRepository.save(perfilModel);
 
     }
     
-    @GetMapping("/perfil/{id}")
+    @GetMapping("/{id}")
     public PerfilModel getPerflById(@PathVariable Long id){
 
         return perfilRepository.findById(id).orElseThrow(()->new RuntimeException("Perfil não encrontrado"));

@@ -1,9 +1,7 @@
 package br.simba.bem_estar.perfil;
 
 
-import org.springframework.web.bind.annotation.RestController;
 
-import br.simba.bem_estar.user.UserModel;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

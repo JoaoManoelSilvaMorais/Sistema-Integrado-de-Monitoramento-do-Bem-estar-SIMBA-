@@ -1,6 +1,6 @@
 package br.simba.bem_estar.perfil;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/perfil")
 public class PerfilController {
 
-    @Autowired 
-    private PerfilRepository perfilRepository;
+    private final PerfilRepository perfilRepository;
 
+    public PerfilController(PerfilRepository perfilRepository) {
+        this.perfilRepository = perfilRepository;
+    }
 
     @PostMapping("/")
     public PerfilModel createPerfil(@RequestBody PerfilModel perfilModel){

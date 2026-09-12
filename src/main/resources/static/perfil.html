@@ -87,18 +87,37 @@
     </main>
 
     <script>
-        const usuarioSalvo = sessionStorage.getItem('usuarioLogado');
+        const token = sessionStorage.getItem('jwtToken');
 
-        if (!usuarioSalvo) {
+        if (!token) {
             window.location.href = 'entrar.html';
         } else {
-            const usuario = JSON.parse(usuarioSalvo);
-            document.getElementById('nome').textContent = usuario.name || '-';
-            document.getElementById('username').textContent = usuario.username || '-';
-            document.getElementById('email').textContent = usuario.email || '-';
+            fetch('/users/me', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(usuario => {
+                    sessionStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+                    document.getElementById('nome').textContent = usuario.name || '-';
+                    document.getElementById('username').textContent = usuario.username || '-';
+                    document.getElementById('email').textContent = usuario.email || '-';
+                })
+                .catch(() => {
+                    sessionStorage.removeItem('jwtToken');
+                    sessionStorage.removeItem('usuarioLogado');
+                    window.location.href = 'entrar.html';
+                });
         }
 
         document.getElementById('sair').addEventListener('click', function() {
+            sessionStorage.removeItem('jwtToken');
             sessionStorage.removeItem('usuarioLogado');
             window.location.href = 'entrar.html';
         });

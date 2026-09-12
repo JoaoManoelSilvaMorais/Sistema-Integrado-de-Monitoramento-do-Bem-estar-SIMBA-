@@ -322,25 +322,35 @@
             submitButton.disabled = true;
 
             try {
-                const response = await fetch('/users/');
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: usernameDigitado,
+                        password: senhaDigitada
+                    })
+                });
 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
                 }
 
-                const usuarios = await response.json();
-                const usuarioEncontrado = usuarios.find(user =>
-                    user.username.toLowerCase() === usernameDigitado.toLowerCase()
-                    && user.password === senhaDigitada
-                );
+                const token = await response.text();
+                sessionStorage.setItem('jwtToken', token);
 
-                if (!usuarioEncontrado) {
-                    showToast("Username ou senha inválidos.");
-                    submitButton.disabled = false;
-                    return;
+                const userResponse = await fetch('/users/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!userResponse.ok) {
+                    throw new Error(`HTTP ${userResponse.status}`);
                 }
 
-                sessionStorage.setItem('usuarioLogado', JSON.stringify(usuarioEncontrado));
+                sessionStorage.setItem('usuarioLogado', JSON.stringify(await userResponse.json()));
                 window.location.href = 'perfil.html';
             } catch (error) {
                 console.error("Erro ao validar usuário:", error);

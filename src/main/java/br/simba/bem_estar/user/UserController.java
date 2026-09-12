@@ -18,14 +18,14 @@ public class UserController {
     @Autowired 
     private UserRepository userRepository;
 
-    @PostMapping("/users")
+    @PostMapping("/")
     public UserModel createUser(@RequestBody UserModel userModel){
     return userRepository.save(userModel);
     }
 
 
 
-    @GetMapping ("/users")
+    @GetMapping ("/")
 
     public List<UserModel> getAllUsers(){
         return  userRepository.findAll();
@@ -33,14 +33,14 @@ public class UserController {
 
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public UserModel getUserById(@PathVariable Long id){
 
         return userRepository.findById(id)
             .orElseThrow(()->new RuntimeException("Usuario não encontrado"));
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id){
     
         userRepository.deleteById(id);

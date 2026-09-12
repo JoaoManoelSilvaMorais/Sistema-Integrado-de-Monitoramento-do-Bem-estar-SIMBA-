@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMBA - Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <img src="img/LeaoLogoPNG.png" alt="SIMBA">
+                <img src="img/NomeLogoPNG.png" alt="SIMBA" class="logo-name">
+            </div>
+
+            <nav>
+                <a href="#" class="active"><i class="fa-solid fa-house"></i>Dashboard</a>
+                <a href="#"><i class="fa-solid fa-droplet"></i>Hidratação</a>
+                <a href="#"><i class="fa-solid fa-moon"></i>Sono</a>
+                <a href="#"><i class="fa-solid fa-dumbbell"></i>Treinos</a>
+                <a href="#"><i class="fa-solid fa-calendar-check"></i>Rotina</a>
+                <a href="#"><i class="fa-solid fa-bell"></i>Lembretes</a>
+                <a href="#"><i class="fa-solid fa-chart-line"></i>Progresso</a>
+                <a href="#"><i class="fa-solid fa-trophy"></i>Conquistas</a>
+            </nav>
+
+            <div class="bottom-menu">
+                <a href="#"><i class="fa-solid fa-user"></i>Meu perfil</a>
+                <a href="entrar.html"><i class="fa-solid fa-right-from-bracket"></i>Sair</a>
+            </div>
+        </aside>
+
+        <main>
+            <header>
+                <button class="menu-button" id="menuButton"><i class="fa-solid fa-bars"></i></button>
+                <div>
+                    <span class="label">DASHBOARD</span>
+                    <h1>Olá!</h1>
+                    <p>Acompanhe seu bem-estar.</p>
+                </div>
+
+                <div class="user">
+                    <button class="notification"><i class="fa-regular fa-bell"></i></button>
+                    <div class="avatar">U</div>
+                </div>
+            </header>
+
+            <section class="cards">
+                <article class="card welcome">
+                    <div>
+                        <span class="label">BEM-VINDO AO SIMBA</span>
+                        <h2>Cuide dos seus hábitos<br>todos os dias.</h2>
+                        <p>Acompanhe sua rotina de bem-estar em um só lugar.</p>
+                    </div>
+                    <i class="fa-solid fa-leaf welcome-icon"></i>
+                </article>
+
+                <article class="card">
+                    <div class="card-top">
+                        <span class="icon"><i class="fa-solid fa-droplet"></i></span>
+                    </div>
+                    <span class="label">HIDRATAÇÃO</span>
+                    <h2>-- <small>L</small></h2>
+                    <p>Meta diária: -- L</p>
+                </article>
+
+                <article class="card">
+                    <div class="card-top">
+                        <span class="icon"><i class="fa-solid fa-moon"></i></span>
+                    </div>
+                    <span class="label">SONO</span>
+                    <h2>-- <small>horas</small></h2>
+                    <p>Dados do último registro</p>
+                </article>
+
+                <article class="card">
+                    <div class="card-top">
+                        <span class="icon"><i class="fa-solid fa-dumbbell"></i></span>
+                    </div>
+                    <span class="label">TREINOS</span>
+                    <h2>--</h2>
+                    <p>Treinos registrados</p>
+                </article>
+
+                <article class="card large">
+                    <div class="title-row">
+                        <div>
+                            <span class="label">ROTINA</span>
+                            <h2>Atividades de hoje</h2>
+                        </div>
+                        <a href="#">Ver mais</a>
+                    </div>
+
+                    <div class="empty-state">
+                        <i class="fa-regular fa-calendar"></i>
+                        <p>Nenhuma atividade registrada.</p>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="title-row">
+                        <div>
+                            <span class="label">PROGRESSO</span>
+                            <h2>Resumo</h2>
+                        </div>
+                    </div>
+
+                    <div class="empty-state small">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <p>Seus dados aparecerão aqui.</p>
+                    </div>
+                </article>
+
+                <article class="card large">
+                    <div class="title-row">
+                        <div>
+                            <span class="label">LEMBRETES</span>
+                            <h2>Próximos lembretes</h2>
+                        </div>
+                        <a href="#">Ver mais</a>
+                    </div>
+
+                    <div class="empty-state">
+                        <i class="fa-regular fa-bell"></i>
+                        <p>Nenhum lembrete cadastrado.</p>
+                    </div>
+                </article>
+            </section>
+
+            <footer>
+                <span>CTO - Mufasa Softwares© 2026</span>
+            </footer>
+        </main>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <script src="js/script.js"></script>
+</body>
+</html>

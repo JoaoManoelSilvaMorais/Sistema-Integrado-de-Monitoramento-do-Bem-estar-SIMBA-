@@ -87,108 +87,139 @@ classDiagram
     direction TB
 
     class UserModel {
+        <<Entity>>
         +UUID id
         +String nome
         +String email
         +String senha
         +Date dataCadastro
-        +autenticar()
-        +recuperarSenha()
+        +PerfilModel perfil
+        +List~RegistroSono~ registrosSono
+        +List~RegistroAgua~ registrosAgua
+        +List~RegistroAlimentacao~ registrosAlimentacao
+        +List~RegistroExercicio~ registrosExercicio
+        +List~DadoClinico~ dadosClinicos
+        +List~SinalCorporal~ sinaisCorporais
+        +List~Medicamento~ medicamentos
+        +List~Rotina~ rotinas
+        +List~UsuarioConquista~ conquistas
     }
 
     class PerfilModel {
+        <<Entity>>
         +UUID id
         +Date dataNascimento
         +float pesoAtual
         +float altura
         +int streakDias
-        +atualizarBiometria()
+        +UserModel usuario
     }
 
     class RegistroSono {
+        <<Entity>>
         +UUID id
         +DateTime horaDormir
         +DateTime horaAcordar
         +int tempoRemMinutos
         +int tempoProfundoMinutos
-        +calcularDeficit()
+        +UserModel usuario
     }
 
     class RegistroAgua {
+        <<Entity>>
         +UUID id
         +int quantidadeMl
         +DateTime dataHora
+        +UserModel usuario
     }
 
     class RegistroAlimentacao {
+        <<Entity>>
         +UUID id
         +String descricaoRefeicao
         +DateTime dataHora
+        +UserModel usuario
     }
 
     class RegistroExercicio {
+        <<Entity>>
         +UUID id
         +String modalidade
         +int duracaoMinutos
         +float gastoCaloricoEstimado
         +DateTime dataHora
+        +UserModel usuario
     }
 
     class DadoClinico {
+        <<Entity>>
         +UUID id
         +String pressaoArterial
         +int frequenciaCardiaca
         +float pesoMedido
         +DateTime dataMedicao
+        +UserModel usuario
     }
 
     class SinalCorporal {
+        <<Entity>>
         +UUID id
         +String tipoSinal
         +String intensidade
         +String humor
         +DateTime dataRegistro
+        +UserModel usuario
     }
 
     class Medicamento {
+        <<Entity>>
         +UUID id
         +String nome
         +String dosagem
         +Time horarioLembrete
+        +UserModel usuario
     }
 
     class Rotina {
+        <<Entity>>
         +UUID id
         +String nome
         +String descricao
         +boolean ativa
+        +UserModel usuario
     }
 
     class Conquista {
+        <<Entity>>
         +UUID id
         +String nome
         +String descricao
         +int metaNecessaria
+        +List~UsuarioConquista~ usuariosConquistas
     }
 
     class UsuarioConquista {
+        <<Entity>>
         +UUID id
         +int progressoAtual
         +boolean concluida
         +DateTime dataConclusao
+        +UserModel usuario
+        +Conquista conquista
     }
 
-    UserModel "1" -- "1" PerfilModel : possui
-    UserModel "1" --> "*" RegistroSono : registra
-    UserModel "1" --> "*" RegistroAgua : registra
-    UserModel "1" --> "*" RegistroAlimentacao : registra
-    UserModel "1" --> "*" RegistroExercicio : registra
-    UserModel "1" --> "*" DadoClinico : afere
-    UserModel "1" --> "*" SinalCorporal : reporta
-    UserModel "1" --> "*" Medicamento : gerencia
-    UserModel "1" --> "*" Rotina : cria
-    UserModel "1" --> "*" UsuarioConquista : obtem
-    Conquista "1" <-- "*" UsuarioConquista : refere-se a
+    %% Relacionamentos JPA (Spring Boot)
+    UserModel "1" -- "1" PerfilModel : @OneToOne
+    UserModel "1" -- "*" RegistroSono : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" RegistroAgua : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" RegistroAlimentacao : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" RegistroExercicio : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" DadoClinico : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" SinalCorporal : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" Medicamento : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" Rotina : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" UsuarioConquista : @OneToMany / @ManyToOne
+    Conquista "1" -- "*" UsuarioConquista : @OneToMany / @ManyToOne
 ```
 
 ---

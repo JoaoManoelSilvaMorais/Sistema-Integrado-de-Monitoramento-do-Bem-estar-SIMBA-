@@ -36,10 +36,13 @@ public class SecurityConfig {
                     "/auth/**",
                     "/h2-console/**",
                     "/",
+                    "/index.html",
                     "/entrar.html",
                     "/login.html",
                     "/perfil.html",
                     "/img/**",
+                    "/css/**",
+                    "/js/**",
                     "/favicon.ico"
                 ).permitAll()
                 .anyRequest().authenticated()

@@ -30,8 +30,8 @@
             </nav>
 
             <div class="bottom-menu">
-                <a href="#"><i class="fa-solid fa-user"></i>Meu perfil</a>
-                <a href="entrar.html"><i class="fa-solid fa-right-from-bracket"></i>Sair</a>
+                <a href="perfil.html"><i class="fa-solid fa-user"></i>Meu perfil</a>
+                <a href="entrar.html" id="sair"><i class="fa-solid fa-right-from-bracket"></i>Sair</a>
             </div>
         </aside>
 
@@ -40,13 +40,14 @@
                 <button class="menu-button" id="menuButton"><i class="fa-solid fa-bars"></i></button>
                 <div>
                     <span class="label">DASHBOARD</span>
-                    <h1>Olá!</h1>
+                    <h1>Olá, <span id="nomeUsuario">!</span></h1>
                     <p>Acompanhe seu bem-estar.</p>
                 </div>
 
                 <div class="user">
                     <button class="notification"><i class="fa-regular fa-bell"></i></button>
-                    <div class="avatar">U</div>
+                    <div class="avatar" id="avatarUsuario">U</div>
+                    <a class="login-button" id="loginButton" href="entrar.html">Entrar</a>
                 </div>
             </header>
 
@@ -140,5 +141,41 @@
 
     <div class="overlay" id="overlay"></div>
     <script src="js/script.js"></script>
+    <script>
+        const token = sessionStorage.getItem('jwtToken');
+
+        if (token) {
+            fetch('/users/me', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(usuario => {
+                    document.getElementById('nomeUsuario').textContent = `${usuario.name || usuario.username}!`;
+                    document.getElementById('avatarUsuario').textContent = (usuario.name || usuario.username || 'U')
+                        .charAt(0)
+                        .toUpperCase();
+                })
+                .catch(() => {
+                    sessionStorage.removeItem('jwtToken');
+                    sessionStorage.removeItem('usuarioLogado');
+                });
+        }
+
+        if (token) {
+            document.getElementById('loginButton').style.display = 'none';
+        }
+
+        document.getElementById('sair').addEventListener('click', () => {
+            sessionStorage.removeItem('jwtToken');
+            sessionStorage.removeItem('usuarioLogado');
+        });
+    </script>
 </body>
 </html>

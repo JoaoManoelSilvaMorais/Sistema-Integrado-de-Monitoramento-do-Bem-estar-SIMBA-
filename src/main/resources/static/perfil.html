@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simba - Meu perfil</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background: #eef5ef;
+            color: #173b27;
+        }
+
+        main {
+            width: 100%;
+            max-width: 480px;
+            padding: 32px;
+            background: #ffffff;
+            border: 1px solid #d5e3d7;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(23, 59, 39, 0.12);
+        }
+
+        h1 {
+            margin: 0 0 24px;
+            font-size: 26px;
+        }
+
+        dl {
+            margin: 0;
+        }
+
+        dt {
+            margin-top: 18px;
+            color: #5b7564;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        dd {
+            margin: 5px 0 0;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2ece4;
+            font-size: 17px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 28px;
+            padding: 13px;
+            border: 0;
+            border-radius: 7px;
+            background: #1aa362;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #158750;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Meu perfil</h1>
+        <dl>
+            <dt>Nome</dt>
+            <dd id="nome">-</dd>
+            <dt>Nome de usuário</dt>
+            <dd id="username">-</dd>
+            <dt>E-mail</dt>
+            <dd id="email">-</dd>
+        </dl>
+        <button type="button" id="sair">Sair</button>
+    </main>
+
+    <script>
+        const usuarioSalvo = sessionStorage.getItem('usuarioLogado');
+
+        if (!usuarioSalvo) {
+            window.location.href = 'entrar.html';
+        } else {
+            const usuario = JSON.parse(usuarioSalvo);
+            document.getElementById('nome').textContent = usuario.name || '-';
+            document.getElementById('username').textContent = usuario.username || '-';
+            document.getElementById('email').textContent = usuario.email || '-';
+        }
+
+        document.getElementById('sair').addEventListener('click', function() {
+            sessionStorage.removeItem('usuarioLogado');
+            window.location.href = 'entrar.html';
+        });
+    </script>
+</body>
+</html>

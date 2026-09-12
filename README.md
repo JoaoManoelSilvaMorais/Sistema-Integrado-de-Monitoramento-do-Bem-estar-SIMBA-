@@ -76,6 +76,122 @@ flowchart LR
 ```
 
 ---
+---
+
+## Diagrama de Classes (UML)
+
+Abaixo apresentamos o diagrama de classes do sistema SIMBA, ilustrando as classes e as relações delas.
+
+```mermaid
+classDiagram
+    direction TB
+
+    class UserModel {
+        +UUID id
+        +String nome
+        +String email
+        +String senha
+        +Date dataCadastro
+        +autenticar()
+        +recuperarSenha()
+    }
+
+    class PerfilModel {
+        +UUID id
+        +Date dataNascimento
+        +float pesoAtual
+        +float altura
+        +int streakDias
+        +atualizarBiometria()
+    }
+
+    class RegistroSono {
+        +UUID id
+        +DateTime horaDormir
+        +DateTime horaAcordar
+        +int tempoRemMinutos
+        +int tempoProfundoMinutos
+        +calcularDeficit()
+    }
+
+    class RegistroAgua {
+        +UUID id
+        +int quantidadeMl
+        +DateTime dataHora
+    }
+
+    class RegistroAlimentacao {
+        +UUID id
+        +String descricaoRefeicao
+        +DateTime dataHora
+    }
+
+    class RegistroExercicio {
+        +UUID id
+        +String modalidade
+        +int duracaoMinutos
+        +float gastoCaloricoEstimado
+        +DateTime dataHora
+    }
+
+    class DadoClinico {
+        +UUID id
+        +String pressaoArterial
+        +int frequenciaCardiaca
+        +float pesoMedido
+        +DateTime dataMedicao
+    }
+
+    class SinalCorporal {
+        +UUID id
+        +String tipoSinal
+        +String intensidade
+        +String humor
+        +DateTime dataRegistro
+    }
+
+    class Medicamento {
+        +UUID id
+        +String nome
+        +String dosagem
+        +Time horarioLembrete
+    }
+
+    class Rotina {
+        +UUID id
+        +String nome
+        +String descricao
+        +boolean ativa
+    }
+
+    class Conquista {
+        +UUID id
+        +String nome
+        +String descricao
+        +int metaNecessaria
+    }
+
+    class UsuarioConquista {
+        +UUID id
+        +int progressoAtual
+        +boolean concluida
+        +DateTime dataConclusao
+    }
+
+    UserModel "1" -- "1" PerfilModel : possui
+    UserModel "1" --> "*" RegistroSono : registra
+    UserModel "1" --> "*" RegistroAgua : registra
+    UserModel "1" --> "*" RegistroAlimentacao : registra
+    UserModel "1" --> "*" RegistroExercicio : registra
+    UserModel "1" --> "*" DadoClinico : afere
+    UserModel "1" --> "*" SinalCorporal : reporta
+    UserModel "1" --> "*" Medicamento : gerencia
+    UserModel "1" --> "*" Rotina : cria
+    UserModel "1" --> "*" UsuarioConquista : obtem
+    Conquista "1" <-- "*" UsuarioConquista : refere-se a
+```
+
+---
 
 ## Funcionalidades e Escopo (Versão 1.0)
 - Autenticação e cadastro de perfil biométrico.

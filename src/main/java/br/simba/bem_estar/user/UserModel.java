@@ -4,6 +4,7 @@ package br.simba.bem_estar.user;
 import java.util.List;
 
 import br.simba.bem_estar.perfil.PerfilModel;
+import br.simba.bem_estar.registroExercicio.RegistroExercicioModel;
 import br.simba.bem_estar.registroSono.RegistroSonoModel;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,6 +34,9 @@ public class UserModel {
     //referencia os registros de  sono do usuario
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
     private List<RegistroSonoModel> registroSono;
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "usuario")
+    private List<RegistroExercicioModel>registroExercicio;
 
     // Versao antiga: a chave estrangeira era definida no lado inverso.
     // @OneToMany(fetch = FetchType.LAZY)

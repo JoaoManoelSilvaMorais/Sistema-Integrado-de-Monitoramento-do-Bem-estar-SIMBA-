@@ -56,7 +56,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public UserModel updateUser(@PathVariable Long id, @RequestBody UserModel usuarioAtualizado) {
-        UserModel usuario = userRepository.findById(id).orElseThrow(()-> new RuntimeException("Usuario não encontrado"))
+        UserModel usuario = userRepository.findById(id).orElseThrow(()-> new RuntimeException("Usuario não encontrado"));
         
         usuario.setEmail(usuarioAtualizado.getEmail());
         usuario.setName(usuarioAtualizado.getEmail());

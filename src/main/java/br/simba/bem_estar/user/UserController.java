@@ -10,13 +10,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
-    private final UserRepository userRepository;
+    @Autowired 
+    private UserRepository userRepository;
 
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -49,5 +52,16 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         userRepository.deleteById(id);
+    }
+
+    @PutMapping("/{id}")
+    public UserModel updateUser(@PathVariable Long id, @RequestBody UserModel usuarioAtualizado) {
+        UserModel usuario = userRepository.findById(id).orElseThrow(()-> new RuntimeException("Usuario não encontrado"))
+        
+        usuario.setEmail(usuarioAtualizado.getEmail());
+        usuario.setName(usuarioAtualizado.getEmail());
+        usuario.setUsername(usuarioAtualizado.getUsername());
+        
+        return userRepository.save(usuario);
     }
 }

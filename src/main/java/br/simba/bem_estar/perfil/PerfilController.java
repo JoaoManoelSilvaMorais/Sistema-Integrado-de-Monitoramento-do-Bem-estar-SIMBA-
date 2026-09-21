@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RestController 
@@ -29,5 +31,21 @@ public class PerfilController {
     public PerfilModel getPerflById(@PathVariable Long id){
 
         return perfilRepository.findById(id).orElseThrow(()->new RuntimeException("Perfil não encrontrado"));
+    }
+
+    @PutMapping("/{id}")
+    public PerfilModel updatePerfil(@PathVariable Long id, @RequestBody PerfilModel perfilAtualizado) {
+        //TODO: process PUT request
+
+        PerfilModel perfil = perfilRepository.findById(id)
+        .orElseThrow(()-> new RuntimeException("Perfil não encontrado"));
+
+        perfil.setAltura(perfilAtualizado.getAltura());
+        perfil.setIdade(perfilAtualizado.getIdade());
+        perfil.setPeso(perfilAtualizado.getPeso());
+    
+        
+
+        return perfilAtualizado;
     }
 }

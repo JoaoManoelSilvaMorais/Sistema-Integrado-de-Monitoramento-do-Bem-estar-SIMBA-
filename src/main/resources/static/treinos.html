@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SIMBA - Treinos</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="css/treinos.css">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="logo">
+            <img src="img/LeaoLogoPNG.png" alt="SIMBA">
+            <img src="img/NomeLogoPNG.png" alt="SIMBA" class="logo-name">
+        </div>
+
+        <nav>
+
+            <a href="index.html">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-droplet"></i>
+                Hidratação
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-moon"></i>
+                Sono
+            </a>
+
+            <a href="treinos.html" class="active">
+                <i class="fa-solid fa-dumbbell"></i>
+                Treinos
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-calendar-check"></i>
+                Rotina
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-bell"></i>
+                Lembretes
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-chart-line"></i>
+                Progresso
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-trophy"></i>
+                Conquistas
+            </a>
+
+        </nav>
+
+        <div class="bottom-menu">
+
+            <a href="perfil.html">
+                <i class="fa-solid fa-user"></i>
+                Meu perfil
+            </a>
+
+            <a href="entrar.html" id="sair">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Sair
+            </a>
+
+        </div>
+
+    </aside>
+
+    <main class="treinos-main">
+
+        <header>
+
+            <button class="menu-button" id="menuButton">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div>
+                <span class="label">TREINOS</span>
+                <h1>Atividades físicas</h1>
+                <p>Registre e acompanhe seus exercícios.</p>
+            </div>
+
+            <div class="user">
+
+                <button class="notification">
+                    <i class="fa-regular fa-bell"></i>
+                </button>
+
+                <div class="avatar" id="avatarUsuario">
+                    U
+                </div>
+
+                <a
+                    class="login-button"
+                    id="loginButton"
+                    href="entrar.html"
+                >
+                    Entrar
+                </a>
+
+            </div>
+
+        </header>
+
+        <section class="treinos-header">
+
+            <div>
+
+                <span class="label">
+                    ATIVIDADE FÍSICA
+                </span>
+
+                <h2>
+                    Seus treinos
+                </h2>
+
+                <p>
+                    Registre as atividades físicas realizadas durante o dia.
+                </p>
+
+            </div>
+
+            <button
+                class="btn-novo-treino"
+                id="btnNovoTreino"
+            >
+
+                <i class="fa-solid fa-plus"></i>
+
+                Registrar treino
+
+            </button>
+
+        </section>
+
+        <section class="treino-resumo">
+
+            <article class="resumo-card">
+
+                <span class="resumo-icon">
+                    <i class="fa-solid fa-dumbbell"></i>
+                </span>
+
+                <div>
+                    <span>Treinos registrados</span>
+
+                    <strong id="totalTreinos">
+                        0
+                    </strong>
+                </div>
+
+            </article>
+
+
+            <article class="resumo-card">
+
+                <span class="resumo-icon">
+                    <i class="fa-regular fa-clock"></i>
+                </span>
+
+                <div>
+                    <span>Tempo total</span>
+
+                    <strong id="tempoTotal">
+                        0 min
+                    </strong>
+                </div>
+
+            </article>
+
+
+            <article class="resumo-card">
+
+                <span class="resumo-icon">
+                    <i class="fa-solid fa-fire"></i>
+                </span>
+
+                <div>
+                    <span>Gasto estimado</span>
+
+                    <strong id="caloriasTotal">
+                        0 kcal
+                    </strong>
+                </div>
+
+            </article>
+
+        </section>
+
+        <section class="treinos-container">
+
+            <div class="treinos-title">
+
+                <div>
+
+                    <span class="label">
+                        REGISTROS
+                    </span>
+
+                    <h2>
+                        Histórico de treinos
+                    </h2>
+
+                </div>
+
+            </div>
+
+            <div
+                class="lista-treinos"
+                id="listaTreinos"
+            >
+            </div>
+
+            <div
+                class="treinos-vazio"
+                id="treinosVazio"
+            >
+
+                <i class="fa-solid fa-dumbbell"></i>
+
+                <h3>
+                    Nenhum treino registrado
+                </h3>
+
+                <p>
+                    Registre sua primeira atividade física utilizando
+                    o botão acima.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <footer>
+            <span>
+                CTO - Mufasa Softwares© 2026
+            </span>
+        </footer>
+
+    </main>
+
+</div>
+
+<div
+    class="modal-overlay"
+    id="modalOverlay"
+>
+
+    <div class="modal-treino">
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="label">
+                    ATIVIDADE FÍSICA
+                </span>
+
+                <h2 id="tituloModal">
+                    Registrar treino
+                </h2>
+
+            </div>
+
+            <button
+                type="button"
+                class="modal-close"
+                id="btnFecharModal"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <form id="formTreino">
+
+            <input
+                type="hidden"
+                id="treinoId"
+            >
+
+
+            <div class="form-group">
+
+                <label for="modalidade">
+                    Modalidade
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-solid fa-dumbbell"></i>
+
+                    <select
+                        id="modalidade"
+                        required
+                    >
+
+                        <option value="">
+                            Selecione a modalidade
+                        </option>
+
+                        <option value="Caminhada">
+                            Caminhada
+                        </option>
+
+                        <option value="Corrida">
+                            Corrida
+                        </option>
+
+                        <option value="Musculação">
+                            Musculação
+                        </option>
+
+                        <option value="Ciclismo">
+                            Ciclismo
+                        </option>
+
+                        <option value="Natação">
+                            Natação
+                        </option>
+
+                        <option value="Futebol">
+                            Futebol
+                        </option>
+
+                        <option value="Vôlei">
+                            Vôlei
+                        </option>
+
+                        <option value="Alongamento">
+                            Alongamento
+                        </option>
+
+                        <option value="Outro">
+                            Outro
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="duracao">
+                        Duração
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-regular fa-clock"></i>
+
+                        <input
+                            type="number"
+                            id="duracao"
+                            min="1"
+                            placeholder="Ex: 60"
+                            required
+                        >
+
+                        <span class="input-unit">
+                            min
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="gastoCalorico">
+                        Gasto calórico
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-solid fa-fire"></i>
+
+                        <input
+                            type="number"
+                            id="gastoCalorico"
+                            min="0"
+                            step="0.1"
+                            placeholder="Ex: 350"
+                        >
+
+                        <span class="input-unit">
+                            kcal
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="dataHora">
+                    Data e horário
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-regular fa-calendar"></i>
+
+                    <input
+                        type="datetime-local"
+                        id="dataHora"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-info">
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                <p>
+                    Informe os dados da atividade física realizada.
+                    O gasto calórico é opcional e representa apenas
+                    uma estimativa.
+                </p>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="btn-cancelar"
+                    id="btnCancelar"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn-salvar"
+                >
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Salvar treino
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- JS que você já possui -->
+<script src="js/script.js"></script>
+
+<!-- JS específico da página -->
+<script src="js/treinos.js"></script>
+
+</body>
+</html>

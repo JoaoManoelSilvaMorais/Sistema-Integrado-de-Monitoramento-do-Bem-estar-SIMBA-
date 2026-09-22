@@ -2,7 +2,10 @@ package br.simba.bem_estar.registroSono;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import br.simba.bem_estar.user.UserModel;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -10,36 +13,39 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+
 @Entity(name = "registro_sono")
 public class RegistroSonoModel {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime horaDormir;
-    private LocalDateTime horaAcordar;
-    private Integer tempoRemMinutos;
-    private Integer tempoProfundoMinutos;
 
+    private LocalDateTime horaDormir;
+
+    private LocalDateTime horaAcordar;
+
+    private Integer notaSono;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
     private UserModel usuario;
 
-    // Versao antiga (incorreta): mappedBy nao existe em @ManyToOne.
-    // @ManyToOne(mappedBy = "registroSono")
-    // private UserModel usuario;
-
-    public RegistroSonoModel(){
-
+    public RegistroSonoModel() {
     }
 
-    public RegistroSonoModel(Long id, LocalDateTime horaDormir, LocalDateTime horaAcordar, Integer tempoRemMinutos,
-            Integer tempoProfundoMinutos, UserModel usuario) {
+    public RegistroSonoModel(
+            Long id,
+            LocalDateTime horaDormir,
+            LocalDateTime horaAcordar,
+            Integer notaSono,
+            UserModel usuario) {
+
         this.id = id;
         this.horaDormir = horaDormir;
         this.horaAcordar = horaAcordar;
-        this.tempoRemMinutos = tempoRemMinutos;
-        this.tempoProfundoMinutos = tempoProfundoMinutos;
+        this.notaSono = notaSono;
         this.usuario = usuario;
     }
 
@@ -67,20 +73,12 @@ public class RegistroSonoModel {
         this.horaAcordar = horaAcordar;
     }
 
-    public Integer getTempoRemMinutos() {
-        return tempoRemMinutos;
+    public Integer getNotaSono() {
+        return notaSono;
     }
 
-    public void setTempoRemMinutos(Integer tempoRemMinutos) {
-        this.tempoRemMinutos = tempoRemMinutos;
-    }
-
-    public Integer getTempoProfundoMinutos() {
-        return tempoProfundoMinutos;
-    }
-
-    public void setTempoProfundoMinutos(Integer tempoProfundoMinutos) {
-        this.tempoProfundoMinutos = tempoProfundoMinutos;
+    public void setNotaSono(Integer notaSono) {
+        this.notaSono = notaSono;
     }
 
     public UserModel getUsuario() {
@@ -90,6 +88,4 @@ public class RegistroSonoModel {
     public void setUsuario(UserModel usuario) {
         this.usuario = usuario;
     }
-
-    
 }

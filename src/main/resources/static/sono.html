@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SIMBA - Sono</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/sono.css">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="logo">
+            <img src="img/LeaoLogoPNG.png" alt="SIMBA">
+            <img src="img/NomeLogoPNG.png" alt="SIMBA" class="logo-name">
+        </div>
+
+        <nav>
+
+            <a href="index.html">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </a>
+
+            <a href="hidratacao.html">
+                <i class="fa-solid fa-droplet"></i>
+                Hidratação
+            </a>
+
+            <a href="sono.html" class="active">
+                <i class="fa-solid fa-moon"></i>
+                Sono
+            </a>
+
+            <a href="treinos.html">
+                <i class="fa-solid fa-dumbbell"></i>
+                Treinos
+            </a>
+
+            <a href="rotina.html">
+                <i class="fa-solid fa-calendar-check"></i>
+                Rotina
+            </a>
+
+            <a href="lembretes.html">
+                <i class="fa-solid fa-bell"></i>
+                Lembretes
+            </a>
+
+            <a href="progresso.html">
+                <i class="fa-solid fa-chart-line"></i>
+                Progresso
+            </a>
+
+            <a href="conquistas.html">
+                <i class="fa-solid fa-trophy"></i>
+                Conquistas
+            </a>
+
+        </nav>
+
+        <div class="bottom-menu">
+
+            <a href="perfil.html">
+                <i class="fa-solid fa-user"></i>
+                Meu perfil
+            </a>
+
+            <a href="entrar.html" id="sair">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Sair
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- CONTEÚDO -->
+    <main class="sono-main">
+
+        <header>
+
+            <button class="menu-button" id="menuButton">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div>
+                <span class="label">SONO</span>
+                <h1>Registro de sono</h1>
+                <p>Acompanhe e planeje seus momentos de descanso.</p>
+            </div>
+
+            <div class="user">
+
+                <button class="notification">
+                    <i class="fa-regular fa-bell"></i>
+                </button>
+
+                <div class="avatar" id="avatarUsuario">
+                    U
+                </div>
+
+                <a
+                    class="login-button"
+                    id="loginButton"
+                    href="entrar.html"
+                >
+                    Entrar
+                </a>
+
+            </div>
+
+        </header>
+
+
+        <!-- ===================================== -->
+        <!-- PLANEJADOR DE SONO -->
+        <!-- ===================================== -->
+
+        <section class="planejador-sono">
+
+            <div class="planejador-info">
+
+                <span class="label">
+                    PLANEJE SEU SONO
+                </span>
+
+                <h2>
+                    Que horas você pretende dormir?
+                </h2>
+
+                <p>
+                    Veja horários aproximados para acordar ao final
+                    de ciclos completos de sono.
+                </p>
+
+                <div class="planejador-form">
+
+                    <div class="hora-planejada">
+
+                        <i class="fa-regular fa-moon"></i>
+
+                        <input
+                            type="time"
+                            id="horaPlanejada"
+                        >
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-calcular"
+                        id="btnCalcularSono"
+                    >
+
+                        <i class="fa-solid fa-calculator"></i>
+
+                        Calcular horários
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="planejador-ilustracao">
+
+                <div class="lua-planejador">
+                    <i class="fa-solid fa-moon"></i>
+                </div>
+
+            </div>
+
+
+            <!-- RESULTADOS -->
+            <div
+                class="resultado-planejador"
+                id="resultadoPlanejador"
+            >
+
+                <div class="resultado-titulo">
+
+                    <div>
+                        <span class="label">
+                            HORÁRIOS ESTIMADOS
+                        </span>
+
+                        <h3>
+                            Possíveis horários para acordar
+                        </h3>
+                    </div>
+
+                </div>
+
+
+                <div class="opcoes-horario">
+
+                    <article class="horario-card">
+
+                        <span>
+                            5 ciclos
+                        </span>
+
+                        <strong id="horario5Ciclos">
+                            --:--
+                        </strong>
+
+                        <small>
+                            cerca de 7h30
+                        </small>
+
+                    </article>
+
+
+                    <article class="horario-card destaque">
+
+                        <span>
+                            6 ciclos
+                        </span>
+
+                        <strong id="horario6Ciclos">
+                            --:--
+                        </strong>
+
+                        <small>
+                            cerca de 9h
+                        </small>
+
+                    </article>
+
+
+                    <article class="horario-card">
+
+                        <span>
+                            7 ciclos
+                        </span>
+
+                        <strong id="horario7Ciclos">
+                            --:--
+                        </strong>
+
+                        <small>
+                            cerca de 10h30
+                        </small>
+
+                    </article>
+
+                </div>
+
+
+                <div class="aviso-planejador">
+
+                    <i class="fa-solid fa-circle-info"></i>
+
+                    <p>
+                        Os horários são apenas estimativas baseadas
+                        em ciclos médios de aproximadamente 90 minutos
+                        e em cerca de 15 minutos para adormecer.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ===================================== -->
+        <!-- CABEÇALHO DE REGISTROS -->
+        <!-- ===================================== -->
+
+        <section class="sono-header">
+
+            <div>
+
+                <span class="label">
+                    QUALIDADE DO SONO
+                </span>
+
+                <h2>
+                    Seus registros de sono
+                </h2>
+
+                <p>
+                    Registre diariamente seus horários e avalie como
+                    foi sua noite.
+                </p>
+
+            </div>
+
+            <button
+                class="btn-novo-sono"
+                id="btnNovoSono"
+            >
+
+                <i class="fa-solid fa-plus"></i>
+
+                Registrar sono
+
+            </button>
+
+        </section>
+
+
+        <!-- ===================================== -->
+        <!-- RESUMO -->
+        <!-- ===================================== -->
+
+        <section class="sono-resumo">
+
+            <article class="resumo-card">
+
+                <span class="resumo-icon">
+                    <i class="fa-solid fa-bed"></i>
+                </span>
+
+                <div>
+
+                    <span>
+                        Registros
+                    </span>
+
+                    <strong id="totalRegistros">
+                        0
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+            <article class="resumo-card">
+
+                <span class="resumo-icon">
+                    <i class="fa-regular fa-clock"></i>
+                </span>
+
+                <div>
+
+                    <span>
+                        Média de sono
+                    </span>
+
+                    <strong id="mediaSono">
+                        0h 00min
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+            <article class="resumo-card">
+
+                <span class="resumo-icon">
+                    <i class="fa-solid fa-star"></i>
+                </span>
+
+                <div>
+
+                    <span>
+                        Média da nota
+                    </span>
+
+                    <strong id="mediaNota">
+                        -- / 5
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+            <article class="resumo-card">
+
+                <span class="resumo-icon">
+                    <i class="fa-solid fa-moon"></i>
+                </span>
+
+                <div>
+
+                    <span>
+                        Última noite
+                    </span>
+
+                    <strong id="ultimaNoite">
+                        --
+                    </strong>
+
+                    <small
+                        class="resumo-extra"
+                        id="ultimaNota"
+                    >
+                        Sem registros
+                    </small>
+
+                </div>
+
+            </article>
+
+        </section>
+
+
+        <!-- ===================================== -->
+        <!-- HISTÓRICO -->
+        <!-- ===================================== -->
+
+        <section class="sono-container">
+
+            <div class="sono-title">
+
+                <div>
+
+                    <span class="label">
+                        HISTÓRICO
+                    </span>
+
+                    <h2>
+                        Registros salvos
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="lista-sono"
+                id="listaSono"
+            >
+            </div>
+
+
+            <div
+                class="sono-vazio"
+                id="sonoVazio"
+            >
+
+                <i class="fa-solid fa-moon"></i>
+
+                <h3>
+                    Nenhum registro de sono encontrado
+                </h3>
+
+                <p>
+                    Cadastre seu primeiro registro de sono para
+                    acompanhar sua rotina de descanso.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <footer>
+            <span>
+                CTO - Mufasa Softwares© 2026
+            </span>
+        </footer>
+
+    </main>
+
+</div>
+
+
+<!-- ===================================== -->
+<!-- MODAL REGISTRAR SONO -->
+<!-- ===================================== -->
+
+<div
+    class="modal-overlay"
+    id="modalOverlay"
+>
+
+    <div class="modal-sono">
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="label">
+                    REGISTRO DE SONO
+                </span>
+
+                <h2 id="tituloModal">
+                    Registrar sono
+                </h2>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                id="btnFecharModal"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <form id="formSono">
+
+            <input
+                type="hidden"
+                id="registroId"
+            >
+
+
+            <!-- HORA DE DORMIR -->
+
+            <div class="form-group">
+
+                <label for="horaDormir">
+                    Quando você foi dormir?
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-regular fa-moon"></i>
+
+                    <input
+                        type="datetime-local"
+                        id="horaDormir"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- HORA DE ACORDAR -->
+
+            <div class="form-group">
+
+                <label for="horaAcordar">
+                    Quando você acordou?
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-regular fa-sun"></i>
+
+                    <input
+                        type="datetime-local"
+                        id="horaAcordar"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- DURAÇÃO CALCULADA -->
+
+            <div class="duracao-preview">
+
+                <div class="duracao-preview-icon">
+
+                    <i class="fa-regular fa-clock"></i>
+
+                </div>
+
+                <div>
+
+                    <span>
+                        Duração calculada
+                    </span>
+
+                    <strong id="duracaoCalculada">
+                        --h --min
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- NOTA -->
+
+            <div class="form-group">
+
+                <label>
+                    Como você avalia sua noite?
+                </label>
+
+                <p class="nota-descricao">
+                    Selecione uma nota de 1 a 5.
+                </p>
+
+
+                <div class="nota-sono">
+
+                    <button
+                        type="button"
+                        class="nota-button"
+                        data-nota="1"
+                    >
+                        <i class="fa-solid fa-star"></i>
+                        <span>1</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="nota-button"
+                        data-nota="2"
+                    >
+                        <i class="fa-solid fa-star"></i>
+                        <span>2</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="nota-button"
+                        data-nota="3"
+                    >
+                        <i class="fa-solid fa-star"></i>
+                        <span>3</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="nota-button"
+                        data-nota="4"
+                    >
+                        <i class="fa-solid fa-star"></i>
+                        <span>4</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="nota-button"
+                        data-nota="5"
+                    >
+                        <i class="fa-solid fa-star"></i>
+                        <span>5</span>
+                    </button>
+
+                </div>
+
+                <input
+                    type="hidden"
+                    id="notaSono"
+                    required
+                >
+
+            </div>
+
+
+            <div class="modal-info">
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                <p>
+                    Sua nota representa como você percebeu a qualidade
+                    do seu descanso. A duração será calculada
+                    automaticamente pelos horários informados.
+                </p>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="btn-cancelar"
+                    id="btnCancelar"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn-salvar"
+                >
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Salvar registro
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<div class="overlay" id="overlay"></div>
+
+<script src="js/script.js"></script>
+<script src="js/sono.js"></script>
+
+</body>
+</html>

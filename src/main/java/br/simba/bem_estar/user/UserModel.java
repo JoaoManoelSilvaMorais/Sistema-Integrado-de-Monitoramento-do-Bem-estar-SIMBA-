@@ -1,8 +1,7 @@
 package br.simba.bem_estar.user;
 
-
 import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import br.simba.bem_estar.perfil.PerfilModel;
 import br.simba.bem_estar.registroExercicio.RegistroExercicioModel;
 import br.simba.bem_estar.registroSono.RegistroSonoModel;
@@ -28,10 +27,11 @@ public class UserModel {
     
     //referencia o perfil do usuario
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "perfil_id",nullable = false)
+    @JoinColumn(name = "perfil_id",nullable = true)
     private PerfilModel perfil;
 
     //referencia os registros de  sono do usuario
+    @JsonIgnore 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
     private List<RegistroSonoModel> registroSono;
 

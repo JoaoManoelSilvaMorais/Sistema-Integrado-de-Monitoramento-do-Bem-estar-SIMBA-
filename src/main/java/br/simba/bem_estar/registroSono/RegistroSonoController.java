@@ -2,7 +2,7 @@ package br.simba.bem_estar.registroSono;
 
 import br.simba.bem_estar.user.UserRepository;
 import java.util.List;
-
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController 
@@ -49,14 +49,55 @@ public class RegistroSonoController {
         return registroSonoRepository.save(registroSono);
     }
 
-    //deletar um registro
-    @DeleteMapping("/")
-        public void deleteRegistro(@PathVariable Long id){
+    @DeleteMapping("/{id}")
+    public void deleteRegistro(
+            @PathVariable Long id) {
 
         registroSonoRepository.deleteById(id);
-        }
+    }
     
-        //atualizar os registros de sono(precisa?)
+    @PutMapping("/{id}")
+    public RegistroSonoModel atualizarRegistro(
+            @PathVariable Long id,
+            @RequestBody RegistroSonoModel novoRegistro) {
+
+        RegistroSonoModel registro =
+            registroSonoRepository
+                .findById(id)
+                .orElseThrow(() ->
+                    new RuntimeException(
+                        "Registro de sono não encontrado"
+                    )
+                );
+
+        registro.setHoraDormir(
+            novoRegistro.getHoraDormir()
+        );
+
+        registro.setHoraAcordar(
+            novoRegistro.getHoraAcordar()
+        );
+
+        registro.setNotaSono(
+            novoRegistro.getNotaSono()
+        );
+
+        registro.setUsuario(
+            novoRegistro.getUsuario()
+        );
+
+        return registroSonoRepository.save(
+            registro
+        );
+    }
     
-    
+    @GetMapping("/usuario/{usuarioId}")
+    public List<RegistroSonoModel> getRegistroSonoPorUsuario(
+            @PathVariable Long usuarioId) {
+
+        return registroSonoRepository
+            .findByUsuario_IdOrderByHoraDormirDesc(usuarioId);
+    }
+
+
 }

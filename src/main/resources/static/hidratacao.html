@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SIMBA - Hidratação</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <!-- CSS geral do projeto -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- CSS específico da página -->
+    <link rel="stylesheet" href="css/hidratacao.css">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR: mesma estrutura usada em treinos.html -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="logo">
+            <img src="img/LeaoLogoPNG.png" alt="SIMBA">
+            <img src="img/NomeLogoPNG.png" alt="SIMBA" class="logo-name">
+        </div>
+
+        <nav>
+
+            <a href="index.html">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </a>
+
+            <a href="hidratacao.html" class="active">
+                <i class="fa-solid fa-droplet"></i>
+                Hidratação
+            </a>
+
+            <a href="sono.html">
+                <i class="fa-solid fa-moon"></i>
+                Sono
+            </a>
+
+            <a href="treinos.html">
+                <i class="fa-solid fa-dumbbell"></i>
+                Treinos
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-calendar-check"></i>
+                Rotina
+            </a>
+
+            <a href="lembretes.html">
+                <i class="fa-solid fa-bell"></i>
+                Lembretes
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-chart-line"></i>
+                Progresso
+            </a>
+
+            <a href="conquistas.html">
+                <i class="fa-solid fa-trophy"></i>
+                Conquistas
+            </a>
+
+        </nav>
+
+        <div class="bottom-menu">
+
+            <a href="perfil.html">
+                <i class="fa-solid fa-user"></i>
+                Meu perfil
+            </a>
+
+            <a href="entrar.html" id="sair">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Sair
+            </a>
+
+        </div>
+
+    </aside>
+
+    <main class="hidratacao-main">
+
+        <!-- HEADER: mesma estrutura usada em treinos.html -->
+        <header>
+
+            <button class="menu-button" id="menuButton">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div>
+                <span class="label">HIDRATAÇÃO</span>
+                <h1>Controle de hidratação</h1>
+                <p>Registre e acompanhe seu consumo de água.</p>
+            </div>
+
+            <div class="user">
+
+                <button class="notification">
+                    <i class="fa-regular fa-bell"></i>
+                </button>
+
+                <div class="avatar" id="avatarUsuario">
+                    U
+                </div>
+
+                <a
+                    class="login-button"
+                    id="loginButton"
+                    href="entrar.html"
+                >
+                    Entrar
+                </a>
+
+            </div>
+
+        </header>
+
+        <!-- RESUMO DE HOJE + ADIÇÃO RÁPIDA -->
+        <section class="hidratacao-header">
+
+            <div class="hidratacao-hoje">
+
+                <div
+                    class="progresso-circulo progresso-circulo-grande"
+                    id="circuloHoje"
+                    style="--progresso: 0"
+                >
+                    <div class="progresso-centro">
+                        <i class="fa-solid fa-droplet"></i>
+                    </div>
+                </div>
+
+                <div class="hidratacao-hoje-info">
+
+                    <span class="label">
+                        HOJE
+                    </span>
+
+                    <div class="quantidade-hoje">
+                        <strong id="quantidadeHoje">
+                            0
+                        </strong>
+
+                        <span>
+                            / <span id="metaHoje">3000</span> ml
+                        </span>
+                    </div>
+
+                    <div class="porcentagem-hoje">
+                        <strong id="porcentagemHoje">
+                            0%
+                        </strong>
+
+                        <span>
+                            da meta diária
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="adicao-rapida">
+
+                <div class="adicao-rapida-titulo">
+
+                    <div>
+                        <span class="label">
+                            REGISTRO RÁPIDO
+                        </span>
+
+                        <h2>
+                            Adicionar água
+                        </h2>
+                    </div>
+
+                    <button
+                        class="btn-outro-valor"
+                        id="btnOutroValor"
+                        type="button"
+                    >
+                        <i class="fa-solid fa-plus"></i>
+                        Outro valor
+                    </button>
+
+                </div>
+
+                <div class="botoes-rapidos">
+
+                    <button
+                        class="btn-agua-rapido"
+                        type="button"
+                        data-quantidade="200"
+                    >
+                        <i class="fa-solid fa-plus"></i>
+                        200
+                        <span>ml</span>
+                    </button>
+
+                    <button
+                        class="btn-agua-rapido"
+                        type="button"
+                        data-quantidade="500"
+                    >
+                        <i class="fa-solid fa-plus"></i>
+                        500
+                        <span>ml</span>
+                    </button>
+
+                    <button
+                        class="btn-agua-rapido"
+                        type="button"
+                        data-quantidade="1000"
+                    >
+                        <i class="fa-solid fa-plus"></i>
+                        1000
+                        <span>ml</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ÚLTIMOS 7 DIAS -->
+        <section class="hidratacao-semanal">
+
+            <div class="semanal-cabecalho">
+
+                <div>
+                    <span class="label">
+                        RESUMO
+                    </span>
+
+                    <h2>
+                        Últimos 7 dias
+                    </h2>
+                </div>
+
+                <div class="semanal-indicadores">
+
+                    <article class="indicador-semanal">
+                        <span>
+                            Média
+                        </span>
+
+                        <strong id="mediaSemanal">
+                            0 ml
+                        </strong>
+                    </article>
+
+                    <article class="indicador-semanal">
+                        <span>
+                            Meta atingida
+                        </span>
+
+                        <strong id="diasMetaAtingida">
+                            0/7 dias
+                        </strong>
+                    </article>
+
+                </div>
+
+            </div>
+
+            <div class="grafico-container">
+
+                <div class="grafico-eixo-y">
+                    <span id="graficoMaximo">
+                        3000 ml
+                    </span>
+
+                    <span>
+                        0 ml
+                    </span>
+                </div>
+
+                <div class="grafico-area">
+
+                    <svg
+                        id="graficoSemanal"
+                        viewBox="0 0 700 220"
+                        preserveAspectRatio="none"
+                        aria-label="Consumo de água nos últimos sete dias"
+                    >
+
+                        <defs>
+                            <linearGradient
+                                id="gradienteAgua"
+                                x1="0"
+                                y1="0"
+                                x2="0"
+                                y2="1"
+                            >
+                                <stop
+                                    offset="0%"
+                                    stop-color="#1ea7c6"
+                                    stop-opacity="0.27"
+                                />
+
+                                <stop
+                                    offset="100%"
+                                    stop-color="#1ea7c6"
+                                    stop-opacity="0.02"
+                                />
+                            </linearGradient>
+                        </defs>
+
+                        <line
+                            class="linha-grade"
+                            x1="0"
+                            y1="28"
+                            x2="700"
+                            y2="28"
+                        />
+
+                        <line
+                            class="linha-grade"
+                            x1="0"
+                            y1="110"
+                            x2="700"
+                            y2="110"
+                        />
+
+                        <line
+                            class="linha-grade"
+                            x1="0"
+                            y1="192"
+                            x2="700"
+                            y2="192"
+                        />
+
+                        <polygon
+                            id="areaGrafico"
+                            class="area-grafico"
+                            points=""
+                        ></polygon>
+
+                        <polyline
+                            id="linhaGrafico"
+                            class="linha-grafico"
+                            points=""
+                        ></polyline>
+
+                        <g id="pontosGrafico"></g>
+
+                    </svg>
+
+                    <div
+                        class="grafico-dias"
+                        id="graficoDias"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- REGISTROS -->
+        <section class="hidratacao-container">
+
+            <div class="hidratacao-title">
+
+                <div>
+
+                    <span class="label">
+                        REGISTROS
+                    </span>
+
+                    <h2>
+                        Histórico de hidratação
+                    </h2>
+
+                    <p>
+                        Clique em um dia para visualizar os registros daquele dia.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div
+                class="lista-hidratacao"
+                id="listaHidratacao"
+            ></div>
+
+            <div
+                class="hidratacao-vazio"
+                id="hidratacaoVazio"
+            >
+
+                <i class="fa-solid fa-droplet"></i>
+
+                <h3>
+                    Nenhum registro de água
+                </h3>
+
+                <p>
+                    Utilize os botões de adição rápida ou registre
+                    manualmente seu primeiro consumo de água.
+                </p>
+
+            </div>
+
+        </section>
+
+        <footer>
+            <span>
+                CTO - Mufasa Softwares© 2026
+            </span>
+        </footer>
+
+    </main>
+
+</div>
+
+<!-- MODAL -->
+<div
+    class="modal-overlay"
+    id="modalOverlay"
+>
+
+    <div class="modal-hidratacao">
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="label">
+                    HIDRATAÇÃO
+                </span>
+
+                <h2 id="tituloModal">
+                    Registrar água
+                </h2>
+
+            </div>
+
+            <button
+                type="button"
+                class="modal-close"
+                id="btnFecharModal"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+        <form id="formHidratacao">
+
+            <input
+                type="hidden"
+                id="registroAguaId"
+            >
+
+            <div class="form-group">
+
+                <label for="quantidadeMl">
+                    Quantidade
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-solid fa-droplet"></i>
+
+                    <input
+                        type="number"
+                        id="quantidadeMl"
+                        min="1"
+                        max="5000"
+                        placeholder="Ex: 500"
+                        required
+                    >
+
+                    <span class="input-unit">
+                        ml
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="dataHora">
+                    Data e horário
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-regular fa-calendar"></i>
+
+                    <input
+                        type="datetime-local"
+                        id="dataHora"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+            <div class="modal-info">
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                <p>
+                    Registre a quantidade de água consumida.
+                    O horário atual já é preenchido automaticamente,
+                    mas pode ser alterado.
+                </p>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="btn-cancelar"
+                    id="btnCancelar"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn-salvar"
+                >
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Salvar registro
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script src="js/script.js"></script>
+<script src="js/hidratacao.js"></script>
+
+</body>
+</html>

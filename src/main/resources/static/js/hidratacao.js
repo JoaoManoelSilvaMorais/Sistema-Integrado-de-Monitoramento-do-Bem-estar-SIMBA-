@@ -48,8 +48,7 @@ const META_DIARIA_ML = 3000;
 
     O id é numérico para ficar compatível com Long no Java.
 */
-let registrosAgua =
-    JSON.parse(localStorage.getItem("registrosAgua")) || [];
+let registrosAgua = [];
 
 
 let diaAberto = null;
@@ -146,64 +145,31 @@ formHidratacao.addEventListener(
 
     "submit",
 
-    function(event) {
+    async function(event) {
 
         event.preventDefault();
 
         const registro = {
-
-            id:
-                registroAguaId.value
-                    ? Number(registroAguaId.value)
-                    : gerarLongId(),
-
-            quantidadeMl:
-                Number(quantidadeMl.value),
-
-            dataHora:
-                dataHora.value
-
+            quantidadeMl: Number(quantidadeMl.value),
+            dataHora: dataHora.value
         };
 
-
-        if (registroAguaId.value) {
-
-            const indice =
-                registrosAgua.findIndex(
-
-                    item =>
-                        Number(item.id) ===
-                        Number(registroAguaId.value)
-
-                );
-
-
-            if (indice !== -1) {
-
-                registrosAgua[indice] =
-                    registro;
-
-            }
-
-        } else {
-
-            registrosAgua.push(
-                registro
-            );
-
+        try {
+            const url = registroAguaId.value
+                ? `/registroAgua/${registroAguaId.value}`
+                : "/registroAgua";
+            const resposta = await fetch(url, {
+                method: registroAguaId.value ? "PUT" : "POST",
+                headers: headersAutenticacao(),
+                body: JSON.stringify(registro)
+            });
+            verificarResposta(resposta);
+            diaAberto = obterChaveData(registro.dataHora);
+            fecharModal();
+            await carregarRegistrosAgua();
+        } catch (erro) {
+            alert(erro.message);
         }
-
-
-        salvarLocalStorage();
-
-        diaAberto =
-            obterChaveData(
-                registro.dataHora
-            );
-
-        renderizarHidratacao();
-
-        fecharModal();
 
     }
 
@@ -234,7 +200,7 @@ function editarRegistroAgua(id) {
         registro.quantidadeMl;
 
     dataHora.value =
-        registro.dataHora;
+        String(registro.dataHora).slice(0, 16);
 
 
     tituloModal.textContent =
@@ -246,7 +212,7 @@ function editarRegistroAgua(id) {
 }
 
 
-function excluirRegistroAgua(id) {
+async function excluirRegistroAgua(id) {
 
     const confirmar =
         confirm(
@@ -259,19 +225,16 @@ function excluirRegistroAgua(id) {
     }
 
 
-    registrosAgua =
-        registrosAgua.filter(
-
-            registro =>
-                Number(registro.id) !==
-                Number(id)
-
-        );
-
-
-    salvarLocalStorage();
-
-    renderizarHidratacao();
+    try {
+        const resposta = await fetch(`/registroAgua/${id}`, {
+            method: "DELETE",
+            headers: headersAutenticacao()
+        });
+        verificarResposta(resposta);
+        await carregarRegistrosAgua();
+    } catch (erro) {
+        alert(erro.message);
+    }
 
 }
 
@@ -280,40 +243,28 @@ function excluirRegistroAgua(id) {
    ADIÇÃO RÁPIDA
    ========================================================= */
 
-function adicionarAguaRapido(valor) {
+async function adicionarAguaRapido(valor) {
 
     const agora =
         new Date();
 
     const registro = {
-
-        id:
-            gerarLongId(),
-
-        quantidadeMl:
-            Number(valor),
-
-        dataHora:
-            formatarDataHoraInput(agora)
-
+        quantidadeMl: Number(valor),
+        dataHora: formatarDataHoraInput(agora)
     };
 
-
-    registrosAgua.push(
-        registro
-    );
-
-
-    salvarLocalStorage();
-
-
-    diaAberto =
-        obterChaveData(
-            registro.dataHora
-        );
-
-
-    renderizarHidratacao();
+    try {
+        const resposta = await fetch("/registroAgua", {
+            method: "POST",
+            headers: headersAutenticacao(),
+            body: JSON.stringify(registro)
+        });
+        verificarResposta(resposta);
+        diaAberto = obterChaveData(registro.dataHora);
+        await carregarRegistrosAgua();
+    } catch (erro) {
+        alert(erro.message);
+    }
 
 }
 
@@ -348,21 +299,6 @@ document
 /* =========================================================
    LOCAL STORAGE
    ========================================================= */
-
-function salvarLocalStorage() {
-
-    localStorage.setItem(
-
-        "registrosAgua",
-
-        JSON.stringify(
-            registrosAgua
-        )
-
-    );
-
-}
-
 
 /* =========================================================
    DATAS
@@ -536,23 +472,14 @@ function formatarDataCard(chaveData) {
    ========================================================= */
 
 function calcularPorcentagem(total) {
-
-    if (META_DIARIA_ML <= 0) {
+    if (!Number(total)) {
         return 0;
     }
 
-
     return Math.round(
-
-        (
-            Number(total) /
-            META_DIARIA_ML
-        ) * 100
-
+        (Number(total) / META_DIARIA_ML) * 100
     );
-
 }
-
 
 function totalDoDia(chaveData) {
 
@@ -1072,7 +999,7 @@ function editarDia(chaveData) {
 }
 
 
-function excluirDia(chaveData) {
+async function excluirDia(chaveData) {
 
     const registrosDoDia =
         registrosAgua.filter(
@@ -1104,18 +1031,6 @@ function excluirDia(chaveData) {
     }
 
 
-    registrosAgua =
-        registrosAgua.filter(
-
-            registro =>
-                obterChaveData(
-                    registro.dataHora
-                ) !==
-                chaveData
-
-        );
-
-
     if (
         diaAberto ===
         chaveData
@@ -1127,9 +1042,19 @@ function excluirDia(chaveData) {
     }
 
 
-    salvarLocalStorage();
-
-    renderizarHidratacao();
+    try {
+        await Promise.all(
+            registrosDoDia.map(registro =>
+                fetch(`/registroAgua/${registro.id}`, {
+                    method: "DELETE",
+                    headers: headersAutenticacao()
+                }).then(verificarResposta)
+            )
+        );
+        await carregarRegistrosAgua();
+    } catch (erro) {
+        alert(erro.message);
+    }
 
 }
 
@@ -1499,6 +1424,42 @@ document.addEventListener(
 const token =
     sessionStorage.getItem("jwtToken");
 
+function headersAutenticacao() {
+    return {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+    };
+}
+
+function verificarResposta(response) {
+    if (response.status === 401) {
+        sessionStorage.removeItem("jwtToken");
+        sessionStorage.removeItem("usuarioLogado");
+        window.location.href = "entrar.html";
+        throw new Error("Sua sessão expirou. Entre novamente.");
+    }
+    if (response.status === 403) {
+        throw new Error("Você não tem permissão para alterar este registro.");
+    }
+    if (!response.ok) {
+        throw new Error("Não foi possível salvar o registro de água.");
+    }
+    return response;
+}
+
+async function carregarRegistrosAgua() {
+    if (!token) {
+        return;
+    }
+
+    const response = await fetch("/registroAgua", {
+        headers: headersAutenticacao()
+    });
+    verificarResposta(response);
+    registrosAgua = await response.json();
+    renderizarHidratacao();
+}
+
 
 if (token) {
 
@@ -1550,6 +1511,7 @@ if (token) {
 
     })
 
+    .then(() => carregarRegistrosAgua())
     .catch(() => {
 
         sessionStorage.removeItem(
@@ -1590,4 +1552,6 @@ document
    INICIALIZAÇÃO
    ========================================================= */
 
-renderizarHidratacao();
+if (!token) {
+    renderizarHidratacao();
+}

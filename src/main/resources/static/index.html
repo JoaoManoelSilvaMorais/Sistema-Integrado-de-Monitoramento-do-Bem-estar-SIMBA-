@@ -19,14 +19,14 @@
             </div>
 
             <nav>
-                <a href="#" class="active"><i class="fa-solid fa-house"></i>Dashboard</a>
+                <a href="index.html" class="active"><i class="fa-solid fa-house"></i>Dashboard</a>
                 <a href="hidratacao.html"><i class="fa-solid fa-droplet"></i>Hidratação</a>
                 <a href="sono.html"><i class="fa-solid fa-moon"></i>Sono</a>
                 <a href="treinos.html"><i class="fa-solid fa-dumbbell"></i>Treinos</a>
                 <a href="#"><i class="fa-solid fa-calendar-check"></i>Rotina</a>
-                <a href="#"><i class="fa-solid fa-bell"></i>Lembretes</a>
+                <a href="lembretes.html"><i class="fa-solid fa-bell"></i>Lembretes</a>
                 <a href="#"><i class="fa-solid fa-chart-line"></i>Progresso</a>
-                <a href="#"><i class="fa-solid fa-trophy"></i>Conquistas</a>
+                <a href="conquistas.html"><i class="fa-solid fa-trophy"></i>Conquistas</a>
             </nav>
 
             <div class="bottom-menu">
@@ -46,7 +46,7 @@
 
                 <div class="user">
                     <button class="notification"><i class="fa-regular fa-bell"></i></button>
-                    <div class="avatar" id="avatarUsuario">U</div>
+                    <a class="avatar" id="avatarUsuario" href="perfil.html" aria-label="Abrir meu perfil">U</a>
                     <a class="login-button" id="loginButton" href="entrar.html">Entrar</a>
                 </div>
             </header>
@@ -61,30 +61,30 @@
                     <i class="fa-solid fa-leaf welcome-icon"></i>
                 </article>
 
-                <article class="card">
+                <article class="card" id="cardHidratacao">
                     <div class="card-top">
                         <span class="icon"><i class="fa-solid fa-droplet"></i></span>
                     </div>
                     <span class="label">HIDRATAÇÃO</span>
-                    <h2>-- <small>L</small></h2>
-                    <p>Meta diária: -- L</p>
+                    <h2 id="resumoAgua">-- <small>L</small></h2>
+                    <p id="metaAgua">Total registrado hoje</p>
                 </article>
 
-                <article class="card">
+                <article class="card" id="cardSono">
                     <div class="card-top">
                         <span class="icon"><i class="fa-solid fa-moon"></i></span>
                     </div>
                     <span class="label">SONO</span>
-                    <h2>-- <small>horas</small></h2>
-                    <p>Dados do último registro</p>
+                    <h2 id="resumoSono">-- <small>horas</small></h2>
+                    <p>Último registro</p>
                 </article>
 
-                <article class="card">
+                <article class="card" id="cardTreinos">
                     <div class="card-top" >
                         <span class="icon"><i class="fa-solid fa-dumbbell"></i></span>
                     </div>
                     <span class="label">TREINOS</span>
-                    <h2>--</h2>
+                    <h2 id="resumoTreinos">--</h2>
                     <p>Treinos registrados</p>
                 </article>
 
@@ -97,7 +97,7 @@
                         <a href="#">Ver mais</a>
                     </div>
 
-                    <div class="empty-state">
+                    <div class="empty-state" id="resumoRotina">
                         <i class="fa-regular fa-calendar"></i>
                         <p>Nenhuma atividade registrada.</p>
                     </div>
@@ -111,7 +111,7 @@
                         </div>
                     </div>
 
-                    <div class="empty-state small">
+                    <div class="empty-state small" id="resumoProgresso">
                         <i class="fa-solid fa-chart-line"></i>
                         <p>Seus dados aparecerão aqui.</p>
                     </div>
@@ -123,10 +123,10 @@
                             <span class="label">LEMBRETES</span>
                             <h2>Próximos lembretes</h2>
                         </div>
-                        <a href="#">Ver mais</a>
+                        <a href="lembretes.html">Ver mais</a>
                     </div>
 
-                    <div class="empty-state">
+                    <div class="empty-state" id="resumoLembretes">
                         <i class="fa-regular fa-bell"></i>
                         <p>Nenhum lembrete cadastrado.</p>
                     </div>
@@ -144,23 +144,110 @@
     <script>
         const token = sessionStorage.getItem('jwtToken');
 
-        if (token) {
-            fetch('/users/me', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
+        function requisicaoAutenticada(url) {
+            return fetch(url, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
                 }
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}`);
-                    }
-                    return response.json();
-                })
+                return response.json();
+            });
+        }
+
+        function formatarData(data) {
+            return new Date(data).toLocaleString('pt-BR', {
+                day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        function mesmoDia(primeiraData, segundaData = new Date()) {
+            const primeira = new Date(primeiraData);
+            return primeira.getFullYear() === segundaData.getFullYear()
+                && primeira.getMonth() === segundaData.getMonth()
+                && primeira.getDate() === segundaData.getDate();
+        }
+
+        function calcularDuracaoSono(registro) {
+            const inicio = new Date(registro.horaDormir);
+            const fim = new Date(registro.horaAcordar);
+            if (Number.isNaN(inicio.getTime()) || Number.isNaN(fim.getTime())) {
+                return null;
+            }
+            let duracao = (fim - inicio) / 3600000;
+            if (duracao < 0) {
+                duracao += 24;
+            }
+            return duracao;
+        }
+
+        function renderizarResumo(usuario, agua, sono, treinos, lembretes) {
+            const aguaHoje = agua
+                .filter(registro => mesmoDia(registro.dataHora))
+                .reduce((total, registro) => total + Number(registro.quantidadeMl || 0), 0);
+            document.getElementById('resumoAgua').innerHTML = `${(aguaHoje / 1000).toFixed(1)} <small>L</small>`;
+
+            const ultimoSono = [...sono]
+                .sort((a, b) => new Date(b.horaDormir) - new Date(a.horaDormir))[0];
+            const duracaoSono = ultimoSono && calcularDuracaoSono(ultimoSono);
+            document.getElementById('resumoSono').innerHTML = duracaoSono === null || duracaoSono === undefined
+                ? '-- <small>horas</small>'
+                : `${duracaoSono.toFixed(1)} <small>horas</small>`;
+
+            document.getElementById('resumoTreinos').textContent = treinos.length;
+
+            const atividadesHoje = agua.filter(registro => mesmoDia(registro.dataHora)).length
+                + treinos.filter(registro => mesmoDia(registro.dataHora)).length
+                + sono.filter(registro => mesmoDia(registro.horaDormir)).length;
+            const rotina = document.getElementById('resumoRotina');
+            rotina.replaceChildren();
+            const rotinaTexto = document.createElement('p');
+            rotinaTexto.textContent = atividadesHoje
+                ? `${atividadesHoje} registro(s) feito(s) hoje.`
+                : 'Nenhuma atividade registrada hoje.';
+            rotina.appendChild(rotinaTexto);
+
+            const progresso = document.getElementById('resumoProgresso');
+            progresso.replaceChildren();
+            const progressoTexto = document.createElement('p');
+            progressoTexto.textContent = `${(aguaHoje / 1000).toFixed(1)} L de água | ${treinos.length} treino(s) | ${lembretes.length} lembrete(s)`;
+            progresso.appendChild(progressoTexto);
+
+            const resumo = document.getElementById('resumoLembretes');
+            const futuros = lembretes
+                .filter(lembrete => new Date(lembrete.horario) >= new Date())
+                .sort((a, b) => new Date(a.horario) - new Date(b.horario))
+                .slice(0, 3);
+            resumo.replaceChildren();
+            if (futuros.length === 0) {
+                const texto = document.createElement('p');
+                texto.textContent = 'Nenhum lembrete cadastrado.';
+                resumo.appendChild(texto);
+            } else {
+                futuros.forEach(lembrete => {
+                    const item = document.createElement('p');
+                    item.textContent = `${formatarData(lembrete.horario)} - ${lembrete.titulo}`;
+                    resumo.appendChild(item);
+                });
+            }
+        }
+
+        if (token) {
+            requisicaoAutenticada('/users/me')
                 .then(usuario => {
                     document.getElementById('nomeUsuario').textContent = `${usuario.name || usuario.username}!`;
                     document.getElementById('avatarUsuario').textContent = (usuario.name || usuario.username || 'U')
                         .charAt(0)
                         .toUpperCase();
+
+                    return Promise.all([
+                        requisicaoAutenticada('/registroAgua'),
+                        requisicaoAutenticada(`/registrosono/usuario/${usuario.id}`),
+                        requisicaoAutenticada('/registroexercicio'),
+                        requisicaoAutenticada('/lembretes')
+                    ]).then(([agua, sono, treinos, lembretes]) => {
+                        renderizarResumo(usuario, agua, sono, treinos, lembretes);
+                    });
                 })
                 .catch(() => {
                     sessionStorage.removeItem('jwtToken');
@@ -170,6 +257,7 @@
 
         if (token) {
             document.getElementById('loginButton').style.display = 'none';
+
         }
 
         document.getElementById('sair').addEventListener('click', () => {

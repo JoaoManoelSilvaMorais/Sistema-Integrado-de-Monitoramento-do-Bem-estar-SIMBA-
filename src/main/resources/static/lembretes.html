@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SIMBA - Lembretes</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/novas-telas.css">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <img src="img/LeaoLogoPNG.png" alt="SIMBA">
+                <img
+                    src="img/NomeLogoPNG.png"
+                    alt="SIMBA"
+                    class="logo-name"
+                >
+            </div>
+
+            <nav>
+                <a href="index.html">
+                    <i class="fa-solid fa-house"></i> Dashboard
+                </a>
+                <a href="hidratacao.html">
+                    <i class="fa-solid fa-droplet"></i> Hidratação
+                </a>
+                <a href="sono.html">
+                    <i class="fa-solid fa-moon"></i> Sono
+                </a>
+                <a href="treinos.html">
+                    <i class="fa-solid fa-dumbbell"></i> Treinos
+                </a>
+                <a href="#">
+                    <i class="fa-solid fa-calendar-check"></i> Rotina
+                </a>
+                <a class="active" href="lembretes.html">
+                    <i class="fa-solid fa-bell"></i> Lembretes
+                </a>
+                <a href="#">
+                    <i class="fa-solid fa-chart-line"></i> Progresso
+                </a>
+                <a href="conquistas.html">
+                    <i class="fa-solid fa-trophy"></i> Conquistas
+                </a>
+            </nav>
+
+            <div class="bottom-menu">
+                <a href="perfil.html">
+                    <i class="fa-solid fa-user"></i> Meu perfil
+                </a>
+                <a href="entrar.html" id="sair">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sair
+                </a>
+            </div>
+        </aside>
+
+        <main>
+            <header>
+                <button class="menu-button" id="menuButton">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div>
+                    <span class="label">ORGANIZAÇÃO</span>
+                    <h1>Meus lembretes</h1>
+                    <p>Pequenos lembretes para cuidar de você.</p>
+                </div>
+
+                <div class="user">
+                    <button class="notification">
+                        <i class="fa-regular fa-bell"></i>
+                    </button>
+                    <div class="avatar" id="avatarUsuario">U</div>
+                    <a class="login-button" id="loginButton" href="entrar.html">
+                        Entrar
+                    </a>
+                </div>
+            </header>
+
+            <section class="page-content">
+                <div class="summary-grid">
+                    <article class="card summary-card">
+                        <span class="summary-icon">
+                            <i class="fa-regular fa-bell"></i>
+                        </span>
+                        <div>
+                            <span class="label">CADASTRADOS</span>
+                            <h2 id="totalLembretes">0</h2>
+                            <p>lembretes ativos</p>
+                        </div>
+                    </article>
+
+                    <article class="card summary-card">
+                        <span class="summary-icon">
+                            <i class="fa-regular fa-calendar-check"></i>
+                        </span>
+                        <div>
+                            <span class="label">PRÓXIMO</span>
+                            <h2 id="proximoHorario">--:--</h2>
+                            <p>horário agendado</p>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="card content-card">
+                    <div class="title-row">
+                        <div>
+                            <span class="label">SUA ROTINA</span>
+                            <h2>Adicionar lembrete</h2>
+                        </div>
+                    </div>
+
+                    <form id="formLembrete" class="reminder-form">
+                        <label>
+                            Título
+                            <input
+                                id="titulo"
+                                maxlength="100"
+                                required
+                                placeholder="Ex.: Beber água"
+                            >
+                        </label>
+
+                        <label>
+                            Mensagem
+                            <input
+                                id="mensagem"
+                                maxlength="250"
+                                placeholder="Ex.: Faça uma pausa e hidrate-se"
+                            >
+                        </label>
+
+                        <label>
+                            Data e horário
+                            <input
+                                id="horario"
+                                type="datetime-local"
+                                required
+                            >
+                        </label>
+
+                        <button class="primary-button" type="submit">
+                            <i class="fa-solid fa-plus"></i>
+                            Adicionar lembrete
+                        </button>
+                    </form>
+
+                    <p class="feedback" id="feedback" aria-live="polite"></p>
+                </div>
+
+                <div class="card content-card">
+                    <div class="title-row">
+                        <div>
+                            <span class="label">ACOMPANHAMENTO</span>
+                            <h2>Seus lembretes</h2>
+                        </div>
+
+                        <button class="refresh-button" id="atualizar">
+                            <i class="fa-solid fa-rotate"></i>
+                            Atualizar
+                        </button>
+                    </div>
+
+                    <div id="listaLembretes" class="reminder-list">
+                        <div class="empty-state">
+                            <i class="fa-regular fa-bell"></i>
+                            <p>Carregando lembretes...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer>
+                <span>CTO - Mufasa Softwares© 2026</span>
+            </footer>
+        </main>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <script src="js/script.js"></script>
+    <script src="js/lembretes.js"></script>
+</body>
+</html>

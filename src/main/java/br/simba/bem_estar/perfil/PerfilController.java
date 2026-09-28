@@ -35,7 +35,6 @@ public class PerfilController {
 
     @PutMapping("/{id}")
     public PerfilModel updatePerfil(@PathVariable Long id, @RequestBody PerfilModel perfilAtualizado) {
-        //TODO: process PUT request
 
         PerfilModel perfil = perfilRepository.findById(id)
         .orElseThrow(()-> new RuntimeException("Perfil não encontrado"));
@@ -46,6 +45,6 @@ public class PerfilController {
     
         
 
-        return perfilAtualizado;
+        return perfilRepository.save(perfil);
     }
 }

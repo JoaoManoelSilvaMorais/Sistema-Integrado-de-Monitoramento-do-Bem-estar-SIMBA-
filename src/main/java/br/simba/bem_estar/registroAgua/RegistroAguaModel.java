@@ -2,8 +2,7 @@ package br.simba.bem_estar.registroAgua;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.ManyToAny;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import br.simba.bem_estar.user.UserModel;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,11 +18,12 @@ public class RegistroAguaModel {
 
 @Id 
 @GeneratedValue (strategy = GenerationType.IDENTITY)
-private long id;
+private Long id;
 private double quantidadeMl;
 private LocalDateTime dataHora;
 
 
+@JsonIgnore
 @ManyToOne(fetch = FetchType.LAZY)
 @JoinColumn(name ="usuario")
 private UserModel usuario;
@@ -32,7 +32,7 @@ public RegistroAguaModel(){
     
 }
 
-public RegistroAguaModel(long id, double quantidadeMl, LocalDateTime dataHora, UserModel usuario) {
+public RegistroAguaModel(Long id, double quantidadeMl, LocalDateTime dataHora, UserModel usuario) {
     this.id = id;
     this.quantidadeMl = quantidadeMl;
     this.dataHora = dataHora;
@@ -40,12 +40,12 @@ public RegistroAguaModel(long id, double quantidadeMl, LocalDateTime dataHora, U
 }
 
 
-public long getId() {
+public Long getId() {
     return id;
 }
 
 
-public void setId(long id) {
+public void setId(Long id) {
     this.id = id;
 }
 

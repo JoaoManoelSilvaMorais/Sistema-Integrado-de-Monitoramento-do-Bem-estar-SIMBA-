@@ -39,8 +39,45 @@ const dataHora =
     document.getElementById("dataHora");
 
 
-let treinos =
-    JSON.parse(localStorage.getItem("treinos")) || [];
+let treinos = [];
+
+const token = sessionStorage.getItem("jwtToken");
+
+function apiFetch(url, options = {}) {
+    return fetch(url, {
+        ...options,
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+            ...(options.headers || {})
+        }
+    });
+}
+
+function normalizarTreino(treino) {
+    return {
+        id: String(treino.id),
+        modalidade: treino.modalidade,
+        duracaoMinutos: Number(treino.duracaominutos),
+        gastoCaloricoEstimado: Number(treino.gastoCaloricoExtimado || 0),
+        dataHora: treino.dataHora
+    };
+}
+
+async function carregarTreinos() {
+    if (!token) {
+        renderizarTreinos();
+        return;
+    }
+
+    const response = await apiFetch("/registroexercicio");
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+    }
+
+    treinos = (await response.json()).map(normalizarTreino);
+    renderizarTreinos();
+}
 
 function abrirModal() {
 
@@ -96,60 +133,41 @@ function definirDataAtual() {
 
 formTreino.addEventListener(
     "submit",
-    function(event) {
+    async function(event) {
 
         event.preventDefault();
 
 
         const registro = {
-
-            id:
-                treinoId.value ||
-                crypto.randomUUID(),
-
             modalidade:
                 modalidade.value,
-
-            duracaoMinutos:
+            duracaominutos:
                 Number(duracao.value),
-
-            gastoCaloricoEstimado:
+            gastoCaloricoExtimado:
                 Number(gastoCalorico.value) || 0,
-
             dataHora:
                 dataHora.value
-
         };
 
+        try {
+            const url = treinoId.value
+                ? `/registroexercicio/${treinoId.value}`
+                : "/registroexercicio";
+            const response = await apiFetch(url, {
+                method: treinoId.value ? "PUT" : "POST",
+                body: JSON.stringify(registro)
+            });
 
-        if (treinoId.value) {
-
-            const indice =
-                treinos.findIndex(
-                    treino =>
-                        treino.id === treinoId.value
-                );
-
-
-            if (indice !== -1) {
-
-                treinos[indice] =
-                    registro;
-
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
             }
 
-        } else {
-
-            treinos.push(registro);
-
+            await carregarTreinos();
+            fecharModal();
+        } catch (error) {
+            console.error("Erro ao salvar treino:", error);
+            alert("Não foi possível salvar o treino. Faça login novamente e tente outra vez.");
         }
-
-
-        salvarLocalStorage();
-
-        renderizarTreinos();
-
-        fecharModal();
 
     }
 );
@@ -204,25 +222,17 @@ function excluirTreino(id) {
     }
 
 
-    treinos =
-        treinos.filter(
-            treino =>
-                treino.id !== id
-        );
-
-
-    salvarLocalStorage();
-
-    renderizarTreinos();
-
-}
-
-function salvarLocalStorage() {
-
-    localStorage.setItem(
-        "treinos",
-        JSON.stringify(treinos)
-    );
+    apiFetch(`/registroexercicio/${id}`, { method: "DELETE" })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            return carregarTreinos();
+        })
+        .catch(error => {
+            console.error("Erro ao excluir treino:", error);
+            alert("Não foi possível excluir o treino.");
+        });
 
 }
 
@@ -547,10 +557,6 @@ document.addEventListener(
     }
 );
 
-const token =
-    sessionStorage.getItem("jwtToken");
-
-
 if (token) {
 
     document
@@ -632,4 +638,7 @@ document
         }
     );
 
-renderizarTreinos();
+carregarTreinos().catch(error => {
+    console.error("Erro ao carregar treinos:", error);
+    renderizarTreinos();
+});

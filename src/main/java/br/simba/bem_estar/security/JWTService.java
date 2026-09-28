@@ -19,7 +19,8 @@ public class JWTService {
     private static final long EXPIRATION_TIME = 86400000; // 1 dia
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        final Claims claims = extractAllClaims(token);
+        return claims != null ? claims.getSubject() : null;
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -46,7 +47,7 @@ public class JWTService {
     }
 
     private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+        return extractAllClaims(token).getExpiration();
     }
 
     private Claims extractAllClaims(String token) {

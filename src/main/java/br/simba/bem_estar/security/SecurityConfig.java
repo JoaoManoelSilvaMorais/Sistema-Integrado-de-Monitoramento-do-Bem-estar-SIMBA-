@@ -1,5 +1,6 @@
 package br.simba.bem_estar.security;
 
+import br.simba.bem_estar.user.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,7 +32,21 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**", "/h2-console/**").permitAll()
+                .requestMatchers(
+                    "/auth/**",
+                    "/h2-console/**",
+                    "/",
+                    "/index.html",
+                    "/treinos.html",
+                    "/sono.html",
+                    "/entrar.html",
+                    "/login.html",
+                    "/perfil.html",
+                    "/img/**",
+                    "/css/**",
+                    "/js/**",
+                    "/favicon.ico"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session

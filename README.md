@@ -241,7 +241,7 @@ A stack tecnológica definida para o projeto (Viabilidade Técnica) engloba:
 
 *   **Frontend:** HTML, CSS, JavaScript (Interface web intuitiva e responsiva).
 *   **Backend:** Java integrado ao framework Spring.
-*   **Banco de Dados:** PostgreSQL (Estruturação de relacionamentos e persistência íntegra).
+*   **Banco de Dados:** PostgreSQL (Estruturação de relacionamentos e persistência íntegra), H2 para prototipagem.
 *   **Versionamento:** Git e GitHub.
 
 ---

@@ -1,0 +1,1135 @@
+.hidratacao-main {
+    min-height: 100vh;
+}
+
+/* =========================================================
+   RESUMO DE HOJE + ADIÇÃO RÁPIDA
+   ========================================================= */
+
+.hidratacao-header {
+    margin-top: 25px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    border-radius: 18px;
+
+    background: rgba(238, 224, 211, 0.55);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    overflow: hidden;
+}
+
+.hidratacao-hoje {
+    min-height: 205px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 24px;
+
+    padding: 26px 28px;
+
+    border-right: 1px solid rgba(124, 98, 82, 0.10);
+}
+
+.hidratacao-hoje-info {
+    min-width: 0;
+}
+
+.quantidade-hoje {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    margin-top: 8px;
+}
+
+.quantidade-hoje strong {
+    color: #713819;
+
+    font-size: 36px;
+    line-height: 1;
+}
+
+.quantidade-hoje span {
+    color: #7b8984;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.porcentagem-hoje {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    margin-top: 11px;
+}
+
+.porcentagem-hoje strong {
+    color: #138eaa;
+
+    font-size: 20px;
+}
+
+.porcentagem-hoje span {
+    color: #7b8984;
+
+    font-size: 12px;
+}
+
+/* =========================================================
+   CÍRCULOS DE PROGRESSO
+   ========================================================= */
+
+.progresso-circulo {
+    --progresso: 0;
+
+    position: relative;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        conic-gradient(
+            #1ea7c6 calc(min(var(--progresso), 100) * 1%),
+            rgba(124, 98, 82, 0.12) 0
+        );
+}
+
+.progresso-circulo::before {
+    content: "";
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    background: rgba(244, 234, 225, 0.96);
+}
+
+.progresso-centro {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #1ea7c6;
+}
+
+.progresso-circulo-grande {
+    width: 125px;
+    height: 125px;
+}
+
+.progresso-circulo-grande::before {
+    width: 96px;
+    height: 96px;
+}
+
+.progresso-circulo-grande .progresso-centro {
+    width: 96px;
+    height: 96px;
+
+    font-size: 30px;
+}
+
+.progresso-circulo-pequeno {
+    width: 66px;
+    height: 66px;
+}
+
+.progresso-circulo-pequeno::before {
+    width: 51px;
+    height: 51px;
+}
+
+.progresso-circulo-pequeno .progresso-centro {
+    width: 51px;
+    height: 51px;
+
+    color: #138eaa;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   ADIÇÃO RÁPIDA
+   ========================================================= */
+
+.adicao-rapida {
+    min-height: 205px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    gap: 20px;
+
+    padding: 26px 28px;
+}
+
+.adicao-rapida-titulo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+.adicao-rapida-titulo h2 {
+    margin-top: 5px;
+
+    color: #713819;
+
+    font-size: 20px;
+}
+
+.btn-outro-valor {
+    border: 1px solid rgba(124, 98, 82, 0.16);
+
+    padding: 10px 13px;
+
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.55);
+
+    color: #713819;
+
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    transition: 0.2s;
+}
+
+.btn-outro-valor:hover {
+    background: rgba(255, 255, 255, 0.75);
+    transform: translateY(-1px);
+}
+
+.botoes-rapidos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 10px;
+}
+
+.btn-agua-rapido {
+    min-height: 55px;
+
+    border: 1px solid rgba(30, 167, 198, 0.26);
+
+    border-radius: 12px;
+
+    background: rgba(30, 167, 198, 0.08);
+
+    color: #138eaa;
+
+    font-family: "Inter", sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.btn-agua-rapido span {
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.btn-agua-rapido:hover {
+    background: rgba(30, 167, 198, 0.15);
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   RESUMO SEMANAL
+   ========================================================= */
+
+.hidratacao-semanal {
+    margin-top: 15px;
+
+    padding: 25px 28px 22px;
+
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    border-radius: 18px;
+
+    background: rgba(238, 224, 211, 0.50);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.semanal-cabecalho {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+.semanal-cabecalho h2 {
+    margin-top: 5px;
+
+    color: #713819;
+
+    font-size: 20px;
+}
+
+.semanal-indicadores {
+    display: flex;
+
+    gap: 10px;
+}
+
+.indicador-semanal {
+    min-width: 120px;
+
+    padding: 10px 13px;
+
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.42);
+}
+
+.indicador-semanal span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #84908c;
+
+    font-size: 10px;
+}
+
+.indicador-semanal strong {
+    color: #713819;
+
+    font-size: 13px;
+}
+
+.grafico-container {
+    margin-top: 22px;
+
+    display: grid;
+    grid-template-columns: 58px 1fr;
+
+    gap: 8px;
+}
+
+.grafico-eixo-y {
+    height: 220px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 8px 0 19px;
+
+    color: #84908c;
+
+    font-size: 10px;
+}
+
+.grafico-area {
+    min-width: 0;
+}
+
+#graficoSemanal {
+    display: block;
+
+    width: 100%;
+    height: 220px;
+
+    overflow: visible;
+}
+
+.linha-grade {
+    stroke: rgba(124, 98, 82, 0.10);
+    stroke-width: 1;
+    stroke-dasharray: 6 8;
+}
+
+.area-grafico {
+    fill: url(#gradienteAgua);
+}
+
+.linha-grafico {
+    fill: none;
+
+    stroke: #1ea7c6;
+    stroke-width: 4;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    vector-effect: non-scaling-stroke;
+}
+
+.ponto-grafico {
+    fill: #f5ebe3;
+
+    stroke: #1ea7c6;
+    stroke-width: 3;
+
+    vector-effect: non-scaling-stroke;
+}
+
+.grafico-dias {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+
+    margin-top: -1px;
+}
+
+.grafico-dia {
+    text-align: center;
+}
+
+.grafico-dia strong {
+    display: block;
+
+    color: #713819;
+
+    font-size: 11px;
+}
+
+.grafico-dia span {
+    color: #84908c;
+
+    font-size: 10px;
+}
+
+/* =========================================================
+   REGISTROS
+   ========================================================= */
+
+.hidratacao-container {
+    margin-top: 15px;
+
+    min-height: 300px;
+
+    padding: 25px;
+
+    border-radius: 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.75);
+
+    background: rgba(238, 224, 211, 0.50);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.hidratacao-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+}
+
+.hidratacao-title h2 {
+    margin-top: 5px;
+
+    color: #713819;
+
+    font-size: 20px;
+}
+
+.hidratacao-title p {
+    margin-top: 5px;
+
+    color: #7b8984;
+
+    font-size: 12px;
+}
+
+.lista-hidratacao {
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+.dia-card {
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    border-radius: 15px;
+
+    background: rgba(255, 255, 255, 0.35);
+
+    transition: 0.2s;
+}
+
+.dia-card:hover {
+    background: rgba(255, 255, 255, 0.45);
+}
+
+.dia-card-topo {
+    display: grid;
+    grid-template-columns: 1fr auto;
+
+    gap: 20px;
+
+    padding: 18px 20px;
+}
+
+.dia-toggle {
+    border: none;
+
+    padding: 0;
+
+    background: transparent;
+
+    text-align: left;
+
+    cursor: pointer;
+}
+
+.dia-data {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    color: #713819;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.dia-data i {
+    color: #d86d25;
+}
+
+.dia-total {
+    margin-top: 8px;
+
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+
+    gap: 6px;
+}
+
+.dia-total strong {
+    color: #713819;
+
+    font-size: 20px;
+}
+
+.dia-total span {
+    color: #7b8984;
+
+    font-size: 11px;
+}
+
+.dia-meta {
+    margin-top: 9px;
+
+    color: #84908c;
+
+    font-size: 11px;
+}
+
+.dia-meta i {
+    margin-right: 5px;
+
+    color: #1ea7c6;
+}
+
+.dia-lateral {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 7px;
+}
+
+.dia-acoes {
+    display: flex;
+
+    gap: 7px;
+}
+
+.btn-editar-dia,
+.btn-excluir-dia {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 9px;
+
+    border: 1px solid rgba(255, 255, 255, 0.7);
+
+    background: rgba(255, 255, 255, 0.55);
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.btn-editar-dia {
+    color: #d86d25;
+}
+
+.btn-excluir-dia {
+    color: #996b5b;
+}
+
+.btn-editar-dia:hover {
+    background: #d86d25;
+    color: white;
+}
+
+.btn-excluir-dia:hover {
+    background: #9c5545;
+    color: white;
+}
+
+.chevron-dia {
+    margin-left: 8px;
+
+    color: #84908c;
+
+    transition: 0.2s;
+}
+
+.dia-card.aberto .chevron-dia {
+    transform: rotate(180deg);
+}
+
+/* detalhes fechados por padrão */
+
+.dia-detalhes {
+    display: none;
+
+    border-top: 1px solid rgba(124, 98, 82, 0.10);
+
+    padding: 15px 20px 18px;
+}
+
+.dia-card.aberto .dia-detalhes {
+    display: block;
+}
+
+.dia-detalhes-titulo {
+    margin-bottom: 11px;
+
+    color: #713819;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.lista-registros-dia {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.registro-agua {
+    display: grid;
+    grid-template-columns: 38px 1fr auto auto;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 10px 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: 11px;
+
+    background: rgba(255, 255, 255, 0.38);
+}
+
+.registro-agua-icone {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: rgba(30, 167, 198, 0.10);
+
+    color: #138eaa;
+}
+
+.registro-agua-hora {
+    color: #7b8984;
+
+    font-size: 12px;
+}
+
+.registro-agua-quantidade {
+    color: #713819;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.registro-agua-acoes {
+    display: flex;
+
+    gap: 6px;
+}
+
+.btn-registro-editar,
+.btn-registro-excluir {
+    width: 30px;
+    height: 30px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 0.50);
+
+    cursor: pointer;
+}
+
+.btn-registro-editar {
+    color: #d86d25;
+}
+
+.btn-registro-excluir {
+    color: #996b5b;
+}
+
+.btn-registro-editar:hover {
+    background: #d86d25;
+    color: white;
+}
+
+.btn-registro-excluir:hover {
+    background: #9c5545;
+    color: white;
+}
+
+/* =========================================================
+   ESTADO VAZIO
+   ========================================================= */
+
+.hidratacao-vazio {
+    min-height: 230px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    color: #83908b;
+}
+
+.hidratacao-vazio i {
+    margin-bottom: 15px;
+
+    color: #1ea7c6;
+
+    font-size: 34px;
+}
+
+.hidratacao-vazio h3 {
+    margin-bottom: 6px;
+
+    color: #713819;
+
+    font-size: 16px;
+}
+
+.hidratacao-vazio p {
+    max-width: 390px;
+
+    color: #83908b;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   MODAL
+   Mesma lógica visual usada em treinos.css
+   ========================================================= */
+
+.modal-overlay {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(45, 37, 31, 0.35);
+
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-hidratacao {
+    width: 100%;
+    max-width: 570px;
+
+    padding: 28px;
+
+    border-radius: 20px;
+
+    border: 1px solid rgba(255, 255, 255, 0.8);
+
+    background: rgba(242, 230, 219, 0.96);
+
+    box-shadow:
+        0 20px 60px rgba(68, 44, 28, 0.18);
+
+    animation: modalEntrada 0.2s ease;
+}
+
+@keyframes modalEntrada {
+
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+.modal-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    margin-bottom: 25px;
+}
+
+.modal-header h2 {
+    margin-top: 5px;
+
+    color: #713819;
+
+    font-size: 22px;
+}
+
+.modal-close {
+    width: 38px;
+    height: 38px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.7);
+
+    color: #713819;
+
+    cursor: pointer;
+
+    font-size: 16px;
+}
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    color: #69391f;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.input-wrapper {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+}
+
+.input-wrapper > i {
+    position: absolute;
+
+    left: 14px;
+
+    color: #9a8d84;
+
+    font-size: 14px;
+
+    pointer-events: none;
+}
+
+.input-wrapper input {
+    width: 100%;
+
+    height: 48px;
+
+    padding: 0 42px;
+
+    border:
+        1px solid
+        rgba(124, 98, 82, 0.20);
+
+    border-radius: 11px;
+
+    outline: none;
+
+    background:
+        rgba(255,255,255,.72);
+
+    color: #543626;
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    font-size: 13px;
+
+    transition: 0.2s;
+}
+
+.input-wrapper input:focus {
+    border-color: #df7225;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(223, 114, 37, 0.10);
+}
+
+.input-unit {
+    position: absolute;
+
+    right: 13px;
+
+    color: #95877f;
+
+    font-size: 11px;
+}
+
+.modal-info {
+    display: flex;
+
+    gap: 10px;
+
+    padding: 12px 14px;
+
+    border-radius: 10px;
+
+    background:
+        rgba(223, 114, 37, 0.08);
+
+    color: #8e613f;
+}
+
+.modal-info i {
+    margin-top: 2px;
+}
+
+.modal-info p {
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 25px;
+}
+
+.btn-cancelar,
+.btn-salvar {
+    border: none;
+
+    border-radius: 10px;
+
+    padding: 12px 18px;
+
+    font-family: "Inter", sans-serif;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.btn-cancelar {
+    background: rgba(255,255,255,.7);
+
+    color: #72584a;
+}
+
+.btn-salvar {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    background: #df7225;
+
+    color: white;
+}
+
+.btn-salvar:hover {
+    background: #c8621c;
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .hidratacao-header {
+        grid-template-columns: 1fr;
+    }
+
+    .hidratacao-hoje {
+        border-right: none;
+        border-bottom: 1px solid rgba(124, 98, 82, 0.10);
+    }
+
+}
+
+@media (max-width: 800px) {
+
+    .semanal-cabecalho {
+        flex-direction: column;
+    }
+
+    .semanal-indicadores {
+        width: 100%;
+    }
+
+    .indicador-semanal {
+        flex: 1;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .hidratacao-hoje {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .adicao-rapida-titulo {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .btn-outro-valor {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .botoes-rapidos {
+        grid-template-columns: 1fr;
+    }
+
+    .semanal-indicadores {
+        flex-direction: column;
+    }
+
+    .grafico-container {
+        grid-template-columns: 44px 1fr;
+    }
+
+    #graficoSemanal,
+    .grafico-eixo-y {
+        height: 185px;
+    }
+
+    .dia-card-topo {
+        gap: 12px;
+
+        padding: 16px;
+    }
+
+    .registro-agua {
+        grid-template-columns: 38px 1fr auto;
+    }
+
+    .registro-agua-quantidade {
+        grid-column: 2;
+    }
+
+    .registro-agua-acoes {
+        grid-column: 3;
+        grid-row: 1 / span 2;
+    }
+
+    .modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn-cancelar,
+    .btn-salvar {
+        width: 100%;
+        justify-content: center;
+    }
+
+}

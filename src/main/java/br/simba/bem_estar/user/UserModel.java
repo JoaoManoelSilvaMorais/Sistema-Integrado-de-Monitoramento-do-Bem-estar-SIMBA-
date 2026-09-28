@@ -1,11 +1,16 @@
+
 package br.simba.bem_estar.user;
 
 import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.simba.bem_estar.perfil.PerfilModel;
 import br.simba.bem_estar.registroAgua.RegistroAguaModel;
 import br.simba.bem_estar.registroExercicio.RegistroExercicioModel;
 import br.simba.bem_estar.registroSono.RegistroSonoModel;
+import br.simba.bem_estar.conquista.UsuarioConquista;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,43 +23,47 @@ import jakarta.persistence.OneToOne;
 @Entity(name = "tb_user")
 public class UserModel {
 
-    @Id 
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String username;
     private String email;
     private String password;
-    
-    //referencia o perfil do usuario
+
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "perfil_id",nullable = true)
+    @JoinColumn(name = "perfil_id", nullable = true)
     private PerfilModel perfil;
 
-    //referencia os registros de  sono do usuario
-    @JsonIgnore 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
     private List<RegistroSonoModel> registroSono;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "usuario")
-    private List<RegistroExercicioModel>registroExercicio;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
+    private List<RegistroExercicioModel> registroExercicio;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "usuario")
-    private List<RegistroAguaModel>registroAgua;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
+    private List<RegistroAguaModel> registroAgua;
 
-    // Versao antiga: a chave estrangeira era definida no lado inverso.
-    // @OneToMany(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "registrosono_id")
-    // private List<RegistroSonoModel> registroSono;
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
+    private List<UsuarioConquista> conquistas;
 
-
-    public UserModel(){
-
+    public UserModel() {
     }
 
-    public UserModel(Long id, String name, String username, String email, String password, PerfilModel perfil,
-            List<RegistroSonoModel> registroSono, List<RegistroExercicioModel> registroExercicio,
+    public UserModel(
+            Long id,
+            String name,
+            String username,
+            String email,
+            String password,
+            PerfilModel perfil,
+            List<RegistroSonoModel> registroSono,
+            List<RegistroExercicioModel> registroExercicio,
             List<RegistroAguaModel> registroAgua) {
+
         this.id = id;
         this.name = name;
         this.username = username;
@@ -138,8 +147,11 @@ public class UserModel {
         this.registroAgua = registroAgua;
     }
 
-    
+    public List<UsuarioConquista> getConquistas() {
+        return conquistas;
+    }
 
-    
-    
+    public void setConquistas(List<UsuarioConquista> conquistas) {
+        this.conquistas = conquistas;
+    }
 }

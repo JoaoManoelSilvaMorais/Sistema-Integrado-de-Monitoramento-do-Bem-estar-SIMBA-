@@ -39,29 +39,27 @@ flowchart LR
     %% Definição de Estilos
     classDef actorStyle fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#000;
     classDef usecaseStyle fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#000;
-    classDef systemStyle fill:#ffffff,stroke:#666,stroke-width:2px,stroke-dasharray: 5 5;
 
     %% Atores
     User((Usuário Final)):::actorStyle
-    Support((Suporte)):::actorStyle
 
     %% Sistema SIMBA
     subgraph SIMBA [Aplicação SIMBA]
         direction TB
         
-        UC1([Cadastrar Perfil e Autenticar]):::usecaseStyle
-        UC2([Registrar Hábitos e Rotinas]):::usecaseStyle
-        UC3([Inserir Dados Clínicos e Sutis]):::usecaseStyle
-        UC4([Configurar Lembretes e Alarmes]):::usecaseStyle
-        UC5([Visualizar Dashboards e Progresso]):::usecaseStyle
-        UC6([Acompanhar Conquistas e Streaks]):::usecaseStyle
-        UC7([Receber Interpretação e Alertas]):::usecaseStyle
-        
-        UC8([Prestar Suporte e Ouvidoria]):::usecaseStyle
-        UC9([Monitorar Usuários e Feedback]):::usecaseStyle
+        UC1([1. Cadastrar Perfil]):::usecaseStyle
+        UC2([2. Autenticar]):::usecaseStyle
+        UC3([3. Registrar Rotinas]):::usecaseStyle
+        UC4([4. Registrar Hábitos]):::usecaseStyle
+        UC5([5. Inserir Dados Clínicos e Sutis]):::usecaseStyle
+        UC6([6. Gerenciar Medicamentos]):::usecaseStyle
+        UC7([7. Configurar Lembretes e Alarmes]):::usecaseStyle
+        UC8([8. Visualizar Dashboards e Progresso]):::usecaseStyle
+        UC9([9. Acompanhar Conquistas e Streaks]):::usecaseStyle
+        UC10([10. Receber Alertas e Interpretações]):::usecaseStyle
     end
 
-    %% Relacionamentos do Usuário Final
+    %% Relacionamentos Principais do Usuário Final
     User --> UC1
     User --> UC2
     User --> UC3
@@ -69,10 +67,23 @@ flowchart LR
     User --> UC5
     User --> UC6
     User --> UC7
+    User --> UC8
+    User --> UC9
 
-    %% Relacionamentos do Suporte
-    Support -->|Ajuda e Orientação| UC8
-    Support -->|Administração| UC9
+    %% Relacionamentos <<include>> (Existem Fluxos para Autenticar)
+    UC1 -.->|«include»| UC2
+    UC3 -.->|«include»| UC2
+    UC4 -.->|«include»| UC2
+    UC5 -.->|«include»| UC2
+    UC6 -.->|«include»| UC2
+    UC7 -.->|«include»| UC2
+    UC8 -.->|«include»| UC2
+    UC9 -.->|«include»| UC2
+
+    %% Relacionamentos <<extend>> (Ações Opcionais)
+    UC7 -.->|«extend»| UC6
+    UC7 -.->|«extend»| UC3
+    UC10 -.->|«extend»| UC8
 ```
 
 ---

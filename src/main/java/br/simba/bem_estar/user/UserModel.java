@@ -10,7 +10,7 @@ import br.simba.bem_estar.registroAgua.RegistroAguaModel;
 import br.simba.bem_estar.registroExercicio.RegistroExercicioModel;
 import br.simba.bem_estar.registroSono.RegistroSonoModel;
 import br.simba.bem_estar.conquista.UsuarioConquista;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +30,7 @@ public class UserModel {
     private String name;
     private String username;
     private String email;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @OneToOne(fetch = FetchType.LAZY)

@@ -1,5 +1,6 @@
 const API_URL = "/lembretes";
 const token = sessionStorage.getItem("jwtToken");
+const lembretesNotificados = new Set();
 
 const form = document.getElementById("formLembrete");
 const tituloInput = document.getElementById("titulo");
@@ -36,31 +37,61 @@ function obterData(horario) {
 
 function formatarHorario(horario) {
     const data = obterData(horario);
-    if (!data) {
-        return "Horário inválido";
-    }
+    if (!data) return "Horário inválido";
 
     return data.toLocaleString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
+        day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit"
     });
 }
 
 function criarEstadoVazio(mensagem) {
     const estado = document.createElement("div");
     estado.className = "empty-state";
-
     const icone = document.createElement("i");
     icone.className = "fa-regular fa-bell";
-
     const texto = document.createElement("p");
     texto.textContent = mensagem;
-
     estado.append(icone, texto);
     return estado;
+}
+
+function exibirToast(lembrete) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.innerHTML = `
+        <div style="display: flex; align-items: flex-start; gap: 10px;">
+            <i class="fa-solid fa-bell" style="color: #f39c12; margin-top: 3px;"></i>
+            <div>
+                <strong style="display: block; font-size: 14px; color: #333; margin-bottom: 2px;">${lembrete.titulo}</strong>
+                <span style="font-size: 12px; color: #666;">${lembrete.mensagem || 'É hora do seu lembrete!'}</span>
+            </div>
+        </div>
+    `;
+    
+    container.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 6000);
+}
+
+function iniciarMonitoramentoLembretes(lembretes) {
+    setInterval(() => {
+        const agora = new Date();
+        lembretes.forEach(lembrete => {
+            const horaLembrete = new Date(lembrete.horario);
+            const diferenca = agora.getTime() - horaLembrete.getTime();
+            
+            if (diferenca >= 0 && diferenca <= 60000 && !lembretesNotificados.has(lembrete.id)) {
+                lembretesNotificados.add(lembrete.id);
+                exibirToast(lembrete);
+            }
+        });
+    }, 10000); 
 }
 
 function renderizarLembretes(lembretes) {
@@ -70,14 +101,40 @@ function renderizarLembretes(lembretes) {
         return primeiro - segundo;
     });
 
-    total.textContent = ordenados.length;
+    const futuros = ordenados.filter(l => (obterData(l.horario)?.getTime() ?? 0) >= Date.now());
+    
+    total.textContent = futuros.length;
     lista.replaceChildren();
 
-    const proximo = ordenados.find((lembrete) => {
-        const data = obterData(lembrete.horario);
-        return data && data.getTime() >= Date.now();
-    });
-    proximoHorario.textContent = proximo ? formatarHorario(proximo.horario).slice(-5) : "--:--";
+    const badge = document.getElementById('badge-notificacao');
+    const dropdownLista = document.getElementById('dropdown-lista');
+    if (dropdownLista) dropdownLista.innerHTML = '';
+    
+    if (futuros.length > 0) {
+        if (badge) {
+            badge.textContent = futuros.length;
+            badge.style.display = 'block';
+        }
+        
+        if (dropdownLista) {
+            futuros.forEach(lembrete => {
+                const div = document.createElement('div');
+                div.className = 'dropdown-item';
+                div.onclick = () => window.location.href = 'lembretes.html';
+                div.innerHTML = `
+                    <span class="dropdown-item-title"><span style="color: #e74c3c; margin-right: 6px;">●</span>${lembrete.titulo}</span>
+                    <span class="dropdown-item-time">${formatarHorario(lembrete.horario).slice(0, 16)}</span>
+                `;
+                dropdownLista.appendChild(div);
+            });
+        }
+        
+        proximoHorario.textContent = formatarHorario(futuros[0].horario).slice(-5);
+    } else {
+        if (badge) badge.style.display = 'none';
+        if (dropdownLista) dropdownLista.innerHTML = '<div class="dropdown-empty">Não tem novas notificações</div>';
+        proximoHorario.textContent = "--:--";
+    }
 
     if (ordenados.length === 0) {
         lista.appendChild(criarEstadoVazio("Nenhum lembrete cadastrado."));
@@ -117,6 +174,8 @@ function renderizarLembretes(lembretes) {
         item.append(horario, conteudo, excluir);
         lista.appendChild(item);
     });
+
+    iniciarMonitoramentoLembretes(lembretes);
 }
 
 async function carregarLembretes() {
@@ -128,9 +187,7 @@ async function carregarLembretes() {
             redirecionarParaLogin();
             return;
         }
-        if (!resposta.ok) {
-            throw new Error("Não foi possível carregar os lembretes.");
-        }
+        if (!resposta.ok) throw new Error("Não foi possível carregar os lembretes.");
 
         renderizarLembretes(await resposta.json());
         mostrarFeedback("");
@@ -141,9 +198,7 @@ async function carregarLembretes() {
 }
 
 async function excluirLembrete(id, botao) {
-    if (!window.confirm("Excluir este lembrete?")) {
-        return;
-    }
+    if (!window.confirm("Excluir este lembrete?")) return;
 
     botao.disabled = true;
     try {
@@ -155,9 +210,7 @@ async function excluirLembrete(id, botao) {
             redirecionarParaLogin();
             return;
         }
-        if (!resposta.ok) {
-            throw new Error("Não foi possível excluir o lembrete.");
-        }
+        if (!resposta.ok) throw new Error("Não foi possível excluir o lembrete.");
 
         mostrarFeedback("Lembrete excluído.");
         await carregarLembretes();
@@ -187,9 +240,7 @@ form.addEventListener("submit", async (evento) => {
             redirecionarParaLogin();
             return;
         }
-        if (!resposta.ok) {
-            throw new Error("Não foi possível salvar o lembrete.");
-        }
+        if (!resposta.ok) throw new Error("Não foi possível salvar o lembrete.");
 
         form.reset();
         mostrarFeedback("Lembrete adicionado.");
@@ -202,25 +253,46 @@ form.addEventListener("submit", async (evento) => {
 });
 
 atualizarButton.addEventListener("click", carregarLembretes);
-document.getElementById("sair").addEventListener("click", () => {
-    sessionStorage.removeItem("jwtToken");
-    sessionStorage.removeItem("usuarioLogado");
-});
+
+const btnSair = document.getElementById("sair");
+if (btnSair) {
+    btnSair.addEventListener("click", () => {
+        sessionStorage.removeItem("jwtToken");
+        sessionStorage.removeItem("usuarioLogado");
+    });
+}
+
+const btnNotificacao = document.getElementById('btnNotificacao');
+const dropdown = document.getElementById('dropdown-notificacoes');
+
+if (btnNotificacao && dropdown) {
+    btnNotificacao.addEventListener('click', (event) => {
+        event.stopPropagation();
+        dropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!dropdown.contains(event.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+}
 
 if (!token) {
     redirecionarParaLogin();
 } else {
-    document.getElementById("loginButton").style.display = "none";
+    const loginButton = document.getElementById("loginButton");
+    if (loginButton) loginButton.style.display = "none";
+    
     fetch("/users/me", { headers: { "Authorization": `Bearer ${token}` } })
         .then((resposta) => {
-            if (!resposta.ok) {
-                throw new Error("Sessão expirada.");
-            }
+            if (!resposta.ok) throw new Error("Sessão expirada.");
             return resposta.json();
         })
         .then((usuario) => {
             const nome = usuario.name || usuario.username || "U";
-            document.getElementById("avatarUsuario").textContent = nome.charAt(0).toUpperCase();
+            const avatar = document.getElementById("avatarUsuario");
+            if (avatar) avatar.textContent = nome.charAt(0).toUpperCase();
         })
         .catch(redirecionarParaLogin);
 

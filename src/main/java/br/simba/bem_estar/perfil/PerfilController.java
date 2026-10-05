@@ -1,50 +1,53 @@
 package br.simba.bem_estar.perfil;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PutMapping;
-
-
-
-@RestController 
+@RestController
 @RequestMapping("/perfil")
 public class PerfilController {
 
-    private final PerfilRepository perfilRepository;
+    private final PerfilService perfilService;
 
-    public PerfilController(PerfilRepository perfilRepository) {
-        this.perfilRepository = perfilRepository;
+    public PerfilController(PerfilService perfilService) {
+        this.perfilService = perfilService;
     }
 
-    @PostMapping("/")
-    public PerfilModel createPerfil(@RequestBody PerfilModel perfilModel){
-        return perfilRepository.save(perfilModel);
+    // CREATE (Criar perfil do usuário autenticado)
+    @PostMapping
+    public ResponseEntity<PerfilModel> createPerfil(
+            @RequestBody PerfilModel perfilModel,
+            Authentication authentication
+    ) {
+        String username = authentication.getName();
+        PerfilModel novoPerfil = perfilService.criarPerfil(perfilModel, username);
 
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoPerfil);
     }
-    
-    @GetMapping("/{id}")
-    public PerfilModel getPerflById(@PathVariable Long id){
 
-        return perfilRepository.findById(id).orElseThrow(()->new RuntimeException("Perfil não encrontrado"));
+    // READ (Buscar o próprio perfil sem expor IDs vulneráveis na URL)
+    @GetMapping("/me")
+    public ResponseEntity<PerfilModel> getPerfilLogado(
+            Authentication authentication
+    ) {
+        String username = authentication.getName();
+        PerfilModel perfil = perfilService.buscarPerfilDoUsuarioLogado(username);
+
+        return ResponseEntity.ok(perfil);
     }
 
-    @PutMapping("/{id}")
-    public PerfilModel updatePerfil(@PathVariable Long id, @RequestBody PerfilModel perfilAtualizado) {
+    // UPDATE (Atualizar o próprio perfil)
+    @PutMapping("/me")
+    public ResponseEntity<PerfilModel> updatePerfil(
+            @RequestBody PerfilModel perfilAtualizado,
+            Authentication authentication
+    ) {
+        String username = authentication.getName();
+        PerfilModel perfilAtual =
+                perfilService.atualizarPerfilDoUsuarioLogado(perfilAtualizado, username);
 
-        PerfilModel perfil = perfilRepository.findById(id)
-        .orElseThrow(()-> new RuntimeException("Perfil não encontrado"));
-
-        perfil.setAltura(perfilAtualizado.getAltura());
-        perfil.setIdade(perfilAtualizado.getIdade());
-        perfil.setPeso(perfilAtualizado.getPeso());
-    
-        
-
-        return perfilRepository.save(perfil);
+        return ResponseEntity.ok(perfilAtual);
     }
 }

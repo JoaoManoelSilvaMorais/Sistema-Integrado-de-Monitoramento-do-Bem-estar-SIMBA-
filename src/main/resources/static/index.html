@@ -108,42 +108,63 @@
 
             <section class="cards">
                 <article class="card welcome">
-                    <div>
+                    <div class="welcome-content">
                         <span class="label">BEM-VINDO AO SIMBA</span>
                         <h2>Cuide dos seus hábitos<br>todos os dias.</h2>
                         <p>Acompanhe sua rotina de bem-estar em um só lugar.</p>
+                        <div class="welcome-status" id="statusDia">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Carregando seu resumo...</span>
+                        </div>
                     </div>
                     <i class="fa-solid fa-leaf welcome-icon"></i>
                 </article>
 
-                <article class="card" id="cardHidratacao">
-                    <div class="card-top">
+                <article class="card metric-card hydration-card" id="cardHidratacao">
+                    <div class="metric-head">
                         <span class="icon"><i class="fa-solid fa-droplet"></i></span>
+                        <span class="metric-status" id="statusAgua">Hoje</span>
                     </div>
                     <span class="label">HIDRATAÇÃO</span>
                     <h2 id="resumoAgua">-- <small>L</small></h2>
-                    <p id="metaAgua">Total registrado hoje</p>
+                    <div class="progress-track" aria-label="Progresso de hidratação">
+                        <span id="barraAgua"></span>
+                    </div>
+                    <div class="metric-footer">
+                        <span id="metaAgua">Meta: 2,0 L</span>
+                        <strong id="percentualAgua">--%</strong>
+                    </div>
                 </article>
 
-                <article class="card" id="cardSono">
-                    <div class="card-top">
+                <article class="card metric-card sleep-card" id="cardSono">
+                    <div class="metric-head">
                         <span class="icon"><i class="fa-solid fa-moon"></i></span>
+                        <span class="metric-status" id="statusSono">Último registro</span>
                     </div>
                     <span class="label">SONO</span>
                     <h2 id="resumoSono">-- <small>horas</small></h2>
-                    <p>Último registro</p>
+                    <div class="sleep-quality" id="qualidadeSono">
+                        <span class="stars">☆☆☆☆☆</span>
+                        <span>Sem avaliação</span>
+                    </div>
+                    <p id="sonoDescricao">Registre uma noite para acompanhar sua qualidade.</p>
                 </article>
 
-                <article class="card" id="cardTreinos">
-                    <div class="card-top" >
+                <article class="card metric-card workout-card" id="cardTreinos">
+                    <div class="metric-head">
                         <span class="icon"><i class="fa-solid fa-dumbbell"></i></span>
+                        <span class="metric-status" id="statusTreinos">Hoje</span>
                     </div>
                     <span class="label">TREINOS</span>
-                    <h2 id="resumoTreinos">--</h2>
-                    <p>Treinos registrados</p>
+                    <h2 id="resumoTreinos">0 <small>hoje</small></h2>
+                    <div class="mini-stats">
+                        <span><i class="fa-regular fa-clock"></i> <strong id="tempoTreinosHoje">0 min</strong></span>
+                        <span><i class="fa-solid fa-fire"></i> <strong id="caloriasTreinosHoje">0 kcal</strong></span>
+                    </div>
+                    <p id="treinoDescricao">Nenhum treino registrado hoje.</p>
                 </article>
 
-                <article class="card large">
+                <article class="card large routine-card">
                     <div class="title-row">
                         <div>
                             <span class="label">ROTINA</span>
@@ -151,36 +172,48 @@
                         </div>
                         <a href="rotinas.html">Ver mais</a>
                     </div>
-                    <div class="empty-state" id="resumoRotina">
-                        <i class="fa-regular fa-calendar"></i>
-                        <p>Nenhuma atividade registrada.</p>
+                    <div class="routine-list" id="resumoRotina">
+                        <div class="dashboard-loading">
+                            <i class="fa-solid fa-spinner fa-spin"></i>
+                            <span>Carregando atividades...</span>
+                        </div>
                     </div>
                 </article>
 
-                <article class="card">
+                <article class="card progress-card">
                     <div class="title-row">
                         <div>
                             <span class="label">PROGRESSO</span>
-                            <h2>Resumo</h2>
+                            <h2>Seu ritmo</h2>
                         </div>
+                        <a href="progresso.html">Detalhes</a>
                     </div>
-                    <div class="empty-state small" id="resumoProgresso">
-                        <i class="fa-solid fa-chart-line"></i>
-                        <p>Seus dados aparecerão aqui.</p>
+                    <div class="progress-main">
+                        <div class="progress-ring" id="progressoRing">
+                            <strong id="progressoPercentual">--%</strong>
+                            <small>consistência</small>
+                        </div>
+                        <div class="progress-info">
+                            <div><span>Hidratação</span><strong id="progressoAgua">--</strong></div>
+                            <div><span>Treinos</span><strong id="progressoTreinos">--</strong></div>
+                            <div><span>Sono</span><strong id="progressoSono">--</strong></div>
+                        </div>
                     </div>
                 </article>
 
-                <article class="card large">
+                <article class="card large reminders-card">
                     <div class="title-row">
                         <div>
                             <span class="label">LEMBRETES</span>
-                            <h2>Notificações Recentes</h2>
+                            <h2>Próximos lembretes</h2>
                         </div>
                         <a href="lembretes.html">Ver mais</a>
                     </div>
-                    <div class="empty-state" id="resumoLembretes">
-                        <i class="fa-regular fa-bell"></i>
-                        <p>Nenhum lembrete cadastrado.</p>
+                    <div class="reminder-list" id="resumoLembretes">
+                        <div class="dashboard-loading">
+                            <i class="fa-solid fa-spinner fa-spin"></i>
+                            <span>Carregando lembretes...</span>
+                        </div>
                     </div>
                 </article>
             </section>
@@ -224,68 +257,261 @@
             return duracao;
         }
 
-        function renderizarResumo(usuario, agua, sono, treinos, lembretes, rotinas) {
-            const aguaHoje = agua.filter(registro => mesmoDia(registro.dataHora)).reduce((total, registro) => total + Number(registro.quantidadeMl || 0), 0);
-            document.getElementById('resumoAgua').innerHTML = `${(aguaHoje / 1000).toFixed(1)} <small>L</small>`;
+        const META_AGUA_ML = 2000;
+        const META_SONO_HORAS = 7;
 
-            const ultimoSono = [...sono].sort((a, b) => new Date(b.horaDormir) - new Date(a.horaDormir))[0];
-            const duracaoSono = ultimoSono && calcularDuracaoSono(ultimoSono);
-            document.getElementById('resumoSono').innerHTML = duracaoSono === null || duracaoSono === undefined ? '-- <small>horas</small>' : `${duracaoSono.toFixed(1)} <small>horas</small>`;
+        function escaparTexto(valor) {
+            return String(valor ?? '').replace(/[&<>"']/g, caractere => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+            }[caractere]));
+        }
 
-            document.getElementById('resumoTreinos').textContent = treinos.length;
+        function dataHojeISO() {
+            const agora = new Date();
+            return `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')}`;
+        }
 
+        function registrosDoDia(registros, campo) {
+            return registros.filter(registro => registro?.[campo] && mesmoDia(registro[campo]));
+        }
+
+        function formatarDuracao(minutos) {
+            const total = Math.max(0, Math.round(Number(minutos) || 0));
+            const horas = Math.floor(total / 60);
+            const mins = total % 60;
+            if (horas === 0) return `${mins} min`;
+            return `${horas}h ${String(mins).padStart(2, '0')}min`;
+        }
+
+        function calcularPercentual(valor, meta) {
+            if (!meta || !Number.isFinite(valor)) return 0;
+            return Math.min(100, Math.round((valor / meta) * 100));
+        }
+
+        function qualidadeSonoTexto(nota) {
+            const n = Number(nota);
+            if (!Number.isFinite(n)) return 'Sem avaliação';
+            if (n >= 4.5) return 'Excelente';
+            if (n >= 3.5) return 'Boa';
+            if (n >= 2.5) return 'Regular';
+            return 'Pode melhorar';
+        }
+
+        function estrelasSono(nota) {
+            const n = Math.max(0, Math.min(5, Math.round(Number(nota) || 0)));
+            return '★'.repeat(n) + '☆'.repeat(5 - n);
+        }
+
+        function ordenarMaisRecente(registros, campo) {
+            return [...registros].sort((a, b) =>
+                new Date(b?.[campo] || 0) - new Date(a?.[campo] || 0)
+            );
+        }
+
+        function atualizarCardAgua(agua) {
+            const hoje = registrosDoDia(agua, 'dataHora');
+            const totalMl = hoje.reduce((total, registro) => total + Number(registro.quantidadeMl || 0), 0);
+            const litros = totalMl / 1000;
+            const percentual = calcularPercentual(totalMl, META_AGUA_ML);
+
+            document.getElementById('resumoAgua').innerHTML = `${litros.toFixed(1)} <small>L</small>`;
+            document.getElementById('metaAgua').textContent = `Meta: ${(META_AGUA_ML / 1000).toFixed(1).replace('.', ',')} L`;
+            document.getElementById('percentualAgua').textContent = `${percentual}%`;
+            document.getElementById('barraAgua').style.width = `${percentual}%`;
+            document.getElementById('statusAgua').textContent = percentual >= 100 ? 'Meta atingida' : 'Hoje';
+
+            return { hoje, totalMl, litros, percentual };
+        }
+
+        function atualizarCardSono(sono) {
+            const ultimo = ordenarMaisRecente(sono, 'horaDormir')[0];
+            const duracao = ultimo ? calcularDuracaoSono(ultimo) : null;
+            const nota = ultimo?.notaSono;
+
+            if (duracao === null || duracao === undefined) {
+                document.getElementById('resumoSono').innerHTML = '-- <small>horas</small>';
+                document.getElementById('qualidadeSono').innerHTML = '<span class="stars">☆☆☆☆☆</span><span>Sem avaliação</span>';
+                document.getElementById('sonoDescricao').textContent = 'Registre uma noite para acompanhar sua qualidade.';
+                document.getElementById('statusSono').textContent = 'Sem registro';
+                return { ultimo: null, duracao: 0, nota: null };
+            }
+
+            const notaTexto = Number.isFinite(Number(nota)) ? `${Number(nota).toFixed(0)}/5` : 'Sem nota';
+            document.getElementById('resumoSono').innerHTML = `${duracao.toFixed(1)} <small>horas</small>`;
+            document.getElementById('qualidadeSono').innerHTML = `
+                <span class="stars">${estrelasSono(nota)}</span>
+                <span>${qualidadeSonoTexto(nota)}${Number.isFinite(Number(nota)) ? ` · ${notaTexto}` : ''}</span>
+            `;
+            document.getElementById('sonoDescricao').textContent =
+                duracao >= META_SONO_HORAS
+                    ? 'Duração dentro da recomendação.'
+                    : `Faltaram cerca de ${(META_SONO_HORAS - duracao).toFixed(1)}h para 7h.`;
+            document.getElementById('statusSono').textContent = duracao >= META_SONO_HORAS ? 'Boa duração' : 'Atenção';
+
+            return { ultimo, duracao, nota };
+        }
+
+        function atualizarCardTreinos(treinos) {
+            const hoje = registrosDoDia(treinos, 'dataHora');
+            const minutos = hoje.reduce((total, treino) => total + Number(treino.duracaominutos || 0), 0);
+            const calorias = hoje.reduce((total, treino) => total + Number(treino.gastoCaloricoExtimado || 0), 0);
+            const modalidades = [...new Set(hoje.map(t => t.modalidade).filter(Boolean))];
+
+            document.getElementById('resumoTreinos').innerHTML = `${hoje.length} <small>hoje</small>`;
+            document.getElementById('tempoTreinosHoje').textContent = formatarDuracao(minutos);
+            document.getElementById('caloriasTreinosHoje').textContent = `${Math.round(calorias)} kcal`;
+            document.getElementById('statusTreinos').textContent = hoje.length ? 'Registrado' : 'Hoje';
+            document.getElementById('treinoDescricao').textContent = hoje.length
+                ? modalidades.slice(0, 2).join(' · ') || 'Atividade registrada'
+                : 'Nenhum treino registrado hoje.';
+
+            return { hoje, minutos, calorias };
+        }
+
+        function atualizarRotina(aguaHoje, sonoInfo, treinosHoje) {
             const rotina = document.getElementById('resumoRotina');
             rotina.replaceChildren();
-            const rotinasAtivas = rotinas.filter(item => item.ativa);
-            if (rotinasAtivas.length === 0) {
-                const rotinaTexto = document.createElement('p');
-                rotinaTexto.textContent = rotinas.length
-                    ? 'Todas as suas rotinas estão inativas.'
-                    : 'Você ainda não cadastrou uma rotina.';
-                rotina.appendChild(rotinaTexto);
-                const rotinaLink = document.createElement('a');
-                rotinaLink.href = 'rotinas.html';
-                rotinaLink.textContent = rotinas.length ? 'Ativar uma rotina' : 'Criar minha primeira rotina';
-                rotina.appendChild(rotinaLink);
-            } else {
-                const rotinaTexto = document.createElement('p');
-                rotinaTexto.textContent = `${rotinasAtivas.length} rotina(s) ativa(s) para hoje.`;
-                rotina.appendChild(rotinaTexto);
-                rotinasAtivas.slice(0, 3).forEach(item => {
-                    const rotinaItem = document.createElement('p');
-                    rotinaItem.className = 'resumo-rotina-item';
-                    rotinaItem.textContent = item.nome;
-                    rotina.appendChild(rotinaItem);
+
+            const atividades = [];
+
+            if (aguaHoje.totalMl > 0) {
+                atividades.push({
+                    icon: 'fa-droplet',
+                    title: `${aguaHoje.litros.toFixed(1)} L de água`,
+                    detail: `${aguaHoje.hoje.length} registro(s) hoje`,
+                    status: aguaHoje.percentual >= 100 ? 'Meta atingida' : `${aguaHoje.percentual}% da meta`
                 });
-                if (rotinasAtivas.length > 3) {
-                    const maisRotinas = document.createElement('p');
-                    maisRotinas.className = 'resumo-rotina-item';
-                    maisRotinas.textContent = `+${rotinasAtivas.length - 3} outra(s)`;
-                    rotina.appendChild(maisRotinas);
-                }
             }
 
-            const progresso = document.getElementById('resumoProgresso');
-            progresso.replaceChildren();
-            const progressoTexto = document.createElement('p');
-            progressoTexto.textContent = `${(aguaHoje / 1000).toFixed(1)} L de água | ${treinos.length} treino(s) | ${rotinasAtivas.length} rotina(s) ativa(s) | ${lembretes.length} lembrete(s)`;
-            progresso.appendChild(progressoTexto);
+            if (treinosHoje.hoje.length > 0) {
+                atividades.push({
+                    icon: 'fa-dumbbell',
+                    title: `${treinosHoje.hoje.length} treino(s)`,
+                    detail: formatarDuracao(treinosHoje.minutos),
+                    status: `${Math.round(treinosHoje.calorias)} kcal`
+                });
+            }
 
+            if (sonoInfo.ultimo) {
+                atividades.push({
+                    icon: 'fa-moon',
+                    title: `${sonoInfo.duracao.toFixed(1)} h de sono`,
+                    detail: 'Última noite',
+                    status: Number.isFinite(Number(sonoInfo.nota)) ? `${Number(sonoInfo.nota)}/5` : 'Sem nota'
+                });
+            }
+
+            if (!atividades.length) {
+                rotina.innerHTML = `
+                    <div class="dashboard-empty">
+                        <i class="fa-regular fa-calendar"></i>
+                        <strong>Seu dia ainda está vazio</strong>
+                        <p>Registre água, sono ou treino para acompanhar sua rotina aqui.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            atividades.forEach(atividade => {
+                const item = document.createElement('div');
+                item.className = 'routine-item';
+                item.innerHTML = `
+                    <span class="routine-icon"><i class="fa-solid ${atividade.icon}"></i></span>
+                    <span class="routine-text">
+                        <strong>${escaparTexto(atividade.title)}</strong>
+                        <small>${escaparTexto(atividade.detail)}</small>
+                    </span>
+                    <span class="routine-status">${escaparTexto(atividade.status)}</span>
+                `;
+                rotina.appendChild(item);
+            });
+        }
+
+        function atualizarProgresso(agua, sono, treinos) {
+            const dias = [];
+            for (let i = 0; i < 7; i++) {
+                const data = new Date();
+                data.setHours(0, 0, 0, 0);
+                data.setDate(data.getDate() - i);
+                dias.push(data);
+            }
+
+            const diasComAgua = dias.filter(dia =>
+                agua.some(r => mesmoDia(r.dataHora, dia) && Number(r.quantidadeMl || 0) > 0)
+            ).length;
+
+            const diasComTreino = dias.filter(dia =>
+                treinos.some(r => mesmoDia(r.dataHora, dia))
+            ).length;
+
+            const diasComSono = dias.filter(dia =>
+                sono.some(r => mesmoDia(r.horaDormir, dia))
+            ).length;
+
+            const consistencia = Math.round(((diasComAgua + diasComTreino + diasComSono) / 21) * 100);
+
+            document.getElementById('progressoPercentual').textContent = `${consistencia}%`;
+            document.getElementById('progressoRing').style.setProperty('--progresso', `${consistencia * 3.6}deg`);
+            document.getElementById('progressoAgua').textContent = `${diasComAgua}/7`;
+            document.getElementById('progressoTreinos').textContent = `${diasComTreino}/7`;
+            document.getElementById('progressoSono').textContent = `${diasComSono}/7`;
+
+            return consistencia;
+        }
+
+        function atualizarLembretes(lembretes) {
             const resumo = document.getElementById('resumoLembretes');
-            const futuros = lembretes.filter(lembrete => new Date(lembrete.horario) >= new Date()).sort((a, b) => new Date(a.horario) - new Date(b.horario)).slice(0, 3);
+            const agora = new Date();
+            const futuros = lembretes
+                .filter(lembrete => new Date(lembrete.horario) >= agora)
+                .sort((a, b) => new Date(a.horario) - new Date(b.horario))
+                .slice(0, 3);
+
             resumo.replaceChildren();
-            if (futuros.length === 0) {
-                const texto = document.createElement('p');
-                texto.textContent = 'Você não tem novos lembretes.';
-                resumo.appendChild(texto);
-            } else {
-                futuros.forEach(lembrete => {
-                    const item = document.createElement('p');
-                    item.innerHTML = `<span style="color: #e74c3c; margin-right: 5px;">●</span> <strong>${formatarData(lembrete.horario)}</strong> - ${lembrete.titulo}`;
-                    item.style.marginBottom = "8px";
-                    resumo.appendChild(item);
-                });
+
+            if (!futuros.length) {
+                resumo.innerHTML = `
+                    <div class="dashboard-empty">
+                        <i class="fa-regular fa-bell"></i>
+                        <strong>Tudo em dia</strong>
+                        <p>Nenhum lembrete futuro cadastrado.</p>
+                    </div>
+                `;
+                return;
             }
+
+            futuros.forEach((lembrete, index) => {
+                const item = document.createElement('div');
+                item.className = 'reminder-item';
+                item.innerHTML = `
+                    <span class="reminder-time">${index === 0 ? 'Próximo' : formatarData(lembrete.horario)}</span>
+                    <span class="reminder-content">
+                        <strong>${escaparTexto(lembrete.titulo || 'Lembrete')}</strong>
+                        <small>${index === 0 ? `${formatarData(lembrete.horario)}${lembrete.mensagem ? ` · ${escaparTexto(lembrete.mensagem)}` : ''}` : escaparTexto(lembrete.mensagem || 'Lembrete programado')}</small>
+                    </span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                `;
+                item.addEventListener('click', () => window.location.href = 'lembretes.html');
+                resumo.appendChild(item);
+            });
+        }
+
+        function renderizarResumo(usuario, agua, sono, treinos, lembretes) {
+            const aguaHoje = atualizarCardAgua(agua);
+            const sonoInfo = atualizarCardSono(sono);
+            const treinosHoje = atualizarCardTreinos(treinos);
+
+            atualizarRotina(aguaHoje, sonoInfo, treinosHoje);
+            const consistencia = atualizarProgresso(agua, sono, treinos);
+            atualizarLembretes(lembretes);
+
+            const status = document.getElementById('statusDia');
+            const totalRegistrosHoje = aguaHoje.hoje.length + treinosHoje.hoje.length +
+                sono.filter(r => mesmoDia(r.horaDormir)).length;
+
+            status.innerHTML = totalRegistrosHoje
+                ? `<i class="fa-solid fa-circle-check"></i><span>${totalRegistrosHoje} registro(s) hoje · ${consistencia}% de consistência</span>`
+                : `<i class="fa-solid fa-circle-info"></i><span>Comece registrando um hábito hoje.</span>`;
         }
 
         function exibirToast(lembrete) {
@@ -359,7 +585,7 @@
                                 div.className = 'dropdown-item';
                                 div.onclick = () => window.location.href = 'lembretes.html';
                                 div.innerHTML = `
-                                    <span class="dropdown-item-title"><span style="color: #e74c3c; margin-right: 6px;">●</span>${lembrete.titulo}</span>
+                                    <span class="dropdown-item-title"><span style="color: #e74c3c; margin-right: 6px;">●</span>${escaparTexto(lembrete.titulo)}</span>
                                     <span class="dropdown-item-time">${formatarData(lembrete.horario)}</span>
                                 `;
                                 dropdownLista.appendChild(div);

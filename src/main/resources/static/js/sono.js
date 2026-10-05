@@ -149,6 +149,9 @@ async function carregarUsuario() {
 
 }
 
+const tipoPlanejamentoBotoes =
+    document.querySelectorAll(".tipo-planejamento-btn");
+
 const horaPlanejada =
     document.getElementById("horaPlanejada");
 
@@ -158,6 +161,52 @@ const btnCalcularSono =
 const resultadoPlanejador =
     document.getElementById("resultadoPlanejador");
 
+const tituloPlanejadorSono =
+    document.getElementById("tituloPlanejadorSono");
+
+const descricaoPlanejadorSono =
+    document.getElementById("descricaoPlanejadorSono");
+
+const tituloResultadoPlanejador =
+    document.getElementById("tituloResultadoPlanejador");
+
+const iconeHoraPlanejada =
+    document.getElementById("iconeHoraPlanejada");
+
+const avisoPlanejador =
+    document.getElementById("avisoPlanejador");
+
+let modoPlanejamento = "acordar";
+
+
+/* =====================================
+   PLANEJADOR DE SONO
+   ===================================== */
+
+
+tipoPlanejamentoBotoes.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        modoPlanejamento =
+            button.dataset.modo;
+
+        tipoPlanejamentoBotoes.forEach(item => {
+            item.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        atualizarModoPlanejamento();
+
+        resultadoPlanejador.classList.remove("active");
+
+        horaPlanejada.focus();
+
+    });
+
+});
+
 
 btnCalcularSono.addEventListener(
     "click",
@@ -165,13 +214,95 @@ btnCalcularSono.addEventListener(
 );
 
 
+function atualizarModoPlanejamento() {
+
+    if (modoPlanejamento === "dormir") {
+
+        tituloPlanejadorSono.textContent =
+            "Que horas você quer dormir?";
+
+        descricaoPlanejadorSono.textContent =
+            "Escolha seu horário de dormir e descubra os melhores horários para acordar após completar ciclos de sono.";
+
+        iconeHoraPlanejada.className =
+            "fa-solid fa-moon";
+
+        iconeHoraPlanejada.style.color = "";
+
+        horaPlanejada.setAttribute(
+            "aria-label",
+            "Horário desejado para dormir"
+        );
+
+        btnCalcularSono.innerHTML =
+            '<i class="fa-solid fa-calculator"></i> Calcular horários de acordar';
+
+        tituloResultadoPlanejador.textContent =
+            "Horários sugeridos para acordar";
+
+        document.getElementById("duracao5Ciclos").textContent =
+            "cerca de 7h30 de sono";
+
+        document.getElementById("duracao6Ciclos").textContent =
+            "cerca de 9h de sono";
+
+        document.getElementById("duracao7Ciclos").textContent =
+            "cerca de 10h30 de sono";
+
+        avisoPlanejador.textContent =
+            "Os horários são estimativas baseadas em ciclos médios de aproximadamente 90 minutos. O cálculo considera cerca de 15 minutos para você adormecer antes do primeiro ciclo.";
+
+        return;
+
+    }
+
+
+    tituloPlanejadorSono.textContent =
+        "Que horas você precisa acordar?";
+
+    descricaoPlanejadorSono.textContent =
+        "Escolha seu horário de acordar e descubra quando seria interessante ir dormir para completar ciclos de sono.";
+
+    iconeHoraPlanejada.className =
+        "fa-regular fa-sun";
+
+    horaPlanejada.setAttribute(
+        "aria-label",
+        "Horário desejado para acordar"
+    );
+
+    btnCalcularSono.innerHTML =
+        '<i class="fa-solid fa-calculator"></i> Calcular horários de dormir';
+
+    tituloResultadoPlanejador.textContent =
+        "Horários sugeridos para dormir";
+
+    document.getElementById("duracao5Ciclos").textContent =
+        "cerca de 7h30 de sono";
+
+    document.getElementById("duracao6Ciclos").textContent =
+        "cerca de 9h de sono";
+
+    document.getElementById("duracao7Ciclos").textContent =
+        "cerca de 10h30 de sono";
+
+    avisoPlanejador.textContent =
+        "Os horários são estimativas baseadas em ciclos médios de aproximadamente 90 minutos. O cálculo considera cerca de 15 minutos para você adormecer.";
+
+}
+
+
 function calcularHorariosSono() {
 
     if (!horaPlanejada.value) {
 
         alert(
-            "Informe o horário em que pretende dormir."
+            modoPlanejamento === "acordar"
+                ? "Informe o horário em que deseja acordar."
+                : "Informe o horário em que deseja dormir."
         );
+
+        horaPlanejada.focus();
 
         return;
 
@@ -195,36 +326,25 @@ function calcularHorariosSono() {
         0
     );
 
-    horarioBase.setMinutes(
-        horarioBase.getMinutes() + 15
-    );
 
+    [5, 6, 7].forEach(ciclos => {
 
-    document
-        .getElementById("horario5Ciclos")
-        .textContent =
-            calcularCiclo(
-                horarioBase,
-                5
-            );
+        const resultado =
+            modoPlanejamento === "acordar"
+                ? calcularHorarioDormir(
+                    horarioBase,
+                    ciclos
+                )
+                : calcularHorarioAcordar(
+                    horarioBase,
+                    ciclos
+                );
 
+        document
+            .getElementById(`horario${ciclos}Ciclos`)
+            .textContent = resultado;
 
-    document
-        .getElementById("horario6Ciclos")
-        .textContent =
-            calcularCiclo(
-                horarioBase,
-                6
-            );
-
-
-    document
-        .getElementById("horario7Ciclos")
-        .textContent =
-            calcularCiclo(
-                horarioBase,
-                7
-            );
+    });
 
 
     resultadoPlanejador
@@ -234,34 +354,67 @@ function calcularHorariosSono() {
 }
 
 
-function calcularCiclo(
-    horarioInicial,
+function calcularHorarioDormir(
+    horarioAcordar,
     ciclos
 ) {
 
     const data =
         new Date(
-            horarioInicial.getTime()
+            horarioAcordar.getTime()
         );
 
+
     data.setMinutes(
-
-        data.getMinutes() +
-        ciclos * 90
-
+        data.getMinutes() -
+        (ciclos * 90) -
+        15
     );
 
 
-    return data
-        .toLocaleTimeString(
-            "pt-BR",
-            {
-                hour: "2-digit",
-                minute: "2-digit"
-            }
-        );
+    return formatarHorario(data);
 
 }
+
+
+function calcularHorarioAcordar(
+    horarioDormir,
+    ciclos
+) {
+
+    const data =
+        new Date(
+            horarioDormir.getTime()
+        );
+
+
+    data.setMinutes(
+        data.getMinutes() +
+        15 +
+        (ciclos * 90)
+    );
+
+
+    return formatarHorario(data);
+
+}
+
+
+function formatarHorario(data) {
+
+    return data.toLocaleTimeString(
+        "pt-BR",
+        {
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+
+}
+
+
+atualizarModoPlanejamento();
+
 
 function abrirModal() {
 

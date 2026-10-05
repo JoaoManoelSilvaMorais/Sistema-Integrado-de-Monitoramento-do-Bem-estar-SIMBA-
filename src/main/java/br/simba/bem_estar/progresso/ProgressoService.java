@@ -159,7 +159,7 @@ public class ProgressoService {
                             registro.getNotaSono() != null
                         )
                         .mapToInt(
-                            RegistroSonoModel::getNotaSono
+                            registro -> registro.getNotaSono()
                         )
                         .average()
                         .orElse(0);
@@ -242,7 +242,7 @@ public class ProgressoService {
                                 .toLocalDate(),
 
                         Collectors.summingDouble(
-                            RegistroAguaModel::getQuantidadeMl
+                            registro -> registro.getQuantidadeMl()
                         )
                     )
                 );

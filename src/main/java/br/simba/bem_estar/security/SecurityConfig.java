@@ -45,7 +45,6 @@ public class SecurityConfig {
                     "/perfil.html",
                     "/lembretes.html",
                     "/hidratacao.html",
-                    "/conquistas.html",
                     "/img/**",
                     "/css/**",
                     "/js/**",

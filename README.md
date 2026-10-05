@@ -18,7 +18,7 @@ O foco do SIMBA é oferecer conveniência, combatendo o "piloto automático" di�
 ## Objetivos Principais
 - **Centralização:** Reunir diferentes ferramentas de monitoramento de saúde em um único lugar.
 - **Rastreamento de Hábitos:** Registrar sono, consumo de água, alimentação e atividades físicas de forma simplificada.
-- **Engajamento e Prevenção:** Sistema de lembretes (ex: medicamentos), streaks (ofensivas), conquistas e orientações preditivas baseadas na rotina do usuário.
+- **Engajamento e Prevenção:** Sistema de lembretes (ex: medicamentos), streaks (ofensivas) e orientações preditivas baseadas na rotina do usuário.
 - **Interpretação Acessível:** Traduzir dados fisiológicos para uma linguagem simples e clara para usuários leigos.
 
 ---
@@ -55,7 +55,6 @@ flowchart LR
         UC6([6. Gerenciar Medicamentos]):::usecaseStyle
         UC7([7. Configurar Lembretes e Alarmes]):::usecaseStyle
         UC8([8. Visualizar Dashboards e Progresso]):::usecaseStyle
-        UC9([9. Acompanhar Conquistas e Streaks]):::usecaseStyle
         UC10([10. Receber Alertas e Interpretações]):::usecaseStyle
     end
 
@@ -68,7 +67,6 @@ flowchart LR
     User --> UC6
     User --> UC7
     User --> UC8
-    User --> UC9
 
     %% Relacionamentos <<include>> (Existem Fluxos para Autenticar)
     UC1 -.->|«include»| UC2
@@ -78,7 +76,6 @@ flowchart LR
     UC6 -.->|«include»| UC2
     UC7 -.->|«include»| UC2
     UC8 -.->|«include»| UC2
-    UC9 -.->|«include»| UC2
 
     %% Relacionamentos <<extend>> (Ações Opcionais)
     UC7 -.->|«extend»| UC6
@@ -99,138 +96,69 @@ classDiagram
 
     class UserModel {
         <<Entity>>
-        +UUID id
-        +String nome
+        +Long id
+        +String name
+        +String username
         +String email
-        +String senha
-        +Date dataCadastro
+        +String password
         +PerfilModel perfil
-        +List~RegistroSono~ registrosSono
-        +List~RegistroAgua~ registrosAgua
-        +List~RegistroAlimentacao~ registrosAlimentacao
-        +List~RegistroExercicio~ registrosExercicio
-        +List~DadoClinico~ dadosClinicos
-        +List~SinalCorporal~ sinaisCorporais
-        +List~Medicamento~ medicamentos
-        +List~Rotina~ rotinas
-        +List~UsuarioConquista~ conquistas
+        +List~RegistroSonoModel~ registroSono
+        +List~RegistroAguaModel~ registroAgua
+        +List~RegistroExercicioModel~ registroExercicio
     }
 
     class PerfilModel {
         <<Entity>>
-        +UUID id
-        +Date dataNascimento
-        +float pesoAtual
+        +Long id
+        +double peso
         +float altura
-        +int streakDias
+        +Integer idade
+        +Integer streak
         +UserModel usuario
     }
 
-    class RegistroSono {
+    class RegistroSonoModel {
         <<Entity>>
-        +UUID id
-        +DateTime horaDormir
-        +DateTime horaAcordar
-        +int tempoRemMinutos
-        +int tempoProfundoMinutos
+        +Long id
+        +LocalDateTime horaDormir
+        +LocalDateTime horaAcordar
+        +Integer notaSono
         +UserModel usuario
     }
 
-    class RegistroAgua {
+    class RegistroAguaModel {
         <<Entity>>
-        +UUID id
-        +int quantidadeMl
-        +DateTime dataHora
+        +Long id
+        +double quantidadeMl
+        +LocalDateTime dataHora
         +UserModel usuario
     }
 
-    class RegistroAlimentacao {
+    class RegistroExercicioModel {
         <<Entity>>
-        +UUID id
-        +String descricaoRefeicao
-        +DateTime dataHora
-        +UserModel usuario
-    }
-
-    class RegistroExercicio {
-        <<Entity>>
-        +UUID id
+        +Long id
         +String modalidade
-        +int duracaoMinutos
-        +float gastoCaloricoEstimado
-        +DateTime dataHora
+        +Integer duracaominutos
+        +float gastoCaloricoExtimado
+        +LocalDateTime dataHora
         +UserModel usuario
     }
 
-    class DadoClinico {
+    class LembreteModel {
         <<Entity>>
-        +UUID id
-        +String pressaoArterial
-        +int frequenciaCardiaca
-        +float pesoMedido
-        +DateTime dataMedicao
+        +Long id
+        +String titulo
+        +String mensagem
+        +LocalDateTime horario
         +UserModel usuario
-    }
-
-    class SinalCorporal {
-        <<Entity>>
-        +UUID id
-        +String tipoSinal
-        +String intensidade
-        +String humor
-        +DateTime dataRegistro
-        +UserModel usuario
-    }
-
-    class Medicamento {
-        <<Entity>>
-        +UUID id
-        +String nome
-        +String dosagem
-        +Time horarioLembrete
-        +UserModel usuario
-    }
-
-    class Rotina {
-        <<Entity>>
-        +UUID id
-        +String nome
-        +String descricao
-        +boolean ativa
-        +UserModel usuario
-    }
-
-    class Conquista {
-        <<Entity>>
-        +UUID id
-        +String nome
-        +String descricao
-        +int metaNecessaria
-        +List~UsuarioConquista~ usuariosConquistas
-    }
-
-    class UsuarioConquista {
-        <<Entity>>
-        +UUID id
-        +int progressoAtual
-        +boolean concluida
-        +DateTime dataConclusao
-        +UserModel usuario
-        +Conquista conquista
     }
 
     %% Relacionamentos JPA (Spring Boot)
     UserModel "1" -- "1" PerfilModel : @OneToOne
-    UserModel "1" -- "*" RegistroSono : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" RegistroAgua : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" RegistroAlimentacao : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" RegistroExercicio : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" DadoClinico : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" SinalCorporal : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" Medicamento : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" Rotina : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" UsuarioConquista : @OneToMany / @ManyToOne
-    Conquista "1" -- "*" UsuarioConquista : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" RegistroSonoModel : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" RegistroAguaModel : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" RegistroExercicioModel : @OneToMany / @ManyToOne
+    LembreteModel "*" --> "1" UserModel : @ManyToOne
 ```
 
 ---
@@ -240,7 +168,7 @@ classDiagram
 - Histórico de hidratação e registro simplificado de alimentação.
 - Cronômetro de sono e cálculo de déficit de sono (descanso vs REM).
 - Catálogo de exercícios, registro de treinos e estimativa de gasto calórico.
-- Dashboard de progresso diário com sistema de ofensivas (streaks) e conquistas.
+- Dashboard de progresso diário com sistema de ofensivas (streaks).
 - Lembretes configuráveis e notificações médicas/preventivas.
 - Inserção de dados vitais (pressão arterial, frequência cardíaca, peso).
 

@@ -1,4 +1,4 @@
-package br.simba.bem_estar.Lembrete;
+package br.simba.bem_estar.lembrete;
 
 import br.simba.bem_estar.user.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;

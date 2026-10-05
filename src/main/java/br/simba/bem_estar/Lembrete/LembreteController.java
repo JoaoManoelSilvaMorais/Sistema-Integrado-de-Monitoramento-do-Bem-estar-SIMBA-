@@ -13,7 +13,6 @@ import java.util.List;
 public class LembreteController {
 
     private final LembreteRepository lembreteRepository;
-
     private final UserRepository userRepository;
 
     LembreteController(LembreteRepository lembreteRepository, UserRepository userRepository) {
@@ -21,7 +20,6 @@ public class LembreteController {
         this.userRepository = userRepository;
     }
 
-    // CREATE (Criar)
     @PostMapping
     public ResponseEntity<LembreteModel> criar(@RequestBody LembreteModel lembrete, Authentication authentication) {
         String username = authentication.getName();
@@ -32,7 +30,6 @@ public class LembreteController {
         return ResponseEntity.ok(novoLembrete);
     }
 
-    // READ (Listar do utilizador logado)
     @GetMapping
     public ResponseEntity<List<LembreteModel>> listar(Authentication authentication) {
         String username = authentication.getName();
@@ -42,12 +39,10 @@ public class LembreteController {
         return ResponseEntity.ok(lembretes);
     }
 
-    // DELETE (Apagar)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id, Authentication authentication) {
         LembreteModel lembrete = lembreteRepository.findById(id).orElseThrow();
         
-        // Validação simples para garantir que o lembrete pertence ao utilizador logado
         String username = authentication.getName();
         if (!lembrete.getUsuario().getUsername().equals(username)) {
             return ResponseEntity.status(403).build();

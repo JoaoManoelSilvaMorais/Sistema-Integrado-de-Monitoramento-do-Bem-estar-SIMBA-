@@ -4,32 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SIMBA - Lembretes</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet"
-    >
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    >
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/novas-telas.css">
+    <style>
+        .user { position: relative; }
+        .notificacoes-dropdown {
+            display: none; position: absolute; top: 45px; right: 0; width: 300px;
+            background: #ffffff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            z-index: 1000; border: 1px solid #eaeaea; overflow: hidden;
+        }
+        .notificacoes-dropdown.show { display: block; }
+        .dropdown-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid #eaeaea; background: #fafafa; }
+        .dropdown-header h3 { margin: 0; font-size: 14px; color: #333; }
+        .dropdown-header a { font-size: 12px; color: #f39c12; text-decoration: none; font-weight: 600; }
+        .dropdown-body { max-height: 280px; overflow-y: auto; }
+        .dropdown-item { padding: 12px 15px; border-bottom: 1px solid #f1f1f1; display: flex; flex-direction: column; transition: background 0.2s; cursor: pointer; }
+        .dropdown-item:hover { background: #f9f9f9; }
+        .dropdown-item-title { font-weight: 600; font-size: 13px; color: #333; margin-bottom: 4px; }
+        .dropdown-item-time { font-size: 11px; color: #888; }
+        .dropdown-empty { padding: 20px; text-align: center; color: #888; font-size: 13px; }
+
+        .toast-container {
+            position: absolute;
+            top: 45px;
+            right: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1001;
+        }
+        .toast-notification {
+            background: #ffffff;
+            border-left: 4px solid #f39c12;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 12px 15px;
+            border-radius: 4px;
+            width: 280px;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    </style>
 </head>
 <body>
     <div class="layout">
         <aside class="sidebar" id="sidebar">
             <div class="logo">
                 <img src="img/LeaoLogoPNG.png" alt="SIMBA">
-                <img
-                    src="img/NomeLogoPNG.png"
-                    alt="SIMBA"
-                    class="logo-name"
-                >
+                <img src="img/NomeLogoPNG.png" alt="SIMBA" class="logo-name">
             </div>
-
             <nav>
                 <a href="index.html">
                     <i class="fa-solid fa-house"></i> Dashboard
@@ -56,7 +87,6 @@
                     <i class="fa-solid fa-trophy"></i> Conquistas
                 </a>
             </nav>
-
             <div class="bottom-menu">
                 <a href="perfil.html">
                     <i class="fa-solid fa-user"></i> Meu perfil
@@ -72,17 +102,30 @@
                 <button class="menu-button" id="menuButton">
                     <i class="fa-solid fa-bars"></i>
                 </button>
-
                 <div>
                     <span class="label">ORGANIZAÇÃO</span>
                     <h1>Meus lembretes</h1>
                     <p>Pequenos lembretes para cuidar de você.</p>
                 </div>
-
+                
                 <div class="user">
-                    <button class="notification">
+                    <button class="notification" id="btnNotificacao" style="position: relative; cursor: pointer; border: none; background: none;">
                         <i class="fa-regular fa-bell"></i>
+                        <span id="badge-notificacao" class="badge" style="display: none; position: absolute; top: -5px; right: -5px; background: #e74c3c; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold;">0</span>
                     </button>
+                    
+                    <div id="toast-container" class="toast-container"></div>
+
+                    <div id="dropdown-notificacoes" class="notificacoes-dropdown">
+                        <div class="dropdown-header">
+                            <h3>Notificações</h3>
+                            <a href="lembretes.html">Ver todas</a>
+                        </div>
+                        <div class="dropdown-body" id="dropdown-lista">
+                            <div class="dropdown-empty">A carregar...</div>
+                        </div>
+                    </div>
+                    
                     <div class="avatar" id="avatarUsuario">U</div>
                     <a class="login-button" id="loginButton" href="entrar.html">
                         Entrar
@@ -102,7 +145,6 @@
                             <p>lembretes ativos</p>
                         </div>
                     </article>
-
                     <article class="card summary-card">
                         <span class="summary-icon">
                             <i class="fa-regular fa-calendar-check"></i>
@@ -122,42 +164,24 @@
                             <h2>Adicionar lembrete</h2>
                         </div>
                     </div>
-
                     <form id="formLembrete" class="reminder-form">
                         <label>
                             Título
-                            <input
-                                id="titulo"
-                                maxlength="100"
-                                required
-                                placeholder="Ex.: Beber água"
-                            >
+                            <input id="titulo" maxlength="100" required placeholder="Ex.: Beber água">
                         </label>
-
                         <label>
                             Mensagem
-                            <input
-                                id="mensagem"
-                                maxlength="250"
-                                placeholder="Ex.: Faça uma pausa e hidrate-se"
-                            >
+                            <input id="mensagem" maxlength="250" placeholder="Ex.: Faça uma pausa e hidrate-se">
                         </label>
-
                         <label>
                             Data e horário
-                            <input
-                                id="horario"
-                                type="datetime-local"
-                                required
-                            >
+                            <input id="horario" type="datetime-local" required>
                         </label>
-
                         <button class="primary-button" type="submit">
                             <i class="fa-solid fa-plus"></i>
                             Adicionar lembrete
                         </button>
                     </form>
-
                     <p class="feedback" id="feedback" aria-live="polite"></p>
                 </div>
 
@@ -167,13 +191,11 @@
                             <span class="label">ACOMPANHAMENTO</span>
                             <h2>Seus lembretes</h2>
                         </div>
-
                         <button class="refresh-button" id="atualizar">
                             <i class="fa-solid fa-rotate"></i>
                             Atualizar
                         </button>
                     </div>
-
                     <div id="listaLembretes" class="reminder-list">
                         <div class="empty-state">
                             <i class="fa-regular fa-bell"></i>

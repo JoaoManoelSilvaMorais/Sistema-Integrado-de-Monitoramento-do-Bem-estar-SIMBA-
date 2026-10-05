@@ -9,8 +9,8 @@ import br.simba.bem_estar.perfil.PerfilModel;
 import br.simba.bem_estar.registroAgua.RegistroAguaModel;
 import br.simba.bem_estar.registroExercicio.RegistroExercicioModel;
 import br.simba.bem_estar.registroSono.RegistroSonoModel;
-import br.simba.bem_estar.conquista.UsuarioConquista;
-
+import br.simba.bem_estar.rotina.RotinaModel;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +30,7 @@ public class UserModel {
     private String name;
     private String username;
     private String email;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -48,7 +49,7 @@ public class UserModel {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
-    private List<UsuarioConquista> conquistas;
+    private List<RotinaModel> rotinas;
 
     public UserModel() {
     }
@@ -147,11 +148,12 @@ public class UserModel {
         this.registroAgua = registroAgua;
     }
 
-    public List<UsuarioConquista> getConquistas() {
-        return conquistas;
+    public List<RotinaModel> getRotinas() {
+        return rotinas;
     }
 
-    public void setConquistas(List<UsuarioConquista> conquistas) {
-        this.conquistas = conquistas;
+    public void setRotinas(List<RotinaModel> rotinas) {
+        this.rotinas = rotinas;
     }
+
 }

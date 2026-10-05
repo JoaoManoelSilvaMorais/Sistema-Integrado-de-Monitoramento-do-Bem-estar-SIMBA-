@@ -18,7 +18,7 @@ O foco do SIMBA é oferecer conveniência, combatendo o "piloto automático" di�
 ## Objetivos Principais
 - **Centralização:** Reunir diferentes ferramentas de monitoramento de saúde em um único lugar.
 - **Rastreamento de Hábitos:** Registrar sono, consumo de água, alimentação e atividades físicas de forma simplificada.
-- **Engajamento e Prevenção:** Sistema de lembretes (ex: medicamentos), streaks (ofensivas), conquistas e orientações preditivas baseadas na rotina do usuário.
+- **Engajamento e Prevenção:** Sistema de lembretes (ex: medicamentos), streaks (ofensivas) e orientações preditivas baseadas na rotina do usuário.
 - **Interpretação Acessível:** Traduzir dados fisiológicos para uma linguagem simples e clara para usuários leigos.
 
 ---
@@ -54,7 +54,6 @@ flowchart LR
         UC3([Inserir Dados Clínicos e Sutis]):::usecaseStyle
         UC4([Configurar Lembretes e Alarmes]):::usecaseStyle
         UC5([Visualizar Dashboards e Progresso]):::usecaseStyle
-        UC6([Acompanhar Conquistas e Streaks]):::usecaseStyle
         UC7([Receber Interpretação e Alertas]):::usecaseStyle
         
         UC8([Prestar Suporte e Ouvidoria]):::usecaseStyle
@@ -82,7 +81,7 @@ flowchart LR
 - Histórico de hidratação e registro simplificado de alimentação.
 - Cronômetro de sono e cálculo de déficit de sono (descanso vs REM).
 - Catálogo de exercícios, registro de treinos e estimativa de gasto calórico.
-- Dashboard de progresso diário com sistema de ofensivas (streaks) e conquistas.
+- Dashboard de progresso diário com sistema de ofensivas (streaks).
 - Lembretes configuráveis e notificações médicas/preventivas.
 - Inserção de dados vitais (pressão arterial, frequência cardíaca, peso).
 

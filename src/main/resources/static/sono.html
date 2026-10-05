@@ -21,6 +21,35 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/sono.css">
+
+        <style>
+            .tipo-planejamento {
+                display: flex;
+                gap: 8px;
+                margin: 18px 0 14px;
+                flex-wrap: wrap;
+            }
+            .tipo-planejamento-btn {
+                border: 1px solid rgba(113, 59, 29, .12);
+                background: rgba(255,255,255,.42);
+                color: var(--muted);
+                border-radius: 9px;
+                padding: 8px 11px;
+                font: inherit;
+                font-size: 9px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: .2s ease;
+            }
+            .tipo-planejamento-btn i { margin-right: 5px; }
+            .tipo-planejamento-btn:hover,
+            .tipo-planejamento-btn.active {
+                color: var(--dark);
+                background: rgba(255,255,255,.72);
+                border-color: rgba(113, 59, 29, .2);
+            }
+            .tipo-planejamento-btn.active i { color: var(--green-dark); }
+        </style>
 </head>
 
 <body>
@@ -57,7 +86,7 @@
                 Treinos
             </a>
 
-            <a href="#">
+            <a href="rotinas.html">
                 <i class="fa-solid fa-calendar-check"></i>
                 Rotina
             </a>
@@ -67,15 +96,11 @@
                 Lembretes
             </a>
 
-            <a href="#">
+            <a href="progresso.html">
                 <i class="fa-solid fa-chart-line"></i>
                 Progresso
             </a>
 
-            <a href="conquistas.html">
-                <i class="fa-solid fa-trophy"></i>
-                Conquistas
-            </a>
 
         </nav>
 
@@ -146,24 +171,50 @@
                     PLANEJE SEU SONO
                 </span>
 
-                <h2>
-                    Que horas você pretende dormir?
+                <h2 id="tituloPlanejadorSono">
+                    Que horas você precisa acordar?
                 </h2>
 
-                <p>
-                    Veja horários aproximados para acordar ao final
-                    de ciclos completos de sono.
+                <p id="descricaoPlanejadorSono">
+                    Escolha seu horário de acordar e descubra quando
+                    seria interessante ir dormir para completar ciclos
+                    de sono.
                 </p>
+
+                <div class="tipo-planejamento" role="group" aria-label="Escolha o que deseja planejar">
+
+                    <button
+                        type="button"
+                        class="tipo-planejamento-btn active"
+                        id="planejarAcordar"
+                        data-modo="acordar"
+                    >
+                        <i class="fa-regular fa-sun"></i>
+                        Quero acordar às...
+                    </button>
+
+                    <button
+                        type="button"
+                        class="tipo-planejamento-btn"
+                        id="planejarDormir"
+                        data-modo="dormir"
+                    >
+                        <i class="fa-solid fa-moon"></i>
+                        Quero dormir às...
+                    </button>
+
+                </div>
 
                 <div class="planejador-form">
 
                     <div class="hora-planejada">
 
-                        <i class="fa-regular fa-moon"></i>
+                        <i class="fa-regular fa-sun" id="iconeHoraPlanejada"></i>
 
                         <input
                             type="time"
                             id="horaPlanejada"
+                            aria-label="Horário desejado"
                         >
 
                     </div>
@@ -207,8 +258,8 @@
                             HORÁRIOS ESTIMADOS
                         </span>
 
-                        <h3>
-                            Possíveis horários para acordar
+                        <h3 id="tituloResultadoPlanejador">
+                            Horários sugeridos para dormir
                         </h3>
                     </div>
 
@@ -227,7 +278,7 @@
                             --:--
                         </strong>
 
-                        <small>
+                        <small id="duracao5Ciclos">
                             cerca de 7h30
                         </small>
 
@@ -244,7 +295,7 @@
                             --:--
                         </strong>
 
-                        <small>
+                        <small id="duracao6Ciclos">
                             cerca de 9h
                         </small>
 
@@ -261,7 +312,7 @@
                             --:--
                         </strong>
 
-                        <small>
+                        <small id="duracao7Ciclos">
                             cerca de 10h30
                         </small>
 
@@ -274,10 +325,10 @@
 
                     <i class="fa-solid fa-circle-info"></i>
 
-                    <p>
-                        Os horários são apenas estimativas baseadas
-                        em ciclos médios de aproximadamente 90 minutos
-                        e em cerca de 15 minutos para adormecer.
+                    <p id="avisoPlanejador">
+                        Os horários são estimativas baseadas em ciclos médios
+                        de aproximadamente 90 minutos. O cálculo considera
+                        cerca de 15 minutos para você adormecer.
                     </p>
 
                 </div>

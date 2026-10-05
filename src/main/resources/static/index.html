@@ -9,6 +9,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .user { position: relative; }
+        .notificacoes-dropdown {
+            display: none; position: absolute; top: 45px; right: 0; width: 300px;
+            background: #ffffff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            z-index: 1000; border: 1px solid #eaeaea; overflow: hidden;
+        }
+        .notificacoes-dropdown.show { display: block; }
+        .dropdown-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid #eaeaea; background: #fafafa; }
+        .dropdown-header h3 { margin: 0; font-size: 14px; color: #333; }
+        .dropdown-header a { font-size: 12px; color: #f39c12; text-decoration: none; font-weight: 600; }
+        .dropdown-body { max-height: 280px; overflow-y: auto; }
+        .dropdown-item { padding: 12px 15px; border-bottom: 1px solid #f1f1f1; display: flex; flex-direction: column; transition: background 0.2s; cursor: pointer; }
+        .dropdown-item:hover { background: #f9f9f9; }
+        .dropdown-item-title { font-weight: 600; font-size: 13px; color: #333; margin-bottom: 4px; }
+        .dropdown-item-time { font-size: 11px; color: #888; }
+        .dropdown-empty { padding: 20px; text-align: center; color: #888; font-size: 13px; }
+
+        .toast-container {
+            position: absolute;
+            top: 45px;
+            right: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1001;
+        }
+        .toast-notification {
+            background: #ffffff;
+            border-left: 4px solid #f39c12;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 12px 15px;
+            border-radius: 4px;
+            width: 280px;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    </style>
 </head>
 <body>
     <div class="layout">
@@ -17,18 +60,15 @@
                 <img src="img/LeaoLogoPNG.png" alt="SIMBA">
                 <img src="img/NomeLogoPNG.png" alt="SIMBA" class="logo-name">
             </div>
-
             <nav>
                 <a href="index.html" class="active"><i class="fa-solid fa-house"></i>Dashboard</a>
                 <a href="hidratacao.html"><i class="fa-solid fa-droplet"></i>Hidratação</a>
                 <a href="sono.html"><i class="fa-solid fa-moon"></i>Sono</a>
                 <a href="treinos.html"><i class="fa-solid fa-dumbbell"></i>Treinos</a>
-                <a href="#"><i class="fa-solid fa-calendar-check"></i>Rotina</a>
+                <a href="rotinas.html"><i class="fa-solid fa-calendar-check"></i>Rotina</a>
                 <a href="lembretes.html"><i class="fa-solid fa-bell"></i>Lembretes</a>
-                <a href="#"><i class="fa-solid fa-chart-line"></i>Progresso</a>
-                <a href="conquistas.html"><i class="fa-solid fa-trophy"></i>Conquistas</a>
+                <a href="progresso.html"><i class="fa-solid fa-chart-line"></i>Progresso</a>
             </nav>
-
             <div class="bottom-menu">
                 <a href="perfil.html"><i class="fa-solid fa-user"></i>Meu perfil</a>
                 <a href="entrar.html" id="sair"><i class="fa-solid fa-right-from-bracket"></i>Sair</a>
@@ -45,7 +85,22 @@
                 </div>
 
                 <div class="user">
-                    <button class="notification"><i class="fa-regular fa-bell"></i></button>
+                    <button class="notification" id="btnNotificacao" style="position: relative; cursor: pointer; border: none; background: none;">
+                        <i class="fa-regular fa-bell"></i>
+                        <span id="badge-notificacao" class="badge" style="display: none; position: absolute; top: -5px; right: -5px; background: #e74c3c; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold;">0</span>
+                    </button>
+                    
+                    <div id="toast-container" class="toast-container"></div>
+
+                    <div id="dropdown-notificacoes" class="notificacoes-dropdown">
+                        <div class="dropdown-header">
+                            <h3>Notificações</h3>
+                            <a href="lembretes.html">Ver todas</a>
+                        </div>
+                        <div class="dropdown-body" id="dropdown-lista">
+                            <div class="dropdown-empty">A carregar...</div>
+                        </div>
+                    </div>
                     <a class="avatar" id="avatarUsuario" href="perfil.html" aria-label="Abrir meu perfil">U</a>
                     <a class="login-button" id="loginButton" href="entrar.html">Entrar</a>
                 </div>
@@ -53,71 +108,100 @@
 
             <section class="cards">
                 <article class="card welcome">
-                    <div>
+                    <div class="welcome-content">
                         <span class="label">BEM-VINDO AO SIMBA</span>
                         <h2>Cuide dos seus hábitos<br>todos os dias.</h2>
                         <p>Acompanhe sua rotina de bem-estar em um só lugar.</p>
+                        <div class="welcome-status" id="statusDia">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Carregando seu resumo...</span>
+                        </div>
                     </div>
                     <i class="fa-solid fa-leaf welcome-icon"></i>
                 </article>
 
-                <article class="card" id="cardHidratacao">
-                    <div class="card-top">
+                <article class="card metric-card hydration-card" id="cardHidratacao">
+                    <div class="metric-head">
                         <span class="icon"><i class="fa-solid fa-droplet"></i></span>
+                        <span class="metric-status" id="statusAgua">Hoje</span>
                     </div>
                     <span class="label">HIDRATAÇÃO</span>
                     <h2 id="resumoAgua">-- <small>L</small></h2>
-                    <p id="metaAgua">Total registrado hoje</p>
+                    <div class="progress-track" aria-label="Progresso de hidratação">
+                        <span id="barraAgua"></span>
+                    </div>
+                    <div class="metric-footer">
+                        <span id="metaAgua">Meta: 2,0 L</span>
+                        <strong id="percentualAgua">--%</strong>
+                    </div>
                 </article>
 
-                <article class="card" id="cardSono">
-                    <div class="card-top">
+                <article class="card metric-card sleep-card" id="cardSono">
+                    <div class="metric-head">
                         <span class="icon"><i class="fa-solid fa-moon"></i></span>
+                        <span class="metric-status" id="statusSono">Último registro</span>
                     </div>
                     <span class="label">SONO</span>
                     <h2 id="resumoSono">-- <small>horas</small></h2>
-                    <p>Último registro</p>
+                    <div class="sleep-quality" id="qualidadeSono">
+                        <span class="stars">☆☆☆☆☆</span>
+                        <span>Sem avaliação</span>
+                    </div>
+                    <p id="sonoDescricao">Registre uma noite para acompanhar sua qualidade.</p>
                 </article>
 
-                <article class="card" id="cardTreinos">
-                    <div class="card-top" >
+                <article class="card metric-card workout-card" id="cardTreinos">
+                    <div class="metric-head">
                         <span class="icon"><i class="fa-solid fa-dumbbell"></i></span>
+                        <span class="metric-status" id="statusTreinos">Hoje</span>
                     </div>
                     <span class="label">TREINOS</span>
-                    <h2 id="resumoTreinos">--</h2>
-                    <p>Treinos registrados</p>
+                    <h2 id="resumoTreinos">0 <small>hoje</small></h2>
+                    <div class="mini-stats">
+                        <span><i class="fa-regular fa-clock"></i> <strong id="tempoTreinosHoje">0 min</strong></span>
+                        <span><i class="fa-solid fa-fire"></i> <strong id="caloriasTreinosHoje">0 kcal</strong></span>
+                    </div>
+                    <p id="treinoDescricao">Nenhum treino registrado hoje.</p>
                 </article>
 
-                <article class="card large">
+                <article class="card large routine-card">
                     <div class="title-row">
                         <div>
                             <span class="label">ROTINA</span>
                             <h2>Atividades de hoje</h2>
                         </div>
-                        <a href="#">Ver mais</a>
+                        <a href="rotinas.html">Ver mais</a>
                     </div>
-
-                    <div class="empty-state" id="resumoRotina">
-                        <i class="fa-regular fa-calendar"></i>
-                        <p>Nenhuma atividade registrada.</p>
+                    <div class="routine-list" id="resumoRotina">
+                        <div class="dashboard-loading">
+                            <i class="fa-solid fa-spinner fa-spin"></i>
+                            <span>Carregando atividades...</span>
+                        </div>
                     </div>
                 </article>
 
-                <article class="card">
+                <article class="card progress-card">
                     <div class="title-row">
                         <div>
                             <span class="label">PROGRESSO</span>
-                            <h2>Resumo</h2>
+                            <h2>Seu ritmo</h2>
                         </div>
+                        <a href="progresso.html">Detalhes</a>
                     </div>
-
-                    <div class="empty-state small" id="resumoProgresso">
-                        <i class="fa-solid fa-chart-line"></i>
-                        <p>Seus dados aparecerão aqui.</p>
+                    <div class="progress-main">
+                        <div class="progress-ring" id="progressoRing">
+                            <strong id="progressoPercentual">--%</strong>
+                            <small>consistência</small>
+                        </div>
+                        <div class="progress-info">
+                            <div><span>Hidratação</span><strong id="progressoAgua">--</strong></div>
+                            <div><span>Treinos</span><strong id="progressoTreinos">--</strong></div>
+                            <div><span>Sono</span><strong id="progressoSono">--</strong></div>
+                        </div>
                     </div>
                 </article>
 
-                <article class="card large">
+                <article class="card large reminders-card">
                     <div class="title-row">
                         <div>
                             <span class="label">LEMBRETES</span>
@@ -125,10 +209,11 @@
                         </div>
                         <a href="lembretes.html">Ver mais</a>
                     </div>
-
-                    <div class="empty-state" id="resumoLembretes">
-                        <i class="fa-regular fa-bell"></i>
-                        <p>Nenhum lembrete cadastrado.</p>
+                    <div class="reminder-list" id="resumoLembretes">
+                        <div class="dashboard-loading">
+                            <i class="fa-solid fa-spinner fa-spin"></i>
+                            <span>Carregando lembretes...</span>
+                        </div>
                     </div>
                 </article>
             </section>
@@ -143,127 +228,407 @@
     <script src="js/script.js"></script>
     <script>
         const token = sessionStorage.getItem('jwtToken');
+        const lembretesNotificados = new Set();
 
         function requisicaoAutenticada(url) {
             return fetch(url, {
                 headers: { 'Authorization': `Bearer ${token}` }
             }).then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 return response.json();
             });
         }
 
         function formatarData(data) {
-            return new Date(data).toLocaleString('pt-BR', {
-                day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
-            });
+            return new Date(data).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
         }
 
         function mesmoDia(primeiraData, segundaData = new Date()) {
             const primeira = new Date(primeiraData);
-            return primeira.getFullYear() === segundaData.getFullYear()
-                && primeira.getMonth() === segundaData.getMonth()
-                && primeira.getDate() === segundaData.getDate();
+            return primeira.getFullYear() === segundaData.getFullYear() && primeira.getMonth() === segundaData.getMonth() && primeira.getDate() === segundaData.getDate();
         }
 
         function calcularDuracaoSono(registro) {
             const inicio = new Date(registro.horaDormir);
             const fim = new Date(registro.horaAcordar);
-            if (Number.isNaN(inicio.getTime()) || Number.isNaN(fim.getTime())) {
-                return null;
-            }
+            if (Number.isNaN(inicio.getTime()) || Number.isNaN(fim.getTime())) return null;
             let duracao = (fim - inicio) / 3600000;
-            if (duracao < 0) {
-                duracao += 24;
-            }
+            if (duracao < 0) duracao += 24;
             return duracao;
         }
 
-        function renderizarResumo(usuario, agua, sono, treinos, lembretes) {
-            const aguaHoje = agua
-                .filter(registro => mesmoDia(registro.dataHora))
-                .reduce((total, registro) => total + Number(registro.quantidadeMl || 0), 0);
-            document.getElementById('resumoAgua').innerHTML = `${(aguaHoje / 1000).toFixed(1)} <small>L</small>`;
+        const META_AGUA_ML = 2000;
+        const META_SONO_HORAS = 7;
 
-            const ultimoSono = [...sono]
-                .sort((a, b) => new Date(b.horaDormir) - new Date(a.horaDormir))[0];
-            const duracaoSono = ultimoSono && calcularDuracaoSono(ultimoSono);
-            document.getElementById('resumoSono').innerHTML = duracaoSono === null || duracaoSono === undefined
-                ? '-- <small>horas</small>'
-                : `${duracaoSono.toFixed(1)} <small>horas</small>`;
+        function escaparTexto(valor) {
+            return String(valor ?? '').replace(/[&<>"']/g, caractere => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+            }[caractere]));
+        }
 
-            document.getElementById('resumoTreinos').textContent = treinos.length;
+        function dataHojeISO() {
+            const agora = new Date();
+            return `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')}`;
+        }
 
-            const atividadesHoje = agua.filter(registro => mesmoDia(registro.dataHora)).length
-                + treinos.filter(registro => mesmoDia(registro.dataHora)).length
-                + sono.filter(registro => mesmoDia(registro.horaDormir)).length;
+        function registrosDoDia(registros, campo) {
+            return registros.filter(registro => registro?.[campo] && mesmoDia(registro[campo]));
+        }
+
+        function formatarDuracao(minutos) {
+            const total = Math.max(0, Math.round(Number(minutos) || 0));
+            const horas = Math.floor(total / 60);
+            const mins = total % 60;
+            if (horas === 0) return `${mins} min`;
+            return `${horas}h ${String(mins).padStart(2, '0')}min`;
+        }
+
+        function calcularPercentual(valor, meta) {
+            if (!meta || !Number.isFinite(valor)) return 0;
+            return Math.min(100, Math.round((valor / meta) * 100));
+        }
+
+        function qualidadeSonoTexto(nota) {
+            const n = Number(nota);
+            if (!Number.isFinite(n)) return 'Sem avaliação';
+            if (n >= 4.5) return 'Excelente';
+            if (n >= 3.5) return 'Boa';
+            if (n >= 2.5) return 'Regular';
+            return 'Pode melhorar';
+        }
+
+        function estrelasSono(nota) {
+            const n = Math.max(0, Math.min(5, Math.round(Number(nota) || 0)));
+            return '★'.repeat(n) + '☆'.repeat(5 - n);
+        }
+
+        function ordenarMaisRecente(registros, campo) {
+            return [...registros].sort((a, b) =>
+                new Date(b?.[campo] || 0) - new Date(a?.[campo] || 0)
+            );
+        }
+
+        function atualizarCardAgua(agua) {
+            const hoje = registrosDoDia(agua, 'dataHora');
+            const totalMl = hoje.reduce((total, registro) => total + Number(registro.quantidadeMl || 0), 0);
+            const litros = totalMl / 1000;
+            const percentual = calcularPercentual(totalMl, META_AGUA_ML);
+
+            document.getElementById('resumoAgua').innerHTML = `${litros.toFixed(1)} <small>L</small>`;
+            document.getElementById('metaAgua').textContent = `Meta: ${(META_AGUA_ML / 1000).toFixed(1).replace('.', ',')} L`;
+            document.getElementById('percentualAgua').textContent = `${percentual}%`;
+            document.getElementById('barraAgua').style.width = `${percentual}%`;
+            document.getElementById('statusAgua').textContent = percentual >= 100 ? 'Meta atingida' : 'Hoje';
+
+            return { hoje, totalMl, litros, percentual };
+        }
+
+        function atualizarCardSono(sono) {
+            const ultimo = ordenarMaisRecente(sono, 'horaDormir')[0];
+            const duracao = ultimo ? calcularDuracaoSono(ultimo) : null;
+            const nota = ultimo?.notaSono;
+
+            if (duracao === null || duracao === undefined) {
+                document.getElementById('resumoSono').innerHTML = '-- <small>horas</small>';
+                document.getElementById('qualidadeSono').innerHTML = '<span class="stars">☆☆☆☆☆</span><span>Sem avaliação</span>';
+                document.getElementById('sonoDescricao').textContent = 'Registre uma noite para acompanhar sua qualidade.';
+                document.getElementById('statusSono').textContent = 'Sem registro';
+                return { ultimo: null, duracao: 0, nota: null };
+            }
+
+            const notaTexto = Number.isFinite(Number(nota)) ? `${Number(nota).toFixed(0)}/5` : 'Sem nota';
+            document.getElementById('resumoSono').innerHTML = `${duracao.toFixed(1)} <small>horas</small>`;
+            document.getElementById('qualidadeSono').innerHTML = `
+                <span class="stars">${estrelasSono(nota)}</span>
+                <span>${qualidadeSonoTexto(nota)}${Number.isFinite(Number(nota)) ? ` · ${notaTexto}` : ''}</span>
+            `;
+            document.getElementById('sonoDescricao').textContent =
+                duracao >= META_SONO_HORAS
+                    ? 'Duração dentro da recomendação.'
+                    : `Faltaram cerca de ${(META_SONO_HORAS - duracao).toFixed(1)}h para 7h.`;
+            document.getElementById('statusSono').textContent = duracao >= META_SONO_HORAS ? 'Boa duração' : 'Atenção';
+
+            return { ultimo, duracao, nota };
+        }
+
+        function atualizarCardTreinos(treinos) {
+            const hoje = registrosDoDia(treinos, 'dataHora');
+            const minutos = hoje.reduce((total, treino) => total + Number(treino.duracaominutos || 0), 0);
+            const calorias = hoje.reduce((total, treino) => total + Number(treino.gastoCaloricoExtimado || 0), 0);
+            const modalidades = [...new Set(hoje.map(t => t.modalidade).filter(Boolean))];
+
+            document.getElementById('resumoTreinos').innerHTML = `${hoje.length} <small>hoje</small>`;
+            document.getElementById('tempoTreinosHoje').textContent = formatarDuracao(minutos);
+            document.getElementById('caloriasTreinosHoje').textContent = `${Math.round(calorias)} kcal`;
+            document.getElementById('statusTreinos').textContent = hoje.length ? 'Registrado' : 'Hoje';
+            document.getElementById('treinoDescricao').textContent = hoje.length
+                ? modalidades.slice(0, 2).join(' · ') || 'Atividade registrada'
+                : 'Nenhum treino registrado hoje.';
+
+            return { hoje, minutos, calorias };
+        }
+
+        function atualizarRotina(aguaHoje, sonoInfo, treinosHoje) {
             const rotina = document.getElementById('resumoRotina');
             rotina.replaceChildren();
-            const rotinaTexto = document.createElement('p');
-            rotinaTexto.textContent = atividadesHoje
-                ? `${atividadesHoje} registro(s) feito(s) hoje.`
-                : 'Nenhuma atividade registrada hoje.';
-            rotina.appendChild(rotinaTexto);
 
-            const progresso = document.getElementById('resumoProgresso');
-            progresso.replaceChildren();
-            const progressoTexto = document.createElement('p');
-            progressoTexto.textContent = `${(aguaHoje / 1000).toFixed(1)} L de água | ${treinos.length} treino(s) | ${lembretes.length} lembrete(s)`;
-            progresso.appendChild(progressoTexto);
+            const atividades = [];
 
-            const resumo = document.getElementById('resumoLembretes');
-            const futuros = lembretes
-                .filter(lembrete => new Date(lembrete.horario) >= new Date())
-                .sort((a, b) => new Date(a.horario) - new Date(b.horario))
-                .slice(0, 3);
-            resumo.replaceChildren();
-            if (futuros.length === 0) {
-                const texto = document.createElement('p');
-                texto.textContent = 'Nenhum lembrete cadastrado.';
-                resumo.appendChild(texto);
-            } else {
-                futuros.forEach(lembrete => {
-                    const item = document.createElement('p');
-                    item.textContent = `${formatarData(lembrete.horario)} - ${lembrete.titulo}`;
-                    resumo.appendChild(item);
+            if (aguaHoje.totalMl > 0) {
+                atividades.push({
+                    icon: 'fa-droplet',
+                    title: `${aguaHoje.litros.toFixed(1)} L de água`,
+                    detail: `${aguaHoje.hoje.length} registro(s) hoje`,
+                    status: aguaHoje.percentual >= 100 ? 'Meta atingida' : `${aguaHoje.percentual}% da meta`
                 });
             }
+
+            if (treinosHoje.hoje.length > 0) {
+                atividades.push({
+                    icon: 'fa-dumbbell',
+                    title: `${treinosHoje.hoje.length} treino(s)`,
+                    detail: formatarDuracao(treinosHoje.minutos),
+                    status: `${Math.round(treinosHoje.calorias)} kcal`
+                });
+            }
+
+            if (sonoInfo.ultimo) {
+                atividades.push({
+                    icon: 'fa-moon',
+                    title: `${sonoInfo.duracao.toFixed(1)} h de sono`,
+                    detail: 'Última noite',
+                    status: Number.isFinite(Number(sonoInfo.nota)) ? `${Number(sonoInfo.nota)}/5` : 'Sem nota'
+                });
+            }
+
+            if (!atividades.length) {
+                rotina.innerHTML = `
+                    <div class="dashboard-empty">
+                        <i class="fa-regular fa-calendar"></i>
+                        <strong>Seu dia ainda está vazio</strong>
+                        <p>Registre água, sono ou treino para acompanhar sua rotina aqui.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            atividades.forEach(atividade => {
+                const item = document.createElement('div');
+                item.className = 'routine-item';
+                item.innerHTML = `
+                    <span class="routine-icon"><i class="fa-solid ${atividade.icon}"></i></span>
+                    <span class="routine-text">
+                        <strong>${escaparTexto(atividade.title)}</strong>
+                        <small>${escaparTexto(atividade.detail)}</small>
+                    </span>
+                    <span class="routine-status">${escaparTexto(atividade.status)}</span>
+                `;
+                rotina.appendChild(item);
+            });
+        }
+
+        function atualizarProgresso(agua, sono, treinos) {
+            const dias = [];
+            for (let i = 0; i < 7; i++) {
+                const data = new Date();
+                data.setHours(0, 0, 0, 0);
+                data.setDate(data.getDate() - i);
+                dias.push(data);
+            }
+
+            const diasComAgua = dias.filter(dia =>
+                agua.some(r => mesmoDia(r.dataHora, dia) && Number(r.quantidadeMl || 0) > 0)
+            ).length;
+
+            const diasComTreino = dias.filter(dia =>
+                treinos.some(r => mesmoDia(r.dataHora, dia))
+            ).length;
+
+            const diasComSono = dias.filter(dia =>
+                sono.some(r => mesmoDia(r.horaDormir, dia))
+            ).length;
+
+            const consistencia = Math.round(((diasComAgua + diasComTreino + diasComSono) / 21) * 100);
+
+            document.getElementById('progressoPercentual').textContent = `${consistencia}%`;
+            document.getElementById('progressoRing').style.setProperty('--progresso', `${consistencia * 3.6}deg`);
+            document.getElementById('progressoAgua').textContent = `${diasComAgua}/7`;
+            document.getElementById('progressoTreinos').textContent = `${diasComTreino}/7`;
+            document.getElementById('progressoSono').textContent = `${diasComSono}/7`;
+
+            return consistencia;
+        }
+
+        function atualizarLembretes(lembretes) {
+            const resumo = document.getElementById('resumoLembretes');
+            const agora = new Date();
+            const futuros = lembretes
+                .filter(lembrete => new Date(lembrete.horario) >= agora)
+                .sort((a, b) => new Date(a.horario) - new Date(b.horario))
+                .slice(0, 3);
+
+            resumo.replaceChildren();
+
+            if (!futuros.length) {
+                resumo.innerHTML = `
+                    <div class="dashboard-empty">
+                        <i class="fa-regular fa-bell"></i>
+                        <strong>Tudo em dia</strong>
+                        <p>Nenhum lembrete futuro cadastrado.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            futuros.forEach((lembrete, index) => {
+                const item = document.createElement('div');
+                item.className = 'reminder-item';
+                item.innerHTML = `
+                    <span class="reminder-time">${index === 0 ? 'Próximo' : formatarData(lembrete.horario)}</span>
+                    <span class="reminder-content">
+                        <strong>${escaparTexto(lembrete.titulo || 'Lembrete')}</strong>
+                        <small>${index === 0 ? `${formatarData(lembrete.horario)}${lembrete.mensagem ? ` · ${escaparTexto(lembrete.mensagem)}` : ''}` : escaparTexto(lembrete.mensagem || 'Lembrete programado')}</small>
+                    </span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                `;
+                item.addEventListener('click', () => window.location.href = 'lembretes.html');
+                resumo.appendChild(item);
+            });
+        }
+
+        function renderizarResumo(usuario, agua, sono, treinos, lembretes) {
+            const aguaHoje = atualizarCardAgua(agua);
+            const sonoInfo = atualizarCardSono(sono);
+            const treinosHoje = atualizarCardTreinos(treinos);
+
+            atualizarRotina(aguaHoje, sonoInfo, treinosHoje);
+            const consistencia = atualizarProgresso(agua, sono, treinos);
+            atualizarLembretes(lembretes);
+
+            const status = document.getElementById('statusDia');
+            const totalRegistrosHoje = aguaHoje.hoje.length + treinosHoje.hoje.length +
+                sono.filter(r => mesmoDia(r.horaDormir)).length;
+
+            status.innerHTML = totalRegistrosHoje
+                ? `<i class="fa-solid fa-circle-check"></i><span>${totalRegistrosHoje} registro(s) hoje · ${consistencia}% de consistência</span>`
+                : `<i class="fa-solid fa-circle-info"></i><span>Comece registrando um hábito hoje.</span>`;
+        }
+
+        function exibirToast(lembrete) {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.innerHTML = `
+                <div style="display: flex; align-items: flex-start; gap: 10px;">
+                    <i class="fa-solid fa-bell" style="color: #f39c12; margin-top: 3px;"></i>
+                    <div>
+                        <strong style="display: block; font-size: 14px; color: #333; margin-bottom: 2px;">${lembrete.titulo}</strong>
+                        <span style="font-size: 12px; color: #666;">${lembrete.mensagem || 'É hora do seu lembrete!'}</span>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 6000);
+        }
+
+        function iniciarMonitoramentoLembretes(lembretes) {
+            setInterval(() => {
+                const agora = new Date();
+                lembretes.forEach(lembrete => {
+                    const horaLembrete = new Date(lembrete.horario);
+                    const diferenca = agora.getTime() - horaLembrete.getTime();
+                    
+                    if (diferenca >= 0 && diferenca <= 60000 && !lembretesNotificados.has(lembrete.id)) {
+                        lembretesNotificados.add(lembrete.id);
+                        exibirToast(lembrete);
+                    }
+                });
+            }, 10000); 
         }
 
         if (token) {
             requisicaoAutenticada('/users/me')
                 .then(usuario => {
                     document.getElementById('nomeUsuario').textContent = `${usuario.name || usuario.username}!`;
-                    document.getElementById('avatarUsuario').textContent = (usuario.name || usuario.username || 'U')
-                        .charAt(0)
-                        .toUpperCase();
+                    document.getElementById('avatarUsuario').textContent = (usuario.name || usuario.username || 'U').charAt(0).toUpperCase();
 
                     return Promise.all([
                         requisicaoAutenticada('/registroAgua'),
                         requisicaoAutenticada(`/registrosono/usuario/${usuario.id}`),
                         requisicaoAutenticada('/registroexercicio'),
-                        requisicaoAutenticada('/lembretes')
-                    ]).then(([agua, sono, treinos, lembretes]) => {
-                        renderizarResumo(usuario, agua, sono, treinos, lembretes);
+                        requisicaoAutenticada('/lembretes'),
+                        requisicaoAutenticada('/api/rotinas')
+                    ]).then(([agua, sono, treinos, lembretes, rotinas]) => {
+                        renderizarResumo(usuario, agua, sono, treinos, lembretes, rotinas);
+                        
+                        const futuros = lembretes.filter(l => new Date(l.horario) >= new Date());
+                        const badge = document.getElementById('badge-notificacao');
+                        const dropdownLista = document.getElementById('dropdown-lista');
+                        dropdownLista.innerHTML = '';
+                        
+                        if (futuros.length > 0) {
+                            badge.textContent = futuros.length;
+                            badge.style.display = 'block';
+                            futuros.sort((a, b) => new Date(a.horario) - new Date(b.horario));
+                            
+                            futuros.forEach(lembrete => {
+                                const div = document.createElement('div');
+                                div.className = 'dropdown-item';
+                                div.onclick = () => window.location.href = 'lembretes.html';
+                                div.innerHTML = `
+                                    <span class="dropdown-item-title"><span style="color: #e74c3c; margin-right: 6px;">●</span>${escaparTexto(lembrete.titulo)}</span>
+                                    <span class="dropdown-item-time">${formatarData(lembrete.horario)}</span>
+                                `;
+                                dropdownLista.appendChild(div);
+                            });
+                        } else {
+                            badge.style.display = 'none';
+                            dropdownLista.innerHTML = '<div class="dropdown-empty">Não tem novas notificações</div>';
+                        }
+
+                        iniciarMonitoramentoLembretes(lembretes);
                     });
-                })
-                .catch(() => {
+                }).catch(() => {
                     sessionStorage.removeItem('jwtToken');
                     sessionStorage.removeItem('usuarioLogado');
                 });
+        } else {
+            document.getElementById('nomeUsuario').textContent = 'Visitante!';
         }
 
         if (token) {
             document.getElementById('loginButton').style.display = 'none';
-
         }
 
         document.getElementById('sair').addEventListener('click', () => {
             sessionStorage.removeItem('jwtToken');
             sessionStorage.removeItem('usuarioLogado');
         });
+
+        const btnNotificacao = document.getElementById('btnNotificacao');
+        const dropdown = document.getElementById('dropdown-notificacoes');
+
+        if (btnNotificacao && dropdown) {
+            btnNotificacao.addEventListener('click', (event) => {
+                event.stopPropagation();
+                dropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!dropdown.contains(event.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        }
     </script>
 </body>
 </html>

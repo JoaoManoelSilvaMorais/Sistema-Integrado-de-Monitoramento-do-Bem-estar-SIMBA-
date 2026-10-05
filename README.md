@@ -18,7 +18,8 @@ O foco do SIMBA é oferecer conveniência, combatendo o "piloto automático" di�
 ## Objetivos Principais
 - **Centralização:** Reunir diferentes ferramentas de monitoramento de saúde em um único lugar.
 - **Rastreamento de Hábitos:** Registrar sono, consumo de água, alimentação e atividades físicas de forma simplificada.
-- **Engajamento e Prevenção:** Sistema de lembretes (ex: medicamentos), streaks (ofensivas), conquistas e orientações preditivas baseadas na rotina do usuário.
+- **Rotinas Diárias:** Criar, visualizar, ativar, desativar e excluir rotinas pessoais, com o resumo das rotinas ativas integrado ao dashboard e ao resumo de progresso.
+- **Engajamento e Prevenção:** Sistema de lembretes (ex: medicamentos), streaks (ofensivas), e orientações preditivas baseadas na rotina do usuário.
 - **Interpretação Acessível:** Traduzir dados fisiológicos para uma linguagem simples e clara para usuários leigos.
 
 ---
@@ -55,7 +56,7 @@ flowchart LR
         UC6([6. Gerenciar Medicamentos]):::usecaseStyle
         UC7([7. Configurar Lembretes e Alarmes]):::usecaseStyle
         UC8([8. Visualizar Dashboards e Progresso]):::usecaseStyle
-        UC9([9. Acompanhar Conquistas e Streaks]):::usecaseStyle
+        UC9([9. Acompanhar Streaks]):::usecaseStyle
         UC10([10. Receber Alertas e Interpretações]):::usecaseStyle
     end
 
@@ -70,7 +71,7 @@ flowchart LR
     User --> UC8
     User --> UC9
 
-    %% Relacionamentos <<include>> (Existem Fluxos para Autenticar)
+    %% Relacionamentos <> (Existem Fluxos para Autenticar)
     UC1 -.->|«include»| UC2
     UC3 -.->|«include»| UC2
     UC4 -.->|«include»| UC2
@@ -80,7 +81,7 @@ flowchart LR
     UC8 -.->|«include»| UC2
     UC9 -.->|«include»| UC2
 
-    %% Relacionamentos <<extend>> (Ações Opcionais)
+    %% Relacionamentos <> (Ações Opcionais)
     UC7 -.->|«extend»| UC6
     UC7 -.->|«extend»| UC3
     UC10 -.->|«extend»| UC8
@@ -98,101 +99,60 @@ classDiagram
     direction TB
 
     class UserModel {
-        <<Entity>>
-        +UUID id
-        +String nome
+        +Long id
+        +String name
+        +String username
         +String email
-        +String senha
-        +Date dataCadastro
+        +String password
         +PerfilModel perfil
-        +List~RegistroSono~ registrosSono
-        +List~RegistroAgua~ registrosAgua
-        +List~RegistroAlimentacao~ registrosAlimentacao
-        +List~RegistroExercicio~ registrosExercicio
-        +List~DadoClinico~ dadosClinicos
-        +List~SinalCorporal~ sinaisCorporais
-        +List~Medicamento~ medicamentos
-        +List~Rotina~ rotinas
-        +List~UsuarioConquista~ conquistas
+        +List~RotinaModel~ rotinas
+        +List~RegistroSonoModel~ registroSono
+        +List~RegistroAguaModel~ registroAgua
+        +List~RegistroExercicioModel~ registroExercicio
     }
 
     class PerfilModel {
-        <<Entity>>
-        +UUID id
-        +Date dataNascimento
-        +float pesoAtual
-        +float altura
-        +int streakDias
+        +Long id
+        +double peso
+        +double altura
+        +Integer idade
+        +Integer streak
+        +UserModel Usuario
+    }
+
+    class RegistroSonoModel {
+        +Long id
+        +LocalDateTime horaDormir
+        +LocalDateTime horaAcordar
+        +Integer notaSono
         +UserModel usuario
     }
 
-    class RegistroSono {
-        <<Entity>>
-        +UUID id
-        +DateTime horaDormir
-        +DateTime horaAcordar
-        +int tempoRemMinutos
-        +int tempoProfundoMinutos
+    class RegistroAguaModel {
+        +Long id
+        +double quantidadeMl
+        +LocalDateTime dataHora
         +UserModel usuario
     }
 
-    class RegistroAgua {
-        <<Entity>>
-        +UUID id
-        +int quantidadeMl
-        +DateTime dataHora
-        +UserModel usuario
-    }
-
-    class RegistroAlimentacao {
-        <<Entity>>
-        +UUID id
-        +String descricaoRefeicao
-        +DateTime dataHora
-        +UserModel usuario
-    }
-
-    class RegistroExercicio {
-        <<Entity>>
-        +UUID id
+    class RegistroExercicioModel {
+        +Long id
         +String modalidade
-        +int duracaoMinutos
-        +float gastoCaloricoEstimado
-        +DateTime dataHora
+        +Integer duracaominutos
+        +float gastoCaloricoExtimado
+        +LocalDateTime dataHora
         +UserModel usuario
     }
 
-    class DadoClinico {
-        <<Entity>>
-        +UUID id
-        +String pressaoArterial
-        +int frequenciaCardiaca
-        +float pesoMedido
-        +DateTime dataMedicao
+    class LembreteModel {
+        +Long id
+        +String titulo
+        +String mensagem
+        +LocalDateTime horario
         +UserModel usuario
     }
 
-    class SinalCorporal {
-        <<Entity>>
-        +UUID id
-        +String tipoSinal
-        +String intensidade
-        +String humor
-        +DateTime dataRegistro
-        +UserModel usuario
-    }
-
-    class Medicamento {
-        <<Entity>>
-        +UUID id
-        +String nome
-        +String dosagem
-        +Time horarioLembrete
-        +UserModel usuario
-    }
-
-    class Rotina {
-        <<Entity>>
+    class RotinaModel {
         +UUID id
         +String nome
         +String descricao
@@ -200,37 +160,13 @@ classDiagram
         +UserModel usuario
     }
 
-    class Conquista {
-        <<Entity>>
-        +UUID id
-        +String nome
-        +String descricao
-        +int metaNecessaria
-        +List~UsuarioConquista~ usuariosConquistas
-    }
-
-    class UsuarioConquista {
-        <<Entity>>
-        +UUID id
-        +int progressoAtual
-        +boolean concluida
-        +DateTime dataConclusao
-        +UserModel usuario
-        +Conquista conquista
-    }
-
     %% Relacionamentos JPA (Spring Boot)
     UserModel "1" -- "1" PerfilModel : @OneToOne
-    UserModel "1" -- "*" RegistroSono : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" RegistroAgua : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" RegistroAlimentacao : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" RegistroExercicio : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" DadoClinico : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" SinalCorporal : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" Medicamento : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" Rotina : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" UsuarioConquista : @OneToMany / @ManyToOne
-    Conquista "1" -- "*" UsuarioConquista : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" RegistroSonoModel : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" RegistroAguaModel : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" RegistroExercicioModel : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" LembreteModel : @ManyToOne
+    UserModel "1" -- "*" RotinaModel : @OneToMany / @ManyToOne
 ```
 
 ---

@@ -20,7 +20,6 @@ public class LembreteModel {
     @JoinColumn(name = "user_id", nullable = false)
     private UserModel usuario;
 
-    // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getTitulo() { return titulo; }

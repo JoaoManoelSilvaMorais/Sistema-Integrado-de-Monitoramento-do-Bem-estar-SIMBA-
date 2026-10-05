@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SIMBA - Rotinas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/rotinas.css">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <img src="img/LeaoLogoPNG.png" alt="SIMBA">
+                <img src="img/NomeLogoPNG.png" alt="SIMBA" class="logo-name">
+            </div>
+            <nav>
+                <a href="index.html"><i class="fa-solid fa-house"></i> Dashboard</a>
+                <a href="hidratacao.html"><i class="fa-solid fa-droplet"></i> Hidratação</a>
+                <a href="sono.html"><i class="fa-solid fa-moon"></i> Sono</a>
+                <a href="treinos.html"><i class="fa-solid fa-dumbbell"></i> Treinos</a>
+                <a class="active" href="rotinas.html"><i class="fa-solid fa-calendar-check"></i> Rotina</a>
+                <a href="lembretes.html"><i class="fa-solid fa-bell"></i> Lembretes</a>
+                <a href="progresso.html"><i class="fa-solid fa-chart-line"></i> Progresso</a>
+            </nav>
+            <div class="bottom-menu">
+                <a href="perfil.html"><i class="fa-solid fa-user"></i> Meu perfil</a>
+                <a href="entrar.html" id="sair"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
+            </div>
+        </aside>
+        <main>
+            <header>
+                <button class="menu-button" id="menuButton" type="button"><i class="fa-solid fa-bars"></i></button>
+                <div>
+                    <span class="label">ORGANIZAÇÃO</span>
+                    <h1>Minhas rotinas</h1>
+                    <p>Planeje pequenos hábitos para cuidar de você todos os dias.</p>
+                </div>
+                <div class="user">
+                    <div class="avatar" id="avatarUsuario">U</div>
+                    <a class="login-button" id="loginButton" href="entrar.html">Entrar</a>
+                </div>
+            </header>
+            <section class="rotinas-content">
+                <div class="rotinas-grid">
+                    <article class="card rotina-form-card">
+                        <span class="label">NOVA ROTINA</span>
+                        <h2>Adicione um hábito</h2>
+                        <form id="formRotina">
+                            <label for="nome">Nome da rotina</label>
+                            <input id="nome" name="nome" maxlength="100" required placeholder="Ex.: Alongamento matinal">
+                            <label for="descricao">Descrição <span>(opcional)</span></label>
+                            <textarea id="descricao" name="descricao" maxlength="250" rows="4" placeholder="Ex.: Alongar por 10 minutos"></textarea>
+                            <button class="btn-principal" type="submit"><i class="fa-solid fa-plus"></i> Criar rotina</button>
+                        </form>
+                        <p class="mensagem" id="mensagem" role="status"></p>
+                    </article>
+                    <article class="card rotina-lista-card">
+                        <div class="titulo-lista">
+                            <div>
+                                <span class="label">SEU PLANEJAMENTO</span>
+                                <h2>Rotinas cadastradas</h2>
+                            </div>
+                            <strong id="totalRotinas">0</strong>
+                        </div>
+                        <div id="listaRotinas" class="lista-rotinas"></div>
+                    </article>
+                </div>
+            </section>
+            <footer><span>CTO - Mufasa Softwares© 2026</span></footer>
+        </main>
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <script src="js/script.js"></script>
+    <script src="js/rotinas.js"></script>
+</body>
+</html>

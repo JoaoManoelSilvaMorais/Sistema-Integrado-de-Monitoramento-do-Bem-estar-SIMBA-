@@ -65,7 +65,7 @@
                 <a href="hidratacao.html"><i class="fa-solid fa-droplet"></i>Hidratação</a>
                 <a href="sono.html"><i class="fa-solid fa-moon"></i>Sono</a>
                 <a href="treinos.html"><i class="fa-solid fa-dumbbell"></i>Treinos</a>
-                <a href="#"><i class="fa-solid fa-calendar-check"></i>Rotina</a>
+                <a href="rotinas.html"><i class="fa-solid fa-calendar-check"></i>Rotina</a>
                 <a href="lembretes.html"><i class="fa-solid fa-bell"></i>Lembretes</a>
                 <a href="progresso.html"><i class="fa-solid fa-chart-line"></i>Progresso</a>
             </nav>
@@ -170,7 +170,7 @@
                             <span class="label">ROTINA</span>
                             <h2>Atividades de hoje</h2>
                         </div>
-                        <a href="progresso.html">Ver progresso</a>
+                        <a href="rotinas.html">Ver mais</a>
                     </div>
                     <div class="routine-list" id="resumoRotina">
                         <div class="dashboard-loading">
@@ -565,9 +565,10 @@
                         requisicaoAutenticada('/registroAgua'),
                         requisicaoAutenticada(`/registrosono/usuario/${usuario.id}`),
                         requisicaoAutenticada('/registroexercicio'),
-                        requisicaoAutenticada('/lembretes')
-                    ]).then(([agua, sono, treinos, lembretes]) => {
-                        renderizarResumo(usuario, agua, sono, treinos, lembretes);
+                        requisicaoAutenticada('/lembretes'),
+                        requisicaoAutenticada('/api/rotinas')
+                    ]).then(([agua, sono, treinos, lembretes, rotinas]) => {
+                        renderizarResumo(usuario, agua, sono, treinos, lembretes, rotinas);
                         
                         const futuros = lembretes.filter(l => new Date(l.horario) >= new Date());
                         const badge = document.getElementById('badge-notificacao');

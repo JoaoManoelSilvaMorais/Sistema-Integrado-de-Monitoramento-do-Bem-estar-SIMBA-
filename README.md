@@ -55,7 +55,7 @@ flowchart LR
         UC5([5. Inserir Dados Clínicos e Sutis]):::usecaseStyle
         UC6([6. Gerenciar Medicamentos]):::usecaseStyle
         UC7([7. Configurar Lembretes e Alarmes]):::usecaseStyle
-        UC8([8. Visualizar Dashboards e Progresso]):::usecaseStyle
+        UC8([8. Visualizar Dashboards]):::usecaseStyle
         UC9([9. Acompanhar Progresso]):::usecaseStyle
         UC10([10. Receber Alertas e Interpretações]):::usecaseStyle
     end

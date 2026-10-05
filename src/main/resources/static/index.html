@@ -51,6 +51,9 @@
             opacity: 1;
             transform: translateX(0);
         }
+        .metric-card[data-href] {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -120,7 +123,7 @@
                     <i class="fa-solid fa-leaf welcome-icon"></i>
                 </article>
 
-                <article class="card metric-card hydration-card" id="cardHidratacao">
+                <article class="card metric-card hydration-card" id="cardHidratacao" data-href="hidratacao.html" tabindex="0" role="link">
                     <div class="metric-head">
                         <span class="icon"><i class="fa-solid fa-droplet"></i></span>
                         <span class="metric-status" id="statusAgua">Hoje</span>
@@ -136,7 +139,7 @@
                     </div>
                 </article>
 
-                <article class="card metric-card sleep-card" id="cardSono">
+                <article class="card metric-card sleep-card" id="cardSono" data-href="sono.html" tabindex="0" role="link">
                     <div class="metric-head">
                         <span class="icon"><i class="fa-solid fa-moon"></i></span>
                         <span class="metric-status" id="statusSono">Último registro</span>
@@ -150,7 +153,7 @@
                     <p id="sonoDescricao">Registre uma noite para acompanhar sua qualidade.</p>
                 </article>
 
-                <article class="card metric-card workout-card" id="cardTreinos">
+                <article class="card metric-card workout-card" id="cardTreinos" data-href="treinos.html" tabindex="0" role="link">
                     <div class="metric-head">
                         <span class="icon"><i class="fa-solid fa-dumbbell"></i></span>
                         <span class="metric-status" id="statusTreinos">Hoje</span>
@@ -368,11 +371,21 @@
             return { hoje, minutos, calorias };
         }
 
-        function atualizarRotina(aguaHoje, sonoInfo, treinosHoje) {
+        function atualizarRotina(aguaHoje, sonoInfo, treinosHoje, rotinas) {
             const rotina = document.getElementById('resumoRotina');
             rotina.replaceChildren();
 
             const atividades = [];
+            const rotinasAtivas = rotinas.filter(item => item && item.ativa);
+
+            rotinasAtivas.slice(0, 3).forEach(item => {
+                atividades.push({
+                    icon: 'fa-calendar-check',
+                    title: item.nome,
+                    detail: item.descricao || 'Rotina ativa',
+                    status: 'Ativa'
+                });
+            });
 
             if (aguaHoje.totalMl > 0) {
                 atividades.push({
@@ -406,7 +419,8 @@
                     <div class="dashboard-empty">
                         <i class="fa-regular fa-calendar"></i>
                         <strong>Seu dia ainda está vazio</strong>
-                        <p>Registre água, sono ou treino para acompanhar sua rotina aqui.</p>
+                        <p>Crie uma rotina ou registre água, sono e treino para acompanhar seu dia.</p>
+                        <a href="rotinas.html">Gerenciar rotinas</a>
                     </div>
                 `;
                 return;
@@ -496,22 +510,28 @@
             });
         }
 
-        function renderizarResumo(usuario, agua, sono, treinos, lembretes) {
+        function renderizarResumo(usuario, agua, sono, treinos, lembretes, rotinas) {
+            agua = Array.isArray(agua) ? agua : [];
+            sono = Array.isArray(sono) ? sono : [];
+            treinos = Array.isArray(treinos) ? treinos : [];
+            lembretes = Array.isArray(lembretes) ? lembretes : [];
+            rotinas = Array.isArray(rotinas) ? rotinas : [];
             const aguaHoje = atualizarCardAgua(agua);
             const sonoInfo = atualizarCardSono(sono);
             const treinosHoje = atualizarCardTreinos(treinos);
 
-            atualizarRotina(aguaHoje, sonoInfo, treinosHoje);
+            atualizarRotina(aguaHoje, sonoInfo, treinosHoje, rotinas);
             const consistencia = atualizarProgresso(agua, sono, treinos);
             atualizarLembretes(lembretes);
 
             const status = document.getElementById('statusDia');
             const totalRegistrosHoje = aguaHoje.hoje.length + treinosHoje.hoje.length +
                 sono.filter(r => mesmoDia(r.horaDormir)).length;
+            const totalRotinasAtivas = rotinas.filter(item => item && item.ativa).length;
 
-            status.innerHTML = totalRegistrosHoje
-                ? `<i class="fa-solid fa-circle-check"></i><span>${totalRegistrosHoje} registro(s) hoje · ${consistencia}% de consistência</span>`
-                : `<i class="fa-solid fa-circle-info"></i><span>Comece registrando um hábito hoje.</span>`;
+            status.innerHTML = totalRegistrosHoje || totalRotinasAtivas
+                ? `<i class="fa-solid fa-circle-check"></i><span>${totalRegistrosHoje} registro(s) hoje · ${totalRotinasAtivas} rotina(s) ativa(s) · ${consistencia}% de consistência</span>`
+                : `<i class="fa-solid fa-circle-info"></i><span>Comece registrando um hábito ou criando uma rotina.</span>`;
         }
 
         function exibirToast(lembrete) {
@@ -563,7 +583,7 @@
 
                     return Promise.all([
                         requisicaoAutenticada('/registroAgua'),
-                        requisicaoAutenticada(`/registrosono/usuario/${usuario.id}`),
+                        requisicaoAutenticada('/registrosono/'),
                         requisicaoAutenticada('/registroexercicio'),
                         requisicaoAutenticada('/lembretes'),
                         requisicaoAutenticada('/api/rotinas')
@@ -600,6 +620,8 @@
                 }).catch(() => {
                     sessionStorage.removeItem('jwtToken');
                     sessionStorage.removeItem('usuarioLogado');
+                    document.getElementById('statusDia').innerHTML =
+                        '<i class="fa-solid fa-triangle-exclamation"></i><span>Não foi possível carregar todos os dados.</span>';
                 });
         } else {
             document.getElementById('nomeUsuario').textContent = 'Visitante!';
@@ -629,6 +651,17 @@
                 }
             });
         }
+
+        document.querySelectorAll('[data-href]').forEach(card => {
+            const abrir = () => window.location.href = card.dataset.href;
+            card.addEventListener('click', abrir);
+            card.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    abrir();
+                }
+            });
+        });
     </script>
 </body>
 </html>

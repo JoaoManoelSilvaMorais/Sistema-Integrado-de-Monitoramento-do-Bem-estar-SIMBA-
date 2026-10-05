@@ -1,6 +1,7 @@
 package br.simba.bem_estar.registroSono;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -40,9 +41,13 @@ public class RegistroSonoController {
     public List<RegistroSonoModel> getAllRegistroSono(
             Authentication authentication) {
 
-        return registroSonoRepository.findByUsuario(
-                usuarioAutenticado(authentication)
-        );
+        UserModel usuario = usuarioAutenticado(authentication);
+
+        return registroSonoRepository.findAll().stream()
+                .filter(registro -> registro.getUsuario() != null
+                        && registro.getUsuario().getUsername()
+                                .equals(usuario.getUsername()))
+                .collect(Collectors.toList());
     }
 
     // puxar um registro específico por id

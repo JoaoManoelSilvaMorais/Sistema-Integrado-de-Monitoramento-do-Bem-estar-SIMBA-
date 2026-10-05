@@ -732,21 +732,9 @@ formSono.addEventListener(
 
 
         const registro = {
-
-            horaDormir:
-                horaDormir,
-
-            horaAcordar:
-                horaAcordar,
-
-            notaSono:
-                notaSono,
-
-            usuario: {
-                id:
-                    usuarioAtual.id
-            }
-
+            horaDormir,
+            horaAcordar,
+            notaSono
         };
 
 
@@ -802,11 +790,10 @@ formSono.addEventListener(
 
 
             if (!response.ok) {
-
+                const detalhe = await response.text();
                 throw new Error(
-                    "Não foi possível salvar o registro."
+                    detalhe || "Não foi possível salvar o registro."
                 );
-
             }
 
 
@@ -849,7 +836,7 @@ async function carregarRegistros() {
         const response =
             await fetch(
 
-                `${API_URL}/usuario/${usuarioAtual.id}`,
+                `${API_URL}/`,
 
                 {
                     headers:

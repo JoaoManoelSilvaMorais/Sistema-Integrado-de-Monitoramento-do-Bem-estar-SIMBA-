@@ -1,126 +1,889 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simba - Meu perfil</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
 
-        body {
-            min-height: 100vh;
-            margin: 0;
-            display: grid;
-            place-items: center;
-            padding: 24px;
-            background: #eef5ef;
-            color: #173b27;
-        }
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-        main {
-            width: 100%;
-            max-width: 480px;
-            padding: 32px;
-            background: #ffffff;
-            border: 1px solid #d5e3d7;
-            border-radius: 10px;
-            box-shadow: 0 8px 24px rgba(23, 59, 39, 0.12);
-        }
+    <title>SIMBA - Meu Perfil</title>
 
-        h1 {
-            margin: 0 0 24px;
-            font-size: 26px;
-        }
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
 
-        dl {
-            margin: 0;
-        }
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
 
-        dt {
-            margin-top: 18px;
-            color: #5b7564;
-            font-size: 13px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
 
-        dd {
-            margin: 5px 0 0;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #e2ece4;
-            font-size: 17px;
-        }
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
 
-        button {
-            width: 100%;
-            margin-top: 28px;
-            padding: 13px;
-            border: 0;
-            border-radius: 7px;
-            background: #1aa362;
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
 
-        button:hover {
-            background: #158750;
-        }
-    </style>
+    <link
+        rel="stylesheet"
+        href="css/perfil.css"
+    >
+
 </head>
+
+
 <body>
-    <main>
-        <h1>Meu perfil</h1>
-        <dl>
-            <dt>Nome</dt>
-            <dd id="nome">-</dd>
-            <dt>Nome de usuário</dt>
-            <dd id="username">-</dd>
-            <dt>E-mail</dt>
-            <dd id="email">-</dd>
-        </dl>
-        <button type="button" id="sair">Sair</button>
+
+
+<div class="layout">
+
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+
+        <div class="logo">
+
+            <img
+                src="img/LeaoLogoPNG.png"
+                alt="SIMBA"
+            >
+
+            <img
+                src="img/NomeLogoPNG.png"
+                alt="SIMBA"
+                class="logo-name"
+            >
+
+        </div>
+
+
+
+        <nav>
+
+
+            <a href="index.html">
+
+                <i class="fa-solid fa-house"></i>
+
+                Dashboard
+
+            </a>
+
+
+            <a href="hidratacao.html">
+
+                <i class="fa-solid fa-droplet"></i>
+
+                Hidratação
+
+            </a>
+
+
+            <a href="sono.html">
+
+                <i class="fa-solid fa-moon"></i>
+
+                Sono
+
+            </a>
+
+
+            <a href="treinos.html">
+
+                <i class="fa-solid fa-dumbbell"></i>
+
+                Treinos
+
+            </a>
+
+
+            <a href="#">
+
+                <i class="fa-solid fa-calendar-check"></i>
+
+                Rotina
+
+            </a>
+
+
+            <a href="lembretes.html">
+
+                <i class="fa-solid fa-bell"></i>
+
+                Lembretes
+
+            </a>
+
+
+            <a href="progresso.html">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                Progresso
+
+            </a>
+
+
+            <a href="conquistas.html">
+
+                <i class="fa-solid fa-trophy"></i>
+
+                Conquistas
+
+            </a>
+
+
+        </nav>
+
+
+
+        <div class="bottom-menu">
+
+
+            <a
+                href="perfil.html"
+                class="active"
+            >
+
+                <i class="fa-solid fa-user"></i>
+
+                Meu perfil
+
+            </a>
+
+
+            <a
+                href="entrar.html"
+                id="sair"
+            >
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                Sair
+
+            </a>
+
+
+        </div>
+
+
+    </aside>
+
+    <main class="perfil-main">
+
+        <header>
+
+
+            <button
+                class="menu-button"
+                id="menuButton"
+            >
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+
+
+            <div>
+
+                <span class="label">
+                    PERFIL
+                </span>
+
+                <h1>
+                    Meu perfil
+                </h1>
+
+                <p>
+                    Visualize e gerencie as informações
+                    da sua conta.
+                </p>
+
+            </div>
+
+
+
+            <div class="user">
+
+
+                <button class="notification">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                </button>
+
+
+                <div
+                    class="avatar"
+                    id="avatarUsuario"
+                >
+                    U
+                </div>
+
+
+                <a
+                    class="login-button"
+                    id="loginButton"
+                    href="entrar.html"
+                >
+                    Entrar
+                </a>
+
+
+            </div>
+
+
+        </header>
+
+        <!-- CARD DO PERFIL -->
+        <section class="perfil-container">
+
+
+            <article class="perfil-card">
+
+
+                <!-- AVATAR -->
+                <div
+                    class="perfil-avatar"
+                    id="avatarPerfil"
+                >
+                    U
+                </div>
+
+                <div class="perfil-divider"></div>
+
+                <!-- CONTA -->
+                <div class="perfil-secao">
+
+
+                    <span class="perfil-secao-titulo">
+                        CONTA
+                    </span>
+
+                    <!-- NOME -->
+                    <div class="perfil-info-linha">
+
+
+                        <div class="perfil-info-icone">
+
+                            <i class="fa-regular fa-address-card"></i>
+
+                        </div>
+
+
+                        <div class="perfil-info-texto">
+
+                            <span>
+                                Nome
+                            </span>
+
+                            <strong id="nomeInfo">
+                                --
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                    <!-- USERNAME -->
+                    <div class="perfil-info-linha">
+
+
+                        <div class="perfil-info-icone">
+
+                            <i class="fa-regular fa-user"></i>
+
+                        </div>
+
+
+                        <div class="perfil-info-texto">
+
+                            <span>
+                                Nome de usuário
+                            </span>
+
+                            <strong id="usernameInfo">
+                                --
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                    <!-- EMAIL -->
+                    <div class="perfil-info-linha">
+
+
+                        <div class="perfil-info-icone">
+
+                            <i class="fa-regular fa-envelope"></i>
+
+                        </div>
+
+
+                        <div class="perfil-info-texto">
+
+                            <span>
+                                E-mail
+                            </span>
+
+                            <strong id="emailInfo">
+                                --
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+                <div class="perfil-divider"></div>
+
+                <!-- AÇÕES -->
+                <div class="perfil-secao">
+
+
+                    <span class="perfil-secao-titulo">
+                        CONFIGURAÇÕES
+                    </span>
+
+
+
+                    <button
+                        type="button"
+                        class="perfil-acao"
+                        id="btnEditarDados"
+                    >
+
+
+                        <div class="perfil-acao-esquerda">
+
+
+                            <span class="perfil-acao-icone">
+
+                                <i class="fa-solid fa-pen"></i>
+
+                            </span>
+
+
+                            <div>
+
+                                <strong>
+                                    Editar informações
+                                </strong>
+
+                                <small>
+                                    Altere nome, usuário e e-mail
+                                </small>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <i class="fa-solid fa-chevron-right"></i>
+
+
+                    </button>
+
+
+
+                    <button
+                        type="button"
+                        class="perfil-acao"
+                        id="btnAlterarSenha"
+                    >
+
+
+                        <div class="perfil-acao-esquerda">
+
+
+                            <span class="perfil-acao-icone">
+
+                                <i class="fa-solid fa-lock"></i>
+
+                            </span>
+
+
+                            <div>
+
+                                <strong>
+                                    Alterar senha
+                                </strong>
+
+                                <small>
+                                    Atualize sua senha de acesso
+                                </small>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <i class="fa-solid fa-chevron-right"></i>
+
+
+                    </button>
+
+
+                </div>
+
+
+            </article>
+
+
+        </section>
+
+        <div
+            class="perfil-mensagem"
+            id="perfilMensagem"
+        >
+
+            <i class="fa-solid fa-circle-info"></i>
+
+            <span id="perfilMensagemTexto"></span>
+
+        </div>
+
+        <footer>
+
+            <span>
+                CTO - Mufasa Softwares© 2026
+            </span>
+
+        </footer>
+
+
     </main>
 
-    <script>
-        const token = sessionStorage.getItem('jwtToken');
 
-        if (!token) {
-            window.location.href = 'entrar.html';
-        } else {
-            fetch('/users/me', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(usuario => {
-                    sessionStorage.setItem('usuarioLogado', JSON.stringify(usuario));
-                    document.getElementById('nome').textContent = usuario.name || '-';
-                    document.getElementById('username').textContent = usuario.username || '-';
-                    document.getElementById('email').textContent = usuario.email || '-';
-                })
-                .catch(() => {
-                    sessionStorage.removeItem('jwtToken');
-                    sessionStorage.removeItem('usuarioLogado');
-                    window.location.href = 'entrar.html';
-                });
-        }
+</div>
 
-        document.getElementById('sair').addEventListener('click', function() {
-            sessionStorage.removeItem('jwtToken');
-            sessionStorage.removeItem('usuarioLogado');
-            window.location.href = 'entrar.html';
-        });
-    </script>
+<!-- MODAL - EDITAR INFORMAÇÕES -->
+<div
+    class="modal-overlay"
+    id="modalDados"
+>
+
+
+    <div class="modal-perfil">
+
+
+        <div class="modal-header">
+
+
+            <div>
+
+                <span class="label">
+                    CONTA
+                </span>
+
+                <h2>
+                    Editar informações
+                </h2>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                id="btnFecharDados"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+
+        </div>
+
+
+
+        <form id="formDados">
+
+            <!-- NOME -->
+            <div class="form-group">
+
+
+                <label for="nomeInput">
+                    Nome
+                </label>
+
+
+                <div class="input-wrapper">
+
+
+                    <i class="fa-regular fa-address-card"></i>
+
+
+                    <input
+                        type="text"
+                        id="nomeInput"
+                        required
+                        autocomplete="name"
+                    >
+
+
+                </div>
+
+
+            </div>
+
+            <!-- USERNAME -->
+            <div class="form-group">
+
+
+                <label for="usernameInput">
+                    Nome de usuário
+                </label>
+
+
+                <div class="input-wrapper">
+
+
+                    <i class="fa-regular fa-user"></i>
+
+
+                    <input
+                        type="text"
+                        id="usernameInput"
+                        required
+                        autocomplete="username"
+                    >
+
+
+                </div>
+
+
+            </div>
+
+            <!-- EMAIL -->
+            <div class="form-group">
+
+
+                <label for="emailInput">
+                    E-mail
+                </label>
+
+
+                <div class="input-wrapper">
+
+
+                    <i class="fa-regular fa-envelope"></i>
+
+
+                    <input
+                        type="email"
+                        id="emailInput"
+                        required
+                        autocomplete="email"
+                    >
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="modal-info">
+
+
+                <i class="fa-solid fa-circle-info"></i>
+
+
+                <p>
+                    Caso o nome de usuário seja alterado,
+                    sua sessão será atualizada automaticamente.
+                </p>
+
+
+            </div>
+
+
+
+            <div class="modal-actions">
+
+
+                <button
+                    type="button"
+                    class="btn-cancelar"
+                    id="btnCancelarDados"
+                >
+                    Cancelar
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn-salvar"
+                >
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Salvar alterações
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+
+</div>
+
+<!-- MODAL - ALTERAR SENHA -->
+<div
+    class="modal-overlay"
+    id="modalSenha"
+>
+
+
+    <div class="modal-perfil">
+
+
+        <div class="modal-header">
+
+
+            <div>
+
+                <span class="label">
+                    SEGURANÇA
+                </span>
+
+                <h2>
+                    Alterar senha
+                </h2>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                id="btnFecharSenha"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+
+        </div>
+
+
+
+        <form id="formSenha">
+
+            <!-- SENHA ATUAL -->
+            <div class="form-group">
+
+
+                <label for="senhaAtual">
+                    Senha atual
+                </label>
+
+
+                <div class="input-wrapper senha-wrapper">
+
+
+                    <i class="fa-solid fa-lock"></i>
+
+
+                    <input
+                        type="password"
+                        id="senhaAtual"
+                        required
+                        autocomplete="current-password"
+                    >
+
+
+                    <button
+                        type="button"
+                        class="btn-mostrar-senha"
+                        data-input="senhaAtual"
+                    >
+
+                        <i class="fa-regular fa-eye"></i>
+
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+            <!-- NOVA SENHA -->
+            <div class="form-group">
+
+
+                <label for="novaSenha">
+                    Nova senha
+                </label>
+
+
+                <div class="input-wrapper senha-wrapper">
+
+
+                    <i class="fa-solid fa-lock"></i>
+
+
+                    <input
+                        type="password"
+                        id="novaSenha"
+                        required
+                        autocomplete="new-password"
+                    >
+
+
+                    <button
+                        type="button"
+                        class="btn-mostrar-senha"
+                        data-input="novaSenha"
+                    >
+
+                        <i class="fa-regular fa-eye"></i>
+
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+            <!-- CONFIRMAR SENHA -->
+            <div class="form-group">
+
+
+                <label for="confirmarSenha">
+                    Confirmar nova senha
+                </label>
+
+
+                <div class="input-wrapper senha-wrapper">
+
+
+                    <i class="fa-solid fa-lock"></i>
+
+
+                    <input
+                        type="password"
+                        id="confirmarSenha"
+                        required
+                        autocomplete="new-password"
+                    >
+
+
+                    <button
+                        type="button"
+                        class="btn-mostrar-senha"
+                        data-input="confirmarSenha"
+                    >
+
+                        <i class="fa-regular fa-eye"></i>
+
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="modal-info">
+
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+
+                <p>
+                    Sua senha atual será validada antes
+                    que a nova senha seja salva.
+                </p>
+
+
+            </div>
+
+
+
+            <div class="modal-actions">
+
+
+                <button
+                    type="button"
+                    class="btn-cancelar"
+                    id="btnCancelarSenha"
+                >
+                    Cancelar
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn-salvar"
+                >
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Alterar senha
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+
+</div>
+
+<div
+    class="overlay"
+    id="overlay"
+></div>
+
+<script src="js/script.js"></script>
+
+<script src="js/perfil.js"></script>
+
+
 </body>
+
 </html>

@@ -38,6 +38,7 @@ public class SecurityConfig {
                     "/",
                     "/index.html",
                     "/treinos.html",
+                    "/progresso.html",
                     "/sono.html",
                     "/entrar.html",
                     "/login.html",

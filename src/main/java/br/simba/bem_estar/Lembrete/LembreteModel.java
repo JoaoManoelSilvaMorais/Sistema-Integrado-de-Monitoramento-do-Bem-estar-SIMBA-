@@ -1,4 +1,4 @@
-package br.simba.bem_estar.lembrete;
+package br.simba.bem_estar.Lembrete;
 
 import jakarta.persistence.*;
 import br.simba.bem_estar.user.UserModel;

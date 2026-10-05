@@ -394,6 +394,13 @@ footer {
         grid-template-columns: 1fr;
     }
 
+    .resumo-rotina-item {
+        border-left: 3px solid #1aa362;
+        color: #4d6658;
+        margin: 7px 0 0;
+        padding-left: 9px;
+    }
+
     .welcome,
     .large {
         grid-column: span 1;

@@ -9,6 +9,7 @@ import br.simba.bem_estar.perfil.PerfilModel;
 import br.simba.bem_estar.registroAgua.RegistroAguaModel;
 import br.simba.bem_estar.registroExercicio.RegistroExercicioModel;
 import br.simba.bem_estar.registroSono.RegistroSonoModel;
+import br.simba.bem_estar.rotina.RotinaModel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -45,6 +46,10 @@ public class UserModel {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
     private List<RegistroAguaModel> registroAgua;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
+    private List<RotinaModel> rotinas;
 
     public UserModel() {
     }
@@ -141,6 +146,14 @@ public class UserModel {
 
     public void setRegistroAgua(List<RegistroAguaModel> registroAgua) {
         this.registroAgua = registroAgua;
+    }
+
+    public List<RotinaModel> getRotinas() {
+        return rotinas;
+    }
+
+    public void setRotinas(List<RotinaModel> rotinas) {
+        this.rotinas = rotinas;
     }
 
 }

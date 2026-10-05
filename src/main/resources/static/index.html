@@ -65,7 +65,7 @@
                 <a href="hidratacao.html"><i class="fa-solid fa-droplet"></i>Hidratação</a>
                 <a href="sono.html"><i class="fa-solid fa-moon"></i>Sono</a>
                 <a href="treinos.html"><i class="fa-solid fa-dumbbell"></i>Treinos</a>
-                <a href="#"><i class="fa-solid fa-calendar-check"></i>Rotina</a>
+                <a href="rotinas.html"><i class="fa-solid fa-calendar-check"></i>Rotina</a>
                 <a href="lembretes.html"><i class="fa-solid fa-bell"></i>Lembretes</a>
                 <a href="progresso.html"><i class="fa-solid fa-chart-line"></i>Progresso</a>
             </nav>
@@ -149,7 +149,7 @@
                             <span class="label">ROTINA</span>
                             <h2>Atividades de hoje</h2>
                         </div>
-                        <a href="#">Ver mais</a>
+                        <a href="rotinas.html">Ver mais</a>
                     </div>
                     <div class="empty-state" id="resumoRotina">
                         <i class="fa-regular fa-calendar"></i>
@@ -224,7 +224,7 @@
             return duracao;
         }
 
-        function renderizarResumo(usuario, agua, sono, treinos, lembretes) {
+        function renderizarResumo(usuario, agua, sono, treinos, lembretes, rotinas) {
             const aguaHoje = agua.filter(registro => mesmoDia(registro.dataHora)).reduce((total, registro) => total + Number(registro.quantidadeMl || 0), 0);
             document.getElementById('resumoAgua').innerHTML = `${(aguaHoje / 1000).toFixed(1)} <small>L</small>`;
 
@@ -234,17 +234,41 @@
 
             document.getElementById('resumoTreinos').textContent = treinos.length;
 
-            const atividadesHoje = agua.filter(registro => mesmoDia(registro.dataHora)).length + treinos.filter(registro => mesmoDia(registro.dataHora)).length + sono.filter(registro => mesmoDia(registro.horaDormir)).length;
             const rotina = document.getElementById('resumoRotina');
             rotina.replaceChildren();
-            const rotinaTexto = document.createElement('p');
-            rotinaTexto.textContent = atividadesHoje ? `${atividadesHoje} registro(s) feito(s) hoje.` : 'Nenhuma atividade registrada hoje.';
-            rotina.appendChild(rotinaTexto);
+            const rotinasAtivas = rotinas.filter(item => item.ativa);
+            if (rotinasAtivas.length === 0) {
+                const rotinaTexto = document.createElement('p');
+                rotinaTexto.textContent = rotinas.length
+                    ? 'Todas as suas rotinas estão inativas.'
+                    : 'Você ainda não cadastrou uma rotina.';
+                rotina.appendChild(rotinaTexto);
+                const rotinaLink = document.createElement('a');
+                rotinaLink.href = 'rotinas.html';
+                rotinaLink.textContent = rotinas.length ? 'Ativar uma rotina' : 'Criar minha primeira rotina';
+                rotina.appendChild(rotinaLink);
+            } else {
+                const rotinaTexto = document.createElement('p');
+                rotinaTexto.textContent = `${rotinasAtivas.length} rotina(s) ativa(s) para hoje.`;
+                rotina.appendChild(rotinaTexto);
+                rotinasAtivas.slice(0, 3).forEach(item => {
+                    const rotinaItem = document.createElement('p');
+                    rotinaItem.className = 'resumo-rotina-item';
+                    rotinaItem.textContent = item.nome;
+                    rotina.appendChild(rotinaItem);
+                });
+                if (rotinasAtivas.length > 3) {
+                    const maisRotinas = document.createElement('p');
+                    maisRotinas.className = 'resumo-rotina-item';
+                    maisRotinas.textContent = `+${rotinasAtivas.length - 3} outra(s)`;
+                    rotina.appendChild(maisRotinas);
+                }
+            }
 
             const progresso = document.getElementById('resumoProgresso');
             progresso.replaceChildren();
             const progressoTexto = document.createElement('p');
-            progressoTexto.textContent = `${(aguaHoje / 1000).toFixed(1)} L de água | ${treinos.length} treino(s) | ${lembretes.length} lembrete(s)`;
+            progressoTexto.textContent = `${(aguaHoje / 1000).toFixed(1)} L de água | ${treinos.length} treino(s) | ${rotinasAtivas.length} rotina(s) ativa(s) | ${lembretes.length} lembrete(s)`;
             progresso.appendChild(progressoTexto);
 
             const resumo = document.getElementById('resumoLembretes');
@@ -315,9 +339,10 @@
                         requisicaoAutenticada('/registroAgua'),
                         requisicaoAutenticada(`/registrosono/usuario/${usuario.id}`),
                         requisicaoAutenticada('/registroexercicio'),
-                        requisicaoAutenticada('/lembretes')
-                    ]).then(([agua, sono, treinos, lembretes]) => {
-                        renderizarResumo(usuario, agua, sono, treinos, lembretes);
+                        requisicaoAutenticada('/lembretes'),
+                        requisicaoAutenticada('/api/rotinas')
+                    ]).then(([agua, sono, treinos, lembretes, rotinas]) => {
+                        renderizarResumo(usuario, agua, sono, treinos, lembretes, rotinas);
                         
                         const futuros = lembretes.filter(l => new Date(l.horario) >= new Date());
                         const badge = document.getElementById('badge-notificacao');

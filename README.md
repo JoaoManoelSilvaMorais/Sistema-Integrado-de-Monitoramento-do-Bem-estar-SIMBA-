@@ -18,6 +18,7 @@ O foco do SIMBA é oferecer conveniência, combatendo o "piloto automático" di�
 ## Objetivos Principais
 - **Centralização:** Reunir diferentes ferramentas de monitoramento de saúde em um único lugar.
 - **Rastreamento de Hábitos:** Registrar sono, consumo de água, alimentação e atividades físicas de forma simplificada.
+- **Rotinas Diárias:** Criar, visualizar, ativar, desativar e excluir rotinas pessoais, com o resumo das rotinas ativas integrado ao dashboard e ao resumo de progresso.
 - **Engajamento e Prevenção:** Sistema de lembretes (ex: medicamentos), streaks (ofensivas), e orientações preditivas baseadas na rotina do usuário.
 - **Interpretação Acessível:** Traduzir dados fisiológicos para uma linguagem simples e clara para usuários leigos.
 
@@ -98,100 +99,60 @@ classDiagram
     direction TB
 
     class UserModel {
-        <>
-        +UUID id
-        +String nome
+        +Long id
+        +String name
+        +String username
         +String email
-        +String senha
-        +Date dataCadastro
+        +String password
         +PerfilModel perfil
-        +List~RegistroSono~ registrosSono
-        +List~RegistroAgua~ registrosAgua
-        +List~RegistroAlimentacao~ registrosAlimentacao
-        +List~RegistroExercicio~ registrosExercicio
-        +List~DadoClinico~ dadosClinicos
-        +List~SinalCorporal~ sinaisCorporais
-        +List~Medicamento~ medicamentos
-        +List~Rotina~ rotinas
+        +List~RotinaModel~ rotinas
+        +List~RegistroSonoModel~ registroSono
+        +List~RegistroAguaModel~ registroAgua
+        +List~RegistroExercicioModel~ registroExercicio
     }
 
     class PerfilModel {
-        <>
-        +UUID id
-        +Date dataNascimento
-        +float pesoAtual
-        +float altura
-        +int streakDias
+        +Long id
+        +double peso
+        +double altura
+        +Integer idade
+        +Integer streak
+        +UserModel Usuario
+    }
+
+    class RegistroSonoModel {
+        +Long id
+        +LocalDateTime horaDormir
+        +LocalDateTime horaAcordar
+        +Integer notaSono
         +UserModel usuario
     }
 
-    class RegistroSono {
-        <>
-        +UUID id
-        +DateTime horaDormir
-        +DateTime horaAcordar
-        +int tempoRemMinutos
-        +int tempoProfundoMinutos
+    class RegistroAguaModel {
+        +Long id
+        +double quantidadeMl
+        +LocalDateTime dataHora
         +UserModel usuario
     }
 
-    class RegistroAgua {
-        <>
-        +UUID id
-        +int quantidadeMl
-        +DateTime dataHora
-        +UserModel usuario
-    }
-
-    class RegistroAlimentacao {
-        <>
-        +UUID id
-        +String descricaoRefeicao
-        +DateTime dataHora
-        +UserModel usuario
-    }
-
-    class RegistroExercicio {
-        <>
-        +UUID id
+    class RegistroExercicioModel {
+        +Long id
         +String modalidade
-        +int duracaoMinutos
-        +float gastoCaloricoEstimado
-        +DateTime dataHora
+        +Integer duracaominutos
+        +float gastoCaloricoExtimado
+        +LocalDateTime dataHora
         +UserModel usuario
     }
 
-    class DadoClinico {
-        <>
-        +UUID id
-        +String pressaoArterial
-        +int frequenciaCardiaca
-        +float pesoMedido
-        +DateTime dataMedicao
+    class LembreteModel {
+        +Long id
+        +String titulo
+        +String mensagem
+        +LocalDateTime horario
         +UserModel usuario
     }
 
-    class SinalCorporal {
-        <>
-        +UUID id
-        +String tipoSinal
-        +String intensidade
-        +String humor
-        +DateTime dataRegistro
-        +UserModel usuario
-    }
-
-    class Medicamento {
-        <>
-        +UUID id
-        +String nome
-        +String dosagem
-        +Time horarioLembrete
-        +UserModel usuario
-    }
-
-    class Rotina {
-        <>
+    class RotinaModel {
         +UUID id
         +String nome
         +String descricao
@@ -201,14 +162,11 @@ classDiagram
 
     %% Relacionamentos JPA (Spring Boot)
     UserModel "1" -- "1" PerfilModel : @OneToOne
-    UserModel "1" -- "*" RegistroSono : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" RegistroAgua : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" RegistroAlimentacao : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" RegistroExercicio : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" DadoClinico : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" SinalCorporal : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" Medicamento : @OneToMany / @ManyToOne
-    UserModel "1" -- "*" Rotina : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" RegistroSonoModel : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" RegistroAguaModel : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" RegistroExercicioModel : @OneToMany / @ManyToOne
+    UserModel "1" -- "*" LembreteModel : @ManyToOne
+    UserModel "1" -- "*" RotinaModel : @OneToMany / @ManyToOne
 ```
 
 ---

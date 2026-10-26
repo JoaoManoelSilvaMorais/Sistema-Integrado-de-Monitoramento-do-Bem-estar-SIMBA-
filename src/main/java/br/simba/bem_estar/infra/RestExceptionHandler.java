@@ -1,3 +1,4 @@
+
 package br.simba.bem_estar.infra;
 
 import org.springframework.http.HttpStatus;

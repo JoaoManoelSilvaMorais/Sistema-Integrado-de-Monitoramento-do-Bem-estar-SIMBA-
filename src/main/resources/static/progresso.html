@@ -40,6 +40,11 @@
         rel="stylesheet"
         href="css/progresso.css"
     >
+
+    <link
+        rel="stylesheet"
+        href="css/metas.css"
+    >
 </head>
 
 
@@ -112,6 +117,13 @@
             >
                 <i class="fa-solid fa-chart-line"></i>
                 Progresso
+            </a>
+
+            <a
+                href="conquistas.html"
+            >
+                <i class="fa-solid fa-trophy"></i>
+                Conquistas
             </a>
 
 
@@ -269,6 +281,15 @@
 
             </div>
 
+        </section>
+
+        <!-- COMPARATIVO SEMANAL (js/comparativo.js) -->
+        <section class="comparativo" id="comparativo" hidden>
+            <h2 class="comparativo-titulo">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+                Esta semana x semana passada
+            </h2>
+            <div class="comparativo-grade" id="comparativoGrade"></div>
         </section>
 
         <!-- CARDS DE RESUMO -->
@@ -629,6 +650,7 @@
 ></script>
 
 <script src="js/progresso.js"></script>
+<script src="js/comparativo.js"></script>
 
 </body>
 

@@ -33,12 +33,10 @@ const dataHora =
 
 
 /*
-    Meta temporária do front-end.
-
-    Depois, quando vocês adicionarem metaAguaMl ao PerfilModel,
-    este valor pode vir do backend.
+    Meta diária de água. 3000 é só o valor inicial: assim que a tela abre,
+    o valor real (personalizado ou calculado pelo peso) vem de /api/metas/agua.
 */
-const META_DIARIA_ML = 3000;
+let META_DIARIA_ML = 3000;
 
 
 /*
@@ -1546,6 +1544,25 @@ document
         }
 
     );
+
+
+/* =========================================================
+   META PERSONALIZADA (vem de /api/metas/agua)
+   ========================================================= */
+
+if (token) {
+    fetch("/api/metas/agua", { headers: { "Authorization": `Bearer ${token}` } })
+        .then(r => r.ok ? r.json() : null)
+        .then(dados => {
+            if (dados && dados.metaMl > 0) {
+                META_DIARIA_ML = dados.metaMl;
+                const eixo = document.getElementById("graficoMaximo");
+                if (eixo) eixo.textContent = `${META_DIARIA_ML} ml`;
+                renderizarHidratacao();
+            }
+        })
+        .catch(() => { /* mantém o valor inicial */ });
+}
 
 
 /* =========================================================

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SIMBA - Conquistas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/conquistas.css">
+    <link rel="stylesheet" href="css/metas.css">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <img src="img/LeaoLogoPNG.png" alt="SIMBA">
+                <img src="img/NomeLogoPNG.png" alt="SIMBA" class="logo-name">
+            </div>
+            <nav>
+                <a href="index.html"><i class="fa-solid fa-house"></i> Dashboard</a>
+                <a href="hidratacao.html"><i class="fa-solid fa-droplet"></i> Hidratação</a>
+                <a href="sono.html"><i class="fa-solid fa-moon"></i> Sono</a>
+                <a href="treinos.html"><i class="fa-solid fa-dumbbell"></i> Treinos</a>
+                <a href="rotinas.html"><i class="fa-solid fa-calendar-check"></i> Rotina</a>
+                <a href="lembretes.html"><i class="fa-solid fa-bell"></i> Lembretes</a>
+                <a href="progresso.html"><i class="fa-solid fa-chart-line"></i> Progresso</a>
+                <a class="active" href="conquistas.html"><i class="fa-solid fa-trophy"></i> Conquistas</a>
+            </nav>
+            <div class="bottom-menu">
+                <a href="perfil.html"><i class="fa-solid fa-user"></i> Meu perfil</a>
+                <a href="entrar.html" id="sair"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
+            </div>
+        </aside>
+        <main>
+            <header>
+                <button class="menu-button" id="menuButton" type="button"><i class="fa-solid fa-bars"></i></button>
+                <div>
+                    <span class="label">RECOMPENSAS</span>
+                    <h1>Minhas conquistas</h1>
+                    <p>Mantenha seus hábitos em dia e desbloqueie cada conquista.</p>
+                </div>
+                <div class="user">
+                    <div class="avatar" id="avatarUsuario">U</div>
+                    <a class="login-button" id="loginButton" href="entrar.html">Entrar</a>
+                </div>
+            </header>
+            <section class="conq-content">
+                <article class="card conq-resumo">
+                    <div class="conq-resumo-numero">
+                        <span class="label">DESBLOQUEADAS</span>
+                        <h2><span id="totalDesbloqueadas">--</span> <small>de <span id="totalConquistas">--</span></small></h2>
+                    </div>
+                    <div class="conq-resumo-meio">
+                        <div class="conq-barra conq-barra-grande"><span id="barraGeral" style="width: 0%"></span></div>
+                        <p id="textoResumo">Carregando suas conquistas...</p>
+                    </div>
+                    <div class="conq-filtros" id="filtros">
+                        <button type="button" class="ativo" data-filtro="todas">Todas</button>
+                        <button type="button" data-filtro="desbloqueadas">Desbloqueadas</button>
+                        <button type="button" data-filtro="bloqueadas">Bloqueadas</button>
+                    </div>
+                </article>
+                <div class="metas-area" id="metas">
+                    <article class="card">
+                        <h2><i class="fa-solid fa-bullseye"></i> Minhas metas</h2>
+                        <p class="sub">Escolha um desafio e o SIMBA acompanha o progresso sozinho, a partir de hoje.</p>
+                        <div id="listaMetas"></div>
+                        <form class="metas-form" id="formMeta">
+                            <select id="tipoMeta" aria-label="Tipo de meta"></select>
+                            <input type="number" id="alvoMeta" min="2" aria-label="Alvo da meta">
+                            <button type="submit" class="principal">Criar meta</button>
+                        </form>
+                        <p class="metas-msg" id="msgMetas" role="status"></p>
+                    </article>
+                    <article class="card">
+                        <h2><i class="fa-solid fa-droplet"></i> Meta de água</h2>
+                        <p class="sub" id="aguaTexto">Carregando...</p>
+                        <div class="agua-meta-valor" id="aguaValor">-- ml</div>
+                        <form class="metas-form" id="formAgua">
+                            <input type="number" id="aguaInput" min="500" max="8000" step="50" aria-label="Meta de água em ml">
+                            <button type="submit" class="principal">Salvar</button>
+                            <button type="button" id="aguaAuto">Usar a sugerida</button>
+                        </form>
+                        <p class="metas-msg" id="msgAgua" role="status"></p>
+                    </article>
+                </div>
+                <p class="conq-mensagem" id="mensagem" role="status"></p>
+                <div id="listaConquistas"></div>
+            </section>
+            <footer><span>CTO - Mufasa Softwares© 2026</span></footer>
+        </main>
+    </div>
+    <div id="toast-container" class="toast-container"></div>
+    <div class="overlay" id="overlay"></div>
+    <script src="js/script.js"></script>
+    <script src="js/conquistas.js"></script>
+    <script src="js/metas.js"></script>
+</body>
+</html>

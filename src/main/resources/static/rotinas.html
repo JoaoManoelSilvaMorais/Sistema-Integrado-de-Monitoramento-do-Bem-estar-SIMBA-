@@ -26,6 +26,7 @@
                 <a class="active" href="rotinas.html"><i class="fa-solid fa-calendar-check"></i> Rotina</a>
                 <a href="lembretes.html"><i class="fa-solid fa-bell"></i> Lembretes</a>
                 <a href="progresso.html"><i class="fa-solid fa-chart-line"></i> Progresso</a>
+                <a href="conquistas.html"><i class="fa-solid fa-trophy"></i> Conquistas</a>
             </nav>
             <div class="bottom-menu">
                 <a href="perfil.html"><i class="fa-solid fa-user"></i> Meu perfil</a>
@@ -38,7 +39,7 @@
                 <div>
                     <span class="label">ORGANIZAÇÃO</span>
                     <h1>Minhas rotinas</h1>
-                    <p>Planeje pequenos hábitos para cuidar de você todos os dias.</p>
+                    <p>Crie rotinas e defina lembretes com horário e dias da semana para cada uma.</p>
                 </div>
                 <div class="user">
                     <div class="avatar" id="avatarUsuario">U</div>
@@ -49,12 +50,12 @@
                 <div class="rotinas-grid">
                     <article class="card rotina-form-card">
                         <span class="label">NOVA ROTINA</span>
-                        <h2>Adicione um hábito</h2>
+                        <h2>Crie uma rotina</h2>
                         <form id="formRotina">
                             <label for="nome">Nome da rotina</label>
-                            <input id="nome" name="nome" maxlength="100" required placeholder="Ex.: Alongamento matinal">
+                            <input id="nome" name="nome" maxlength="100" required placeholder="Ex.: Treinos, Leitura, Estudo">
                             <label for="descricao">Descrição <span>(opcional)</span></label>
-                            <textarea id="descricao" name="descricao" maxlength="250" rows="4" placeholder="Ex.: Alongar por 10 minutos"></textarea>
+                            <textarea id="descricao" name="descricao" maxlength="250" rows="4" placeholder="Ex.: Treino de segunda a sexta na academia"></textarea>
                             <button class="btn-principal" type="submit"><i class="fa-solid fa-plus"></i> Criar rotina</button>
                         </form>
                         <p class="mensagem" id="mensagem" role="status"></p>
@@ -74,6 +75,7 @@
             <footer><span>CTO - Mufasa Softwares© 2026</span></footer>
         </main>
     </div>
+    <div id="toast-container" class="toast-container"></div>
     <div class="overlay" id="overlay"></div>
     <script src="js/script.js"></script>
     <script src="js/rotinas.js"></script>

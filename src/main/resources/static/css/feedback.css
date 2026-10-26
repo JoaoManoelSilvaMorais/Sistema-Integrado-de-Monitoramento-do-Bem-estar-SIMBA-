@@ -1,0 +1,50 @@
+/* Avisos de feedback ao registrar (ofensiva, conquista, meta) - usado por js/feedback.js */
+.simba-toasts {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.simba-toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 290px;
+    padding: 12px 15px;
+    border-left: 4px solid #f5b82e;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.simba-toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.simba-toast > i {
+    color: #d8782f;
+    font-size: 20px;
+}
+
+.simba-toast strong {
+    display: block;
+    color: #1f2d2a;
+    font-size: 13px;
+}
+
+.simba-toast span {
+    color: #6b7a76;
+    font-size: 11px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .simba-toast { transition: none; }
+}

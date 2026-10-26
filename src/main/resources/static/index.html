@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/streak.css">
+    <link rel="stylesheet" href="css/feedback.css">
     <style>
         .user { position: relative; }
         .notificacoes-dropdown {
@@ -71,6 +73,7 @@
                 <a href="rotinas.html"><i class="fa-solid fa-calendar-check"></i>Rotina</a>
                 <a href="lembretes.html"><i class="fa-solid fa-bell"></i>Lembretes</a>
                 <a href="progresso.html"><i class="fa-solid fa-chart-line"></i>Progresso</a>
+                <a href="conquistas.html"><i class="fa-solid fa-trophy"></i>Conquistas</a>
             </nav>
             <div class="bottom-menu">
                 <a href="perfil.html"><i class="fa-solid fa-user"></i>Meu perfil</a>
@@ -110,11 +113,24 @@
             </header>
 
             <section class="cards">
+                <article class="card streak-card" id="cardStreak">
+                    <div class="streak-leao" id="streakLeao" aria-hidden="true"></div>
+                    <div class="streak-info">
+                        <span class="label">STREAK</span>
+                        <h2><span id="streakNumero">--</span> <small id="streakUnidade">dias</small></h2>
+                        <p id="streakFrase">Carregando sua ofensiva...</p>
+                    </div>
+                    <div class="streak-chips" id="streakChips"></div>
+                </article>
+
                 <article class="card welcome">
                     <div class="welcome-content">
                         <span class="label">BEM-VINDO AO SIMBA</span>
                         <h2>Cuide dos seus hábitos<br>todos os dias.</h2>
                         <p>Acompanhe sua rotina de bem-estar em um só lugar.</p>
+                        <a class="proximo-passo" id="proximoPasso" href="#" hidden>
+                            <i class="fa-solid fa-lightbulb"></i><span id="proximoPassoTexto"></span>
+                        </a>
                         <div class="welcome-status" id="statusDia">
                             <i class="fa-solid fa-circle-check"></i>
                             <span>Carregando seu resumo...</span>
@@ -137,6 +153,9 @@
                         <span id="metaAgua">Meta: 2,0 L</span>
                         <strong id="percentualAgua">--%</strong>
                     </div>
+                    <button type="button" class="btn-agua-rapida" id="btnAguaRapida">
+                        <i class="fa-solid fa-plus"></i> 250 ml
+                    </button>
                 </article>
 
                 <article class="card metric-card sleep-card" id="cardSono" data-href="sono.html" tabindex="0" role="link">
@@ -229,6 +248,8 @@
 
     <div class="overlay" id="overlay"></div>
     <script src="js/script.js"></script>
+    <script src="js/feedback.js"></script>
+    <script src="js/streak.js"></script>
     <script>
         const token = sessionStorage.getItem('jwtToken');
         const lembretesNotificados = new Set();
@@ -260,7 +281,7 @@
             return duracao;
         }
 
-        const META_AGUA_ML = 2000;
+        let META_AGUA_ML = 2000; // valor inicial; o real vem de /api/metas/agua
         const META_SONO_HORAS = 7;
 
         function escaparTexto(valor) {
@@ -324,6 +345,51 @@
             document.getElementById('statusAgua').textContent = percentual >= 100 ? 'Meta atingida' : 'Hoje';
 
             return { hoje, totalMl, litros, percentual };
+        }
+
+        function carregarProximoPasso() {
+            requisicaoAutenticada('/api/proximo-passo').then(passo => {
+                const link = document.getElementById('proximoPasso');
+                if (!passo || !passo.texto) { link.hidden = true; return; }
+                link.className = 'proximo-passo ' + (passo.tipo || '');
+                link.href = passo.link || '#';
+                link.querySelector('i').className = 'fa-solid ' + (passo.icone || 'fa-lightbulb');
+                document.getElementById('proximoPassoTexto').textContent = passo.texto;
+                link.hidden = false;
+            }).catch(() => { document.getElementById('proximoPasso').hidden = true; });
+        }
+
+        function dataHoraAgoraISO() {
+            const a = new Date();
+            const p = n => String(n).padStart(2, '0');
+            return `${a.getFullYear()}-${p(a.getMonth() + 1)}-${p(a.getDate())}T${p(a.getHours())}:${p(a.getMinutes())}`;
+        }
+
+        function ativarBotaoAguaRapida() {
+            const botao = document.getElementById('btnAguaRapida');
+            if (!botao) return;
+            botao.addEventListener('click', async event => {
+                event.stopPropagation(); // o card inteiro é um link para a hidratação
+                botao.disabled = true;
+                try {
+                    const resposta = await fetch('/registroAgua', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ quantidadeMl: 250, dataHora: dataHoraAgoraISO() })
+                    });
+                    if (!resposta.ok) throw new Error('HTTP ' + resposta.status);
+                    const agua = await requisicaoAutenticada('/registroAgua');
+                    atualizarCardAgua(agua);
+                    carregarProximoPasso();
+                    if (window.atualizarStreak) window.atualizarStreak();
+                } catch (erro) {
+                    botao.textContent = 'Erro, tente de novo';
+                    setTimeout(() => { botao.innerHTML = '<i class="fa-solid fa-plus"></i> 250 ml'; }, 2500);
+                } finally {
+                    botao.disabled = false;
+                }
+            });
+            botao.addEventListener('keydown', event => event.stopPropagation());
         }
 
         function atualizarCardSono(sono) {
@@ -586,9 +652,12 @@
                         requisicaoAutenticada('/registrosono/'),
                         requisicaoAutenticada('/registroexercicio'),
                         requisicaoAutenticada('/lembretes'),
-                        requisicaoAutenticada('/api/rotinas')
-                    ]).then(([agua, sono, treinos, lembretes, rotinas]) => {
+                        requisicaoAutenticada('/api/rotinas'),
+                        requisicaoAutenticada('/api/metas/agua').catch(() => null)
+                    ]).then(([agua, sono, treinos, lembretes, rotinas, metaAgua]) => {
+                        if (metaAgua && metaAgua.metaMl > 0) META_AGUA_ML = metaAgua.metaMl;
                         renderizarResumo(usuario, agua, sono, treinos, lembretes, rotinas);
+                        carregarProximoPasso();
                         
                         const futuros = lembretes.filter(l => new Date(l.horario) >= new Date());
                         const badge = document.getElementById('badge-notificacao');
@@ -651,6 +720,8 @@
                 }
             });
         }
+
+        ativarBotaoAguaRapida();
 
         document.querySelectorAll('[data-href]').forEach(card => {
             const abrir = () => window.location.href = card.dataset.href;

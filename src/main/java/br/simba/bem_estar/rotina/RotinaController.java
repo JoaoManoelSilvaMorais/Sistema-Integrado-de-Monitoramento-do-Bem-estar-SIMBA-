@@ -61,6 +61,24 @@ public class RotinaController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{id}/lembretes")
+    public ResponseEntity<RotinaResponseDTO> adicionarLembrete(
+            @PathVariable UUID id,
+            @RequestBody RotinaLembreteDTO dados,
+            Authentication authentication) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(rotinaService.adicionarLembrete(id, dados, authentication.getName()));
+    }
+
+    @DeleteMapping("/{id}/lembretes/{lembreteId}")
+    public ResponseEntity<RotinaResponseDTO> removerLembrete(
+            @PathVariable UUID id,
+            @PathVariable UUID lembreteId,
+            Authentication authentication) {
+        return ResponseEntity.ok(
+                rotinaService.removerLembrete(id, lembreteId, authentication.getName()));
+    }
+
     @org.springframework.web.bind.annotation.ExceptionHandler(RotinaNaoEncontradaException.class)
     public ResponseEntity<String> tratarNaoEncontrada(RotinaNaoEncontradaException erro) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro.getMessage());

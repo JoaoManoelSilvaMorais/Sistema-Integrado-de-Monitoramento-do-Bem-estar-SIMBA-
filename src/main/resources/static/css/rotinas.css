@@ -99,13 +99,18 @@
 }
 
 .rotina-item {
-    align-items: center;
     border: 1px solid #e1ebe3;
     border-radius: 9px;
+    display: grid;
+    gap: 14px;
+    padding: 15px;
+}
+
+.rotina-topo {
+    align-items: center;
     display: flex;
     gap: 14px;
     justify-content: space-between;
-    padding: 15px;
 }
 
 .rotina-item.inativa {
@@ -160,4 +165,124 @@
     .rotinas-grid {
         grid-template-columns: 1fr;
     }
+}
+
+.rotina-lembretes {
+    border-top: 1px solid #e1ebe3;
+    display: grid;
+    gap: 10px;
+    padding-top: 12px;
+}
+
+.sem-lembretes {
+    color: #718477;
+    font-size: 13px;
+    margin: 0;
+}
+
+.lembrete-item {
+    align-items: center;
+    background: #f5faf6;
+    border-radius: 8px;
+    display: grid;
+    gap: 12px;
+    grid-template-columns: auto 1fr auto;
+    padding: 9px 12px;
+}
+
+.lembrete-item strong {
+    color: #168052;
+}
+
+.lembrete-item small {
+    color: #607467;
+    display: block;
+}
+
+.form-lembrete {
+    display: grid;
+    gap: 8px;
+}
+
+.form-lembrete input[type="text"],
+.form-lembrete input:not([type]),
+.form-lembrete input[type="time"] {
+    border: 1px solid #d7e3da;
+    border-radius: 8px;
+    font: inherit;
+    padding: 9px 11px;
+}
+
+.dias-semana {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.dias-semana label {
+    cursor: pointer;
+}
+
+.dias-semana input {
+    display: none;
+}
+
+.dias-semana span {
+    border: 1px solid #d7e3da;
+    border-radius: 999px;
+    color: #4d6658;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 11px;
+}
+
+.dias-semana input:checked + span {
+    background: #1aa362;
+    border-color: #1aa362;
+    color: #fff;
+}
+
+.btn-add-lembrete {
+    background: #e7f5ec;
+    border: 0;
+    border-radius: 8px;
+    color: #168052;
+    cursor: pointer;
+    font-weight: 700;
+    padding: 10px 12px;
+}
+
+.toast-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: fixed;
+    right: 24px;
+    top: 24px;
+    z-index: 1001;
+}
+
+.toast-notification {
+    background: #fff;
+    border-left: 4px solid #f39c12;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: grid;
+    gap: 2px;
+    opacity: 0;
+    padding: 12px 15px;
+    transform: translateX(20px);
+    transition: opacity 0.3s, transform 0.3s;
+    width: 280px;
+}
+
+.toast-notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toast-notification span {
+    color: #666;
+    font-size: 12px;
 }

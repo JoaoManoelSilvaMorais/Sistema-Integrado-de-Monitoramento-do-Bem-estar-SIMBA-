@@ -114,9 +114,20 @@
 
             <div class="user">
 
-                <button class="notification">
-                    <i class="fa-regular fa-bell"></i>
+                <button class="notification" id="btnNotificacao" type="button" aria-label="Abrir notificações" aria-expanded="false" aria-controls="dropdown-notificacoes">
+                    <i class="fa-regular fa-bell" aria-hidden="true"></i>
+                    <span id="badge-notificacao" class="badge" aria-live="polite">0</span>
                 </button>
+
+                <div id="dropdown-notificacoes" class="notificacoes-dropdown">
+                    <div class="dropdown-header">
+                        <h3>Notificações</h3>
+                        <a href="lembretes.html">Ver todas</a>
+                    </div>
+                    <div class="dropdown-body" id="dropdown-lista">
+                        <div class="dropdown-empty">A carregar notificações...</div>
+                    </div>
+                </div>
 
                 <div class="avatar" id="avatarUsuario">
                     U
@@ -160,9 +171,22 @@
                             0
                         </strong>
 
-                        <span>
-                            / <span id="metaHoje">3000</span> ml
-                        </span>
+                        <button
+                            type="button"
+                            class="meta-hoje-editavel"
+                            id="btnEditarMetaAgua"
+                            title="Editar meta diária de água"
+                            aria-label="Editar meta diária de água"
+                        >
+                            <span>
+                                / <span id="metaHoje">3000</span> ml
+                            </span>
+
+                            <i
+                                class="fa-solid fa-pen"
+                                aria-hidden="true"
+                            ></i>
+                        </button>
                     </div>
 
                     <div class="porcentagem-hoje">
@@ -398,6 +422,15 @@
 
                 </div>
 
+                <button
+                    class="btn-adicionar-registro"
+                    id="btnAdicionarRegistro"
+                    type="button"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                    Adicionar registro
+                </button>
+
             </div>
 
             <div
@@ -527,8 +560,8 @@
 
                 <p>
                     Registre a quantidade de água consumida.
-                    O horário atual já é preenchido automaticamente,
-                    mas pode ser alterado.
+                    A data e o horário atuais já são preenchidos automaticamente,
+                    mas você pode alterá-los para lançar um registro de outro dia.
                 </p>
 
             </div>
@@ -562,8 +595,122 @@
 
 </div>
 
+<!-- MODAL: META DIÁRIA DE ÁGUA -->
+<div
+    class="modal-overlay"
+    id="modalMetaAgua"
+>
+
+    <div class="modal-hidratacao">
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="label">
+                    HIDRATAÇÃO
+                </span>
+
+                <h2>
+                    Meta diária de água
+                </h2>
+
+            </div>
+
+            <button
+                type="button"
+                class="modal-close"
+                id="btnFecharMetaAgua"
+                aria-label="Fechar"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+        <form id="formMetaAgua">
+
+            <div class="form-group">
+
+                <label for="metaAguaInput">
+                    Quantidade por dia
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-solid fa-droplet"></i>
+
+                    <input
+                        type="number"
+                        id="metaAguaInput"
+                        min="500"
+                        max="8000"
+                        step="50"
+                        required
+                    >
+
+                    <span class="input-unit">
+                        ml
+                    </span>
+
+                </div>
+
+            </div>
+
+            <p
+                class="meta-agua-sugestao"
+                id="metaAguaSugestao"
+            ></p>
+
+            <div class="modal-info">
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                <p>
+                    O SIMBA sugere uma meta com base no seu peso.
+                    Você pode personalizar esse valor ou voltar à sugestão.
+                </p>
+
+            </div>
+
+            <p
+                class="meta-agua-msg"
+                id="msgMetaAgua"
+                role="status"
+            ></p>
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="btn-cancelar"
+                    id="btnMetaAguaSugerida"
+                >
+                    Usar a sugerida
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn-salvar"
+                >
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Salvar meta
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
 <script src="js/feedback.js"></script>
 <script src="js/script.js"></script>
+<script src="js/notificacoes.js"></script>
 <script src="js/hidratacao.js"></script>
 
 </body>

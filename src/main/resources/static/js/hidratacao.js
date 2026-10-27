@@ -1,6 +1,9 @@
 const btnOutroValor =
     document.getElementById("btnOutroValor");
 
+const btnAdicionarRegistro =
+    document.getElementById("btnAdicionarRegistro");
+
 const modalOverlay =
     document.getElementById("modalOverlay");
 
@@ -31,12 +34,38 @@ const quantidadeMl =
 const dataHora =
     document.getElementById("dataHora");
 
+const btnEditarMetaAgua =
+    document.getElementById("btnEditarMetaAgua");
+
+const modalMetaAgua =
+    document.getElementById("modalMetaAgua");
+
+const btnFecharMetaAgua =
+    document.getElementById("btnFecharMetaAgua");
+
+const formMetaAgua =
+    document.getElementById("formMetaAgua");
+
+const metaAguaInput =
+    document.getElementById("metaAguaInput");
+
+const metaAguaSugestao =
+    document.getElementById("metaAguaSugestao");
+
+const msgMetaAgua =
+    document.getElementById("msgMetaAgua");
+
+const btnMetaAguaSugerida =
+    document.getElementById("btnMetaAguaSugerida");
+
 
 /*
     Meta diária de água. 3000 é só o valor inicial: assim que a tela abre,
     o valor real (personalizado ou calculado pelo peso) vem de /api/metas/agua.
 */
 let META_DIARIA_ML = 3000;
+
+let metaAguaDados = null;
 
 
 /*
@@ -1356,6 +1385,15 @@ btnOutroValor.addEventListener(
 );
 
 
+btnAdicionarRegistro.addEventListener(
+
+    "click",
+
+    abrirModal
+
+);
+
+
 btnFecharModal.addEventListener(
 
     "click",
@@ -1406,6 +1444,8 @@ document.addEventListener(
         ) {
 
             fecharModal();
+
+            fecharModalMetaAgua();
 
         }
 
@@ -1550,19 +1590,193 @@ document
    META PERSONALIZADA (vem de /api/metas/agua)
    ========================================================= */
 
-if (token) {
-    fetch("/api/metas/agua", { headers: { "Authorization": `Bearer ${token}` } })
-        .then(r => r.ok ? r.json() : null)
-        .then(dados => {
-            if (dados && dados.metaMl > 0) {
-                META_DIARIA_ML = dados.metaMl;
-                const eixo = document.getElementById("graficoMaximo");
-                if (eixo) eixo.textContent = `${META_DIARIA_ML} ml`;
-                renderizarHidratacao();
-            }
-        })
-        .catch(() => { /* mantém o valor inicial */ });
+function definirMensagemMetaAgua(texto, sucesso) {
+    msgMetaAgua.textContent = texto || "";
+    msgMetaAgua.classList.toggle("sucesso", Boolean(sucesso));
 }
+
+function atualizarSugestaoMetaAgua() {
+    if (!metaAguaDados) {
+        metaAguaSugestao.textContent = "";
+        return;
+    }
+
+    const sugerida =
+        Number(metaAguaDados.sugeridaMl || 0)
+            .toLocaleString("pt-BR");
+
+    if (!(metaAguaDados.pesoKg > 0)) {
+        metaAguaSugestao.textContent =
+            "Informe seu peso no perfil para receber uma sugestão personalizada.";
+        return;
+    }
+
+    metaAguaSugestao.textContent =
+        `Sugestão pelo seu peso (${metaAguaDados.pesoKg} kg): ${sugerida} ml.` +
+        (metaAguaDados.personalizada
+            ? " Sua meta atual é personalizada."
+            : "");
+}
+
+function aplicarMetaAgua(dados) {
+    if (!dados || !(dados.metaMl > 0)) {
+        return;
+    }
+
+    metaAguaDados = dados;
+    META_DIARIA_ML = dados.metaMl;
+    metaAguaInput.value = dados.metaMl;
+    atualizarSugestaoMetaAgua();
+    renderizarHidratacao();
+}
+
+function abrirModalMetaAgua() {
+    if (!token) {
+        window.location.href = "entrar.html";
+        return;
+    }
+
+    definirMensagemMetaAgua("");
+    metaAguaInput.value =
+        metaAguaDados
+            ? metaAguaDados.metaMl
+            : META_DIARIA_ML;
+    atualizarSugestaoMetaAgua();
+    modalMetaAgua.classList.add("active");
+    setTimeout(() => metaAguaInput.focus(), 60);
+}
+
+function fecharModalMetaAgua() {
+    modalMetaAgua.classList.remove("active");
+}
+
+async function carregarMetaAgua() {
+    if (!token) {
+        return;
+    }
+
+    try {
+        const resposta =
+            await fetch("/api/metas/agua", {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+        if (resposta.ok) {
+            aplicarMetaAgua(await resposta.json());
+        }
+    } catch (erro) {
+        /* mantém a meta inicial */
+    }
+}
+
+formMetaAgua.addEventListener(
+    "submit",
+    async function (event) {
+        event.preventDefault();
+
+        const valor = Number(metaAguaInput.value);
+
+        if (!Number.isFinite(valor) || valor < 500 || valor > 8000) {
+            definirMensagemMetaAgua(
+                "Informe uma meta entre 500 e 8.000 ml."
+            );
+            return;
+        }
+
+        try {
+            const resposta =
+                await fetch("/api/metas/agua", {
+                    method: "PUT",
+                    headers: headersAutenticacao(),
+                    body: JSON.stringify({ metaMl: valor })
+                });
+
+            if (!resposta.ok) {
+                let mensagem =
+                    "Não foi possível atualizar a meta de água.";
+
+                try {
+                    const erro =
+                        await resposta.json();
+
+                    if (erro.message) {
+                        mensagem = erro.message;
+                    }
+                } catch (e) {
+                    /* mantém a mensagem padrão */
+                }
+
+                throw new Error(mensagem);
+            }
+
+            aplicarMetaAgua(await resposta.json());
+            definirMensagemMetaAgua(
+                "Meta de água atualizada!",
+                true
+            );
+            setTimeout(fecharModalMetaAgua, 600);
+        } catch (erro) {
+            definirMensagemMetaAgua(erro.message);
+        }
+    }
+);
+
+btnMetaAguaSugerida.addEventListener(
+    "click",
+    async function () {
+        if (!token) {
+            window.location.href = "entrar.html";
+            return;
+        }
+
+        try {
+            const resposta =
+                await fetch("/api/metas/agua", {
+                    method: "PUT",
+                    headers: headersAutenticacao(),
+                    body: JSON.stringify({ metaMl: null })
+                });
+
+            if (!resposta.ok) {
+                throw new Error(
+                    "Não foi possível restaurar a meta sugerida."
+                );
+            }
+
+            aplicarMetaAgua(await resposta.json());
+            definirMensagemMetaAgua(
+                "Voltou para a meta sugerida.",
+                true
+            );
+            setTimeout(fecharModalMetaAgua, 600);
+        } catch (erro) {
+            definirMensagemMetaAgua(erro.message);
+        }
+    }
+);
+
+btnEditarMetaAgua.addEventListener(
+    "click",
+    abrirModalMetaAgua
+);
+
+btnFecharMetaAgua.addEventListener(
+    "click",
+    fecharModalMetaAgua
+);
+
+modalMetaAgua.addEventListener(
+    "click",
+    function (event) {
+        if (event.target === modalMetaAgua) {
+            fecharModalMetaAgua();
+        }
+    }
+);
+
+carregarMetaAgua();
 
 
 /* =========================================================

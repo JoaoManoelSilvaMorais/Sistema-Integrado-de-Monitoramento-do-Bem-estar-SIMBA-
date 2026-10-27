@@ -227,6 +227,20 @@
             color: #e74c3c;
         }
 
+        .toast.sucesso {
+            border-left-color: #1aa362;
+            color: #147a4a;
+        }
+
+        .toast.sucesso i {
+            color: #1aa362;
+        }
+
+        .toast.erro {
+            border-left-color: #e74c3c;
+            color: #a33a2c;
+        }
+
     </style>
 </head>
 <body>
@@ -288,7 +302,7 @@
             });
         });
              
-        function showToast(mensagem) {
+        function showToast(mensagem, tipo = 'erro') {
             let container = document.getElementById('toast-container');
             if (!container) {
                 container = document.createElement('div');
@@ -296,9 +310,12 @@
                 document.body.appendChild(container);
             }
 
+            const sucesso = tipo === 'sucesso';
             const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> <span>${mensagem}</span>`;
+            toast.className = sucesso ? 'toast sucesso' : 'toast erro';
+
+            const icone = sucesso ? 'fa-circle-check' : 'fa-circle-xmark';
+            toast.innerHTML = `<i class="fa-solid ${icone}"></i> <span>${mensagem}</span>`;
             
             container.appendChild(toast);
 
@@ -351,10 +368,12 @@
                 }
 
                 sessionStorage.setItem('usuarioLogado', JSON.stringify(await userResponse.json()));
-                window.location.href = 'index.html';
+
+                showToast("Login realizado com sucesso! Redirecionando...", "sucesso");
+                setTimeout(() => window.location.href = 'index.html', 1000);
             } catch (error) {
                 console.error("Erro ao validar usuário:", error);
-                showToast("Erro ao conectar com o banco de dados.");
+                showToast("Não foi possível entrar. Verifique seu usuário e senha.");
                 submitButton.disabled = false;
             }
         });

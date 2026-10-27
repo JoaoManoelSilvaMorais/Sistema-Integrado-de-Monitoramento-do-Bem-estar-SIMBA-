@@ -106,35 +106,13 @@ function renderizarLembretes(lembretes) {
     total.textContent = futuros.length;
     lista.replaceChildren();
 
-    const badge = document.getElementById('badge-notificacao');
-    const dropdownLista = document.getElementById('dropdown-lista');
-    if (dropdownLista) dropdownLista.innerHTML = '';
-    
     if (futuros.length > 0) {
-        if (badge) {
-            badge.textContent = futuros.length;
-            badge.style.display = 'block';
-        }
-        
-        if (dropdownLista) {
-            futuros.forEach(lembrete => {
-                const div = document.createElement('div');
-                div.className = 'dropdown-item';
-                div.onclick = () => window.location.href = 'lembretes.html';
-                div.innerHTML = `
-                    <span class="dropdown-item-title"><span style="color: #e74c3c; margin-right: 6px;">●</span>${lembrete.titulo}</span>
-                    <span class="dropdown-item-time">${formatarHorario(lembrete.horario).slice(0, 16)}</span>
-                `;
-                dropdownLista.appendChild(div);
-            });
-        }
-        
         proximoHorario.textContent = formatarHorario(futuros[0].horario).slice(-5);
     } else {
-        if (badge) badge.style.display = 'none';
-        if (dropdownLista) dropdownLista.innerHTML = '<div class="dropdown-empty">Não tem novas notificações</div>';
         proximoHorario.textContent = "--:--";
     }
+
+    document.dispatchEvent(new CustomEvent("simba:lembretes-atualizados"));
 
     if (ordenados.length === 0) {
         lista.appendChild(criarEstadoVazio("Nenhum lembrete cadastrado."));
@@ -259,22 +237,6 @@ if (btnSair) {
     btnSair.addEventListener("click", () => {
         sessionStorage.removeItem("jwtToken");
         sessionStorage.removeItem("usuarioLogado");
-    });
-}
-
-const btnNotificacao = document.getElementById('btnNotificacao');
-const dropdown = document.getElementById('dropdown-notificacoes');
-
-if (btnNotificacao && dropdown) {
-    btnNotificacao.addEventListener('click', (event) => {
-        event.stopPropagation();
-        dropdown.classList.toggle('show');
-    });
-
-    document.addEventListener('click', (event) => {
-        if (!dropdown.contains(event.target)) {
-            dropdown.classList.remove('show');
-        }
     });
 }
 

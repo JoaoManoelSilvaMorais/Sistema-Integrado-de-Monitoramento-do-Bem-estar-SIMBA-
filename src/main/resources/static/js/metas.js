@@ -1,5 +1,5 @@
 /*
- * Metas do usuário (ex.: "treinar 5 dias seguidos") e meta de água da tela de conquistas.
+ * Metas do usuário (ex.: "treinar 5 dias seguidos") da tela de conquistas.
  * O progresso é calculado pelo backend (/api/metas); aqui só mostramos e criamos.
  */
 (function () {
@@ -123,39 +123,6 @@
         });
     }
 
-    // ---------- meta de água ----------
-    let agua = null;
-
-    function mostrarAgua(dados) {
-        agua = dados;
-        document.getElementById("aguaValor").textContent = dados.metaMl.toLocaleString("pt-BR") + " ml";
-        document.getElementById("aguaInput").value = dados.metaMl;
-        document.getElementById("aguaTexto").textContent = dados.personalizada
-            ? "Meta definida por você. Sugestão pelo seu peso: " + dados.sugeridaMl.toLocaleString("pt-BR") + " ml."
-            : dados.pesoKg > 0
-                ? "Calculada pelo seu peso (" + dados.pesoKg + " kg x 35 ml)."
-                : "Meta padrão. Informe seu peso no perfil para uma sugestão personalizada.";
-    }
-
-    function prepararAgua() {
-        document.getElementById("formAgua").addEventListener("submit", async evento => {
-            evento.preventDefault();
-            try {
-                const valor = Number(document.getElementById("aguaInput").value);
-                mostrarAgua(await chamar("/api/metas/agua", "PUT", { metaMl: valor }));
-                dizer("msgAgua", "Meta de água atualizada!");
-            } catch (e) { dizer("msgAgua", e.message); }
-        });
-        document.getElementById("aguaAuto").addEventListener("click", async () => {
-            try {
-                mostrarAgua(await chamar("/api/metas/agua", "PUT", { metaMl: null }));
-                dizer("msgAgua", "Voltou para a meta sugerida.");
-            } catch (e) { dizer("msgAgua", e.message); }
-        });
-    }
-
     prepararFormMeta();
-    prepararAgua();
     carregarMetas().catch(e => dizer("msgMetas", e.message));
-    chamar("/api/metas/agua").then(mostrarAgua).catch(e => dizer("msgAgua", e.message));
 })();

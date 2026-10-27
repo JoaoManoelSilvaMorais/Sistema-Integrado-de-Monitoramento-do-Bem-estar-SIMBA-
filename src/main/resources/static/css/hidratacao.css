@@ -64,6 +64,64 @@
     font-weight: 600;
 }
 
+.meta-hoje-editavel {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 6px;
+
+    margin-left: -2px;
+    padding: 3px 7px;
+
+    border: 1px solid transparent;
+    border-radius: 7px;
+
+    background: transparent;
+
+    color: #7b8984;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.meta-hoje-editavel span {
+    color: inherit;
+
+    font-size: inherit;
+}
+
+.meta-hoje-editavel i {
+    font-size: 10px;
+
+    opacity: 0.55;
+
+    transition: opacity 0.15s ease;
+}
+
+.meta-hoje-editavel:hover,
+.meta-hoje-editavel:focus-visible {
+    border-color: rgba(223, 114, 37, 0.28);
+
+    background: rgba(223, 114, 37, 0.08);
+
+    color: #b95f1f;
+
+    outline: none;
+}
+
+.meta-hoje-editavel:hover i,
+.meta-hoje-editavel:focus-visible i {
+    opacity: 1;
+}
+
 .porcentagem-hoje {
     display: flex;
     align-items: baseline;
@@ -452,7 +510,38 @@
     align-items: center;
     justify-content: space-between;
 
+    gap: 15px;
+
     margin-bottom: 20px;
+}
+
+.btn-adicionar-registro {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 10px 14px;
+
+    border-radius: 10px;
+
+    background: #df7225;
+
+    color: white;
+
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.btn-adicionar-registro:hover {
+    background: #c8621c;
+    transform: translateY(-1px);
 }
 
 .hidratacao-title h2 {
@@ -989,6 +1078,32 @@
     line-height: 1.5;
 }
 
+.meta-agua-sugestao {
+    min-height: 17px;
+
+    margin: -8px 0 16px;
+
+    color: #7b8984;
+
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.meta-agua-msg {
+    min-height: 17px;
+
+    margin: 12px 0 0;
+
+    color: #a33a2c;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.meta-agua-msg.sucesso {
+    color: #147a4a;
+}
+
 .modal-actions {
     display: flex;
 
@@ -1084,6 +1199,15 @@
     .btn-outro-valor {
         width: 100%;
         justify-content: center;
+    }
+
+    .hidratacao-title {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .btn-adicionar-registro {
+        width: 100%;
     }
 
     .botoes-rapidos {

@@ -147,6 +147,7 @@ header p {
 }
 
 .user {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -160,6 +161,114 @@ header p {
     color: var(--dark);
     background: rgba(255, 255, 255, 0.55);
     border: 1px solid var(--border);
+}
+
+.notification {
+    position: relative;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    transition: 0.2s;
+}
+
+.notification:hover {
+    background: rgba(255, 255, 255, 0.85);
+}
+
+.notification .badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    display: none;
+    padding: 2px 6px;
+    border-radius: 50%;
+    color: #ffffff;
+    background: #e74c3c;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.notificacoes-dropdown {
+    display: none;
+    position: absolute;
+    top: 45px;
+    right: 0;
+    width: 300px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    border: 1px solid #eaeaea;
+    overflow: hidden;
+}
+
+.notificacoes-dropdown.show {
+    display: block;
+}
+
+.dropdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #eaeaea;
+    background: #fafafa;
+}
+
+.dropdown-header h3 {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.dropdown-header a {
+    font-size: 12px;
+    color: #f39c12;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.dropdown-body {
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.dropdown-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid #f1f1f1;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus-visible {
+    background: #f9f9f9;
+}
+
+.dropdown-item-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.dropdown-item-dot {
+    color: #e74c3c;
+    margin-right: 6px;
+}
+
+.dropdown-item-time {
+    font-size: 11px;
+    color: #888;
+}
+
+.dropdown-empty {
+    padding: 20px;
+    text-align: center;
+    color: #888;
+    font-size: 13px;
 }
 
 .avatar {

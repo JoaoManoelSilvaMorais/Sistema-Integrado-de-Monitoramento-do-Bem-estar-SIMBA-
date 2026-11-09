@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,16 +21,19 @@ public class UserController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
+    private final UserAccountService userAccountService;
 
 
     public UserController(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            JWTService jwtService) {
+            JWTService jwtService,
+            UserAccountService userAccountService) {
 
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.userAccountService = userAccountService;
     }
 
     @GetMapping("/me")
@@ -292,4 +296,19 @@ public class UserController {
             "Senha alterada com sucesso"
         );
     }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> excluirConta(
+            Authentication authentication,
+            @RequestBody ExcluirContaDto dados) {
+
+        userAccountService.excluirConta(
+                authentication.getName(),
+                dados.getSenha()
+        );
+
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

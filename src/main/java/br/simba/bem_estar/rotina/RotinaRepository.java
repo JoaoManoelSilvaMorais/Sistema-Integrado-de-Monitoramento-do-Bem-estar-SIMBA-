@@ -10,4 +10,6 @@ public interface RotinaRepository extends JpaRepository<RotinaModel, UUID> {
     List<RotinaModel> findByUsuarioId(Long usuarioId);
 
     java.util.Optional<RotinaModel> findByIdAndUsuarioId(UUID id, Long usuarioId);
+
+    void deleteByUsuarioId(Long usuarioId);
 }

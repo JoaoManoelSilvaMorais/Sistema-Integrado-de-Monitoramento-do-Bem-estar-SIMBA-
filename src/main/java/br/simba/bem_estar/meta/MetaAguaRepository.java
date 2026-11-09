@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface MetaAguaRepository extends JpaRepository<MetaAguaModel, Long> {
 
     Optional<MetaAguaModel> findByUsuarioId(Long usuarioId);
+
+    void deleteByUsuarioId(Long usuarioId);
 }

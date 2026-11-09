@@ -457,6 +457,22 @@
 
                     </button>
 
+                    <button
+                        type="button"
+                        class="perfil-acao btn-excluir-conta"
+                        id="btnExcluirConta"
+                    >
+                        <div class="perfil-acao-esquerda">
+                            <span class="perfil-acao-icone">
+                                <i class="fa-solid fa-trash"></i>
+                            </span>
+                            <div>
+                                <strong>Excluir minha conta</strong>
+                                <small>Apagar permanentemente sua conta e seus dados</small>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
 
                 </div>
 
@@ -882,6 +898,85 @@
     </div>
 
 
+</div>
+
+<!-- MODAL DE EXCLUSÃO DE CONTA -->
+<div
+    class="modal-overlay"
+    id="modalExcluirConta"
+>
+    <div class="modal-perfil">
+        <div class="modal-header">
+            <h2>Excluir conta</h2>
+            <button
+                type="button"
+                class="modal-close"
+                id="btnFecharExcluir"
+                aria-label="Fechar"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <form id="formExcluirConta">
+            <div class="modal-info aviso-exclusao">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <p>
+                    <strong>Atenção!</strong>
+                    <br><br>
+                    Essa ação é permanente. Sua conta e todos
+                    os dados associados serão excluídos,
+                    incluindo registros de água, sono,
+                    exercícios, metas, rotinas e conquistas.
+                    <br><br>
+                    Não será possível recuperar essas informações.
+                </p>
+            </div>
+
+            <div class="modal-campo">
+                <label for="senhaExcluir">
+                    Confirme sua senha atual
+                </label>
+                <input
+                    type="password"
+                    id="senhaExcluir"
+                    placeholder="Digite sua senha"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <div class="modal-campo">
+                <label for="confirmacaoExcluir">
+                    Digite EXCLUIR para confirmar
+                </label>
+                <input
+                    type="text"
+                    id="confirmacaoExcluir"
+                    placeholder="EXCLUIR"
+                    autocomplete="off"
+                    required
+                >
+            </div>
+
+            <div class="modal-actions">
+                <button
+                    type="button"
+                    class="btn-cancelar"
+                    id="btnCancelarExcluir"
+                >
+                    Cancelar
+                </button>
+                <button
+                    type="submit"
+                    class="btn-confirmar-exclusao"
+                    id="btnConfirmarExcluir"
+                >
+                    Excluir definitivamente
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <div

@@ -781,3 +781,91 @@
 
     color: #995348;
 }
+
+/* ========================================= */
+/* EXCLUSÃO DE CONTA */
+/* ========================================= */
+
+.btn-excluir-conta {
+    color: #b42318;
+}
+
+.btn-excluir-conta .perfil-acao-icone {
+    color: #b42318;
+    background: rgba(180, 35, 24, 0.08);
+}
+
+.btn-excluir-conta:hover {
+    background: rgba(180, 35, 24, 0.06);
+}
+
+.aviso-exclusao {
+    background: rgba(180, 35, 24, 0.08);
+    color: #842018;
+    margin-bottom: 20px;
+}
+
+.aviso-exclusao i {
+    color: #b42318;
+    font-size: 18px;
+}
+
+.modal-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 17px;
+}
+
+.modal-campo label {
+    color: #69391f;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.modal-campo input {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+    border: 1px solid rgba(124, 98, 82, 0.20);
+    border-radius: 10px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.75);
+    color: #543626;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+}
+
+.modal-campo input:focus {
+    border-color: #b42318;
+    box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.10);
+}
+
+.btn-confirmar-exclusao {
+    min-height: 44px;
+    padding: 0 17px;
+    border: none;
+    border-radius: 10px;
+    background: #b42318;
+    color: white;
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-confirmar-exclusao:hover {
+    background: #8f1d15;
+}
+
+.btn-confirmar-exclusao:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 500px) {
+    .modal-actions .btn-confirmar-exclusao {
+        width: 100%;
+    }
+}

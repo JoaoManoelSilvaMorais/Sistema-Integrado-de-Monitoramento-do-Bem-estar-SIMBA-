@@ -19,4 +19,6 @@ public interface RegistroExercicioRepository
             LocalDateTime inicio,
             LocalDateTime fim
         );
+
+    void deleteByUsuarioId(Long usuarioId);
 }

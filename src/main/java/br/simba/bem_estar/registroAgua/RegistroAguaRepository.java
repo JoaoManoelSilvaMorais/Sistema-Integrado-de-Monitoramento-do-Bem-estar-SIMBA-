@@ -19,4 +19,6 @@ public interface RegistroAguaRepository
             LocalDateTime inicio,
             LocalDateTime fim
         );
+
+    void deleteByUsuarioId(Long usuarioId);
 }

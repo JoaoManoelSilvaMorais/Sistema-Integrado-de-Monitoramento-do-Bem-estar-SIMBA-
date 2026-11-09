@@ -17,4 +17,6 @@ public interface RegistroSonoRepository
             LocalDateTime inicio,
             LocalDateTime fim
         );
+
+    void deleteByUsuarioId(Long usuarioId);
 }

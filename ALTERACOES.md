@@ -19,6 +19,20 @@ MODELO (copie para o topo a cada entrega):
 
 ---
 
+## 2026-11-09 — Sugestões de metas: botão "Criar meta" grava em Conquistas
+**Pedido:** ao clicar em criar meta nas sugestões, salvar a meta de verdade na aba Conquistas.
+**Alterado:**
+- `perfil/SugestaoMetaDTO.java` — +`metaTipo`, `metaAlvo`, `metaTitulo` (a meta do app que o botão grava).
+- `perfil/SugestoesCalculator.java` — água → `AGUA_SEGUIDOS` 7 dias; atividade → `TREINO_TOTAL` (5 treinos no peso adequado, 6 abaixo, 10 acima); peso → sem meta (o app não tem tipo de meta de peso).
+- `test/.../perfil/SugestoesCalculatorTest.java` — +3 testes (mapeamento e alvos dentro dos limites do `TipoMeta`).
+- `static/perfil.html` — link do topo do bloco: "Criar meta" → "Ver metas".
+- `static/js/perfil-medidas.js` — botão "Criar meta: …" em cada sugestão com meta; grava via `POST /api/metas` (mesma rota da tela de Conquistas); ao abrir consulta `GET /api/metas` e mostra "Você já tem uma meta desse tipo ativa" quando for o caso; confirmação no próprio botão ("Meta criada! Ver em Conquistas"); erro do back-end (409/422) aparece embaixo do botão.
+- `static/css/perfil-medidas.css` — estilos do botão e dos estados.
+**Usado:** rotas existentes de metas (nenhuma regra de metas mudou), JUnit 5, Edge headless.
+**Como testar:** criar um usuário novo (o demo já começa com metas de treino e de água ativas) → Meu perfil → Peso e altura → 90 kg / 175 cm → "Criar meta: Bater a meta de água por 7 dias seguidos" e "Criar meta: Fazer 10 treinos" → abrir Conquistas: as duas aparecem.
+**Verificado:** 35 testes JUnit OK; `node --check`; app rodado (porta 8081) com usuário novo: os 2 cliques gravaram `AGUA_SEGUIDOS 7` e `TREINO_TOTAL 10` na API, botões viraram "Meta criada!", após F5 mostram "já ativa", Conquistas exibe as duas metas, zero erro de JS. **Não verificado:** teste manual por pessoa; Firefox/Safari.
+**Atenção:** no usuário demo as duas sugestões aparecem como "já ativa" (o seeder cria metas `TREINO_TOTAL` e `AGUA_SEGUIDOS`). Para demonstrar, excluir essas metas em Conquistas antes ou usar um usuário novo. Ainda não commitado.
+
 ## 2026-11-09 — Branch com todas as alterações (commits)
 **Pedido:** criar uma branch com todas as alterações.
 **Alterado (git):** branch `feature/sinais-corporais` (criada a partir de `main` em `fbe388c`) com 3 commits locais: `feat: Sinais Corporais…`, `feat: peso e altura no perfil…` e `docs: CLAUDE.md, ALTERACOES.md e .gitignore`. 42 arquivos, só inserções em relação à `main`.

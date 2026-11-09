@@ -329,3 +329,72 @@
     font-size: 11.5px;
     line-height: 1.45;
 }
+
+/* botão "Criar meta" em cada sugestão */
+.sugestao-acao {
+    margin-top: 8px;
+}
+
+.sugestao-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 11px;
+    border: 1px solid rgba(223, 114, 37, 0.35);
+    border-radius: 8px;
+    background: #fff;
+    color: #b85d1f;
+    font-family: "Inter", sans-serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sugestao-btn:hover {
+    background: #df7225;
+    color: #fff;
+}
+
+.sugestao-btn:focus-visible {
+    outline: 2px solid #df7225;
+    outline-offset: 2px;
+}
+
+.sugestao-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.sugestao-meta-ativa {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #7a6455;
+    font-size: 11.5px;
+    font-weight: 600;
+}
+
+.sugestao-meta-ativa i {
+    color: #3f9b5b;
+}
+
+.sugestao-meta-ativa.criada {
+    color: #2f8549;
+}
+
+.sugestao-meta-ativa:hover {
+    text-decoration: underline;
+}
+
+.sugestao-erro {
+    display: block;
+    margin-top: 5px;
+    color: #a5321f;
+    font-size: 11.5px;
+    font-weight: 600;
+}
+
+.sugestao-erro[hidden] {
+    display: none;
+}

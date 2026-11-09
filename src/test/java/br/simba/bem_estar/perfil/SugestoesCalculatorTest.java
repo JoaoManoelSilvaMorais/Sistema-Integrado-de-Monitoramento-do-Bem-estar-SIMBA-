@@ -1,6 +1,7 @@
 package br.simba.bem_estar.perfil;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -87,5 +88,41 @@ class SugestoesCalculatorTest {
         // 2,90 m (novo limite de 3 m): faixa saudável 155,6 a 209,4 kg
         SugestaoMetaDTO peso = doTipo(SugestoesCalculator.sugerir(180.0, 2.90), "PESO");
         assertEquals("Manter o peso entre 155,6 e 209,4 kg", peso.titulo());
+    }
+
+    @Test
+    void cadaSugestaoTrazAMetaDoApp() {
+        // peso adequado: água 7 dias seguidos + 5 treinos; peso não tem meta no app
+        List<SugestaoMetaDTO> s = SugestoesCalculator.sugerir(75.0, 1.80);
+        SugestaoMetaDTO peso = doTipo(s, "PESO");
+        assertNull(peso.metaTipo());
+        assertNull(peso.metaAlvo());
+        SugestaoMetaDTO agua = doTipo(s, "AGUA");
+        assertEquals("AGUA_SEGUIDOS", agua.metaTipo());
+        assertEquals(7, agua.metaAlvo());
+        assertEquals("Bater a meta de água por 7 dias seguidos", agua.metaTitulo());
+        SugestaoMetaDTO atividade = doTipo(s, "ATIVIDADE");
+        assertEquals("TREINO_TOTAL", atividade.metaTipo());
+        assertEquals(5, atividade.metaAlvo());
+        assertEquals("Fazer 5 treinos", atividade.metaTitulo());
+    }
+
+    @Test
+    void alvoDeTreinosMudaComAFaixa() {
+        assertEquals(6, doTipo(SugestoesCalculator.sugerir(50.0, 1.75), "ATIVIDADE").metaAlvo());  // abaixo
+        assertEquals(10, doTipo(SugestoesCalculator.sugerir(90.0, 1.75), "ATIVIDADE").metaAlvo()); // sobrepeso
+        assertEquals(5, doTipo(SugestoesCalculator.sugerir(75.0, null), "ATIVIDADE").metaAlvo());  // só peso
+    }
+
+    @Test
+    void alvosRespeitamOsLimitesDoTipoMeta() {
+        // o POST /api/metas recusa alvo fora de min..max; as sugestões precisam caber
+        for (double peso : new double[] {50, 75, 90, 120}) {
+            for (SugestaoMetaDTO s : SugestoesCalculator.sugerir(peso, 1.75)) {
+                if (s.metaTipo() == null) continue;
+                br.simba.bem_estar.meta.TipoMeta t = br.simba.bem_estar.meta.TipoMeta.valueOf(s.metaTipo());
+                assertTrue(s.metaAlvo() >= t.getMin() && s.metaAlvo() <= t.getMax(), s.metaTipo() + " " + s.metaAlvo());
+            }
+        }
     }
 }

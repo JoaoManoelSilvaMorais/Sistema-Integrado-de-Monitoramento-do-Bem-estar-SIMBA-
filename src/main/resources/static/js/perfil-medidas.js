@@ -177,8 +177,96 @@
     // As regras ficam no back-end (SugestoesCalculator); aqui só pedimos a prévia e mostramos.
     let esperaSugestoes = null;
     let pedidoAtual = 0;
+    let ultimasSugestoes = [];
+    // tipos de meta (TipoMeta) que o usuário já tem ativos — o app só deixa 1 ativa por tipo
+    let tiposAtivos = new Set();
+    // criadas agora pelo botão (mostram "Meta criada!" em vez de "Meta ativa")
+    const criadasAgora = new Set();
+
+    async function carregarMetasAtivas() {
+        try {
+            const resposta = await fetch("/api/metas", {
+                headers: { "Authorization": "Bearer " + obterToken() }
+            });
+            if (!resposta.ok) return;
+            const metas = await resposta.json();
+            tiposAtivos = new Set(metas.filter((m) => !m.concluida).map((m) => m.tipo));
+            renderizarSugestoes(ultimasSugestoes);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    /** Grava a meta na aba Conquistas (mesma rota que a tela de Conquistas usa). */
+    async function criarMeta(sugestao, botao, aviso) {
+        botao.disabled = true;
+        aviso.hidden = true;
+        try {
+            const resposta = await fetch("/api/metas", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + obterToken()
+                },
+                body: JSON.stringify({ tipo: sugestao.metaTipo, alvo: sugestao.metaAlvo })
+            });
+            let dados = null;
+            try { dados = await resposta.json(); } catch (e) { dados = null; }
+            if (!resposta.ok) {
+                throw new Error(dados && dados.message ? dados.message : "Não foi possível criar a meta.");
+            }
+            // o aviso da tela fica atrás do popup; a confirmação aparece no próprio botão
+            tiposAtivos.add(sugestao.metaTipo);
+            criadasAgora.add(sugestao.metaTipo);
+            renderizarSugestoes(ultimasSugestoes);
+        } catch (e) {
+            botao.disabled = false;
+            aviso.textContent = e.message;
+            aviso.hidden = false;
+        }
+    }
+
+    function acaoDaSugestao(s) {
+        const area = document.createElement("div");
+        area.className = "sugestao-acao";
+
+        if (tiposAtivos.has(s.metaTipo)) {
+            const feita = document.createElement("a");
+            const agora = criadasAgora.has(s.metaTipo);
+            feita.className = "sugestao-meta-ativa" + (agora ? " criada" : "");
+            feita.href = "conquistas.html";
+            const i = document.createElement("i");
+            i.className = "fa-solid fa-circle-check";
+            i.setAttribute("aria-hidden", "true");
+            feita.appendChild(i);
+            feita.appendChild(document.createTextNode(agora
+                ? " Meta criada! Ver em Conquistas"
+                : " Você já tem uma meta desse tipo ativa · Ver em Conquistas"));
+            area.appendChild(feita);
+            return area;
+        }
+
+        const botao = document.createElement("button");
+        botao.type = "button";
+        botao.className = "sugestao-btn";
+        const i = document.createElement("i");
+        i.className = "fa-solid fa-plus";
+        i.setAttribute("aria-hidden", "true");
+        botao.appendChild(i);
+        botao.appendChild(document.createTextNode(" Criar meta: " + s.metaTitulo));
+
+        const aviso = document.createElement("span");
+        aviso.className = "sugestao-erro";
+        aviso.hidden = true;
+
+        botao.addEventListener("click", () => criarMeta(s, botao, aviso));
+        area.appendChild(botao);
+        area.appendChild(aviso);
+        return area;
+    }
 
     function renderizarSugestoes(lista) {
+        ultimasSugestoes = lista || [];
         const ul = $("sugestoesLista");
         while (ul.firstChild) ul.removeChild(ul.firstChild);
         ul.classList.remove("carregando");
@@ -202,6 +290,9 @@
             desc.textContent = s.descricao;
             texto.appendChild(titulo);
             texto.appendChild(desc);
+            if (s.metaTipo) {
+                texto.appendChild(acaoDaSugestao(s));
+            }
 
             li.appendChild(icone);
             li.appendChild(texto);
@@ -262,6 +353,7 @@
         $("sugestoesVazio").textContent = "Preencha seu peso (e sua altura) para ver sugestões.";
         pedidoAtual++;
         renderizarSugestoes(medidas.sugestoes || []);
+        carregarMetasAtivas();
         modal.classList.add("active");
         pesoInput.focus();
     }

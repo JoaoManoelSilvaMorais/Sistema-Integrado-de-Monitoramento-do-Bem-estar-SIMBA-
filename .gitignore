@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### graphify (grafo de conhecimento gerado localmente) ###
+graphify-out/

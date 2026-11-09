@@ -196,3 +196,18 @@ Regras para o futuro:
 - **Simples mas funcional**, seguindo o que o projeto já faz; se o jeito simples for frágil, faça o melhor e explique.
 - Ele testa na própria máquina Windows; seja **honesto** sobre o que não foi compilado/rodado.
 - Entregue com instruções curtas de teste e os pontos de atenção.
+
+---
+
+## 10. Relatório obrigatório de cada entrega (SEMPRE)
+
+Toda vez que terminar uma tarefa que **altere arquivos** (código, config, docs, git), faça as duas coisas:
+
+1. **Responda no chat** com este formato:
+   - **O que foi alterado** — arquivos criados/alterados/removidos e o que mudou em cada um (1 linha por arquivo).
+   - **O que foi usado** — ferramentas, bibliotecas, comandos, rotas/tabelas novas, skills.
+   - **Como testar** — passo a passo curto que o dono consegue seguir no Windows (comando + o que clicar + o que deve aparecer).
+   - **Verificado × não verificado** — o que foi realmente compilado/rodado e o que ficou sem testar.
+2. **Registre a mesma coisa em [`ALTERACOES.md`](ALTERACOES.md)** (raiz do projeto), adicionando uma entrada **no topo** com o modelo que está no próprio arquivo
+   (data `AAAA-MM-DD`, título, quem pediu/história de usuário, alterado, usado, como testar, verificado, pendências).
+   Não apague entradas antigas. Se a tarefa não mexeu em nenhum arquivo (só pergunta/explicação), não precisa registrar.

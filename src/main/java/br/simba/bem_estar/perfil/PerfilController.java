@@ -50,4 +50,29 @@ public class PerfilController {
 
         return ResponseEntity.ok(perfilAtual);
     }
+
+    // Peso e altura do usuário logado (campos nulos = ainda não informados)
+    @GetMapping("/me/medidas")
+    public ResponseEntity<MedidasResponseDTO> getMedidas(Authentication authentication) {
+        return ResponseEntity.ok(perfilService.buscarMedidas(authentication.getName()));
+    }
+
+    // Adiciona ou edita peso (kg) e altura (m); cria o perfil se ainda não existir
+    @PutMapping("/me/medidas")
+    public ResponseEntity<MedidasResponseDTO> salvarMedidas(
+            @RequestBody MedidasDTO dados,
+            Authentication authentication
+    ) {
+        return ResponseEntity.ok(perfilService.salvarMedidas(authentication.getName(), dados));
+    }
+
+    // Prévia: IMC e sugestões de metas para os valores digitados no popup (não salva nada)
+    @GetMapping("/me/medidas/previa")
+    public ResponseEntity<MedidasResponseDTO> previaMedidas(
+            @RequestParam(required = false) Double peso,
+            @RequestParam(required = false) Double altura
+    ) {
+        MedidasCalculator.validar(peso, altura);
+        return ResponseEntity.ok(MedidasResponseDTO.de(peso, altura));
+    }
 }

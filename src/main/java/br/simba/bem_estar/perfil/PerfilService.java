@@ -69,4 +69,52 @@ public class PerfilService {
 
         return perfilRepository.save(perfilExistente);
     }
+
+    // 4. Peso e altura do usuário logado (usado na tela de perfil).
+    //    Quem ainda não tem perfil recebe tudo nulo.
+    @Transactional(readOnly = true)
+    public MedidasResponseDTO buscarMedidas(String username) {
+        UserModel usuario = buscarUsuario(username);
+        PerfilModel perfil = usuario.getPerfil();
+        if (perfil == null) {
+            return MedidasResponseDTO.de(null, null);
+        }
+        return MedidasResponseDTO.de(
+                MedidasCalculator.ouNulo(perfil.getPeso()),
+                MedidasCalculator.ouNulo(perfil.getAltura()));
+    }
+
+    // 5. Adiciona ou edita peso e altura. Se o usuário ainda não tem perfil, cria e liga
+    //    ao usuário (quem guarda a ligação é UserModel.perfil). Campo nulo = em branco.
+    @Transactional
+    public MedidasResponseDTO salvarMedidas(String username, MedidasDTO dados) {
+        Double peso = dados == null ? null : dados.peso();
+        Double altura = dados == null ? null : dados.altura();
+        MedidasCalculator.validar(peso, altura);
+
+        UserModel usuario = buscarUsuario(username);
+        PerfilModel perfil = usuario.getPerfil();
+        boolean novo = perfil == null;
+        if (novo) {
+            perfil = new PerfilModel();
+        }
+
+        perfil.setPeso(peso == null ? 0 : peso);
+        perfil.setAltura(altura == null ? 0 : altura);
+        perfil = perfilRepository.save(perfil);
+
+        if (novo) {
+            usuario.setPerfil(perfil);
+            userRepository.save(usuario);
+        }
+
+        return MedidasResponseDTO.de(peso, altura);
+    }
+
+    private UserModel buscarUsuario(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new DadoNaoEncontradoException(
+                        "Usuário não encontrado com o username: " + username
+                ));
+    }
 }

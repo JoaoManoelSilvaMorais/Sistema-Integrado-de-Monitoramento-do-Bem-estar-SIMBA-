@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -26,6 +27,9 @@ import br.simba.bem_estar.registroSono.RegistroSonoRepository;
 import br.simba.bem_estar.rotina.RotinaLembreteModel;
 import br.simba.bem_estar.rotina.RotinaModel;
 import br.simba.bem_estar.rotina.RotinaRepository;
+import br.simba.bem_estar.sintoma.NivelDor;
+import br.simba.bem_estar.sintoma.RegistroSintomaModel;
+import br.simba.bem_estar.sintoma.RegistroSintomaRepository;
 import br.simba.bem_estar.user.UserModel;
 import br.simba.bem_estar.user.UserRepository;
 
@@ -50,6 +54,7 @@ public class DemoDataSeeder implements CommandLineRunner {
     private final RegistroExercicioRepository exercicioRepository;
     private final RotinaRepository rotinaRepository;
     private final MetaRepository metaRepository;
+    private final RegistroSintomaRepository sintomaRepository;
     private final PasswordEncoder passwordEncoder;
 
     public DemoDataSeeder(
@@ -60,6 +65,7 @@ public class DemoDataSeeder implements CommandLineRunner {
             RegistroExercicioRepository exercicioRepository,
             RotinaRepository rotinaRepository,
             MetaRepository metaRepository,
+            RegistroSintomaRepository sintomaRepository,
             PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.perfilRepository = perfilRepository;
@@ -68,6 +74,7 @@ public class DemoDataSeeder implements CommandLineRunner {
         this.exercicioRepository = exercicioRepository;
         this.rotinaRepository = rotinaRepository;
         this.metaRepository = metaRepository;
+        this.sintomaRepository = sintomaRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -112,6 +119,7 @@ public class DemoDataSeeder implements CommandLineRunner {
         }
         gerarRotinas(usuario);
         gerarMetas(usuario, hoje);
+        gerarSintomas(usuario, hoje);
 
         System.out.println(">>> [demo] Usuário criado: " + USERNAME + " / " + SENHA);
     }
@@ -159,6 +167,57 @@ public class DemoDataSeeder implements CommandLineRunner {
         treino.setDataHora(dia.atTime(17 + random.nextInt(3), random.nextInt(60)));
         treino.setUsuario(usuario);
         exercicioRepository.save(treino);
+    }
+
+    /**
+     * Questionário "Sinais Corporais" dos últimos 20 dias (hoje fica em aberto para responder
+     * ao vivo na demonstração; ontem e os dias sem registro também ficam vazios).
+     * Nos "dias pesados" o estresse sobe junto com dor de cabeça e cansaço, para o histórico
+     * mostrar um padrão. Usa um Random próprio para não mudar os outros dados do demo.
+     */
+    private void gerarSintomas(UserModel usuario, LocalDate hoje) {
+        Random random = new Random(7);
+        Set<Integer> diasPesados = Set.of(2, 3, 5, 9, 10, 16, 17, 19);
+        Set<Integer> diasPosTreino = Set.of(4, 8, 12, 15, 20);
+        for (int i = 20; i >= 2; i--) {
+            if (i == 14 || i == 13) {
+                continue;
+            }
+            RegistroSintomaModel r = new RegistroSintomaModel();
+            r.setUsuario(usuario);
+            r.setDataRegistro(hoje.minusDays(i));
+            r.setCriadoEm(hoje.minusDays(i).atTime(20, random.nextInt(60)));
+            r.setAtualizadoEm(r.getCriadoEm());
+            if (diasPesados.contains(i)) {
+                r.setEnergia(1 + random.nextInt(2));      // 1 a 2
+                r.setHumor(2 + random.nextInt(2));        // 2 a 3
+                r.setEstresse(4 + random.nextInt(2));     // 4 a 5
+                r.setDor(random.nextBoolean() ? NivelDor.MODERADA : NivelDor.LEVE);
+                r.setLocaisDor(random.nextBoolean() ? "CABECA,PESCOCO" : "CABECA");
+                r.setSintomas(random.nextBoolean() ? "DOR_DE_CABECA,CANSACO" : "DOR_DE_CABECA,CANSACO,INSONIA");
+                if (i == 3) {
+                    r.setObservacao("Semana de provas, dormi pouco.");
+                }
+            } else if (diasPosTreino.contains(i)) {
+                r.setEnergia(3 + random.nextInt(2));      // 3 a 4
+                r.setHumor(4);
+                r.setEstresse(2);
+                r.setDor(NivelDor.LEVE);
+                r.setLocaisDor(random.nextBoolean() ? "PERNAS" : "COSTAS,LOMBAR");
+                r.setSintomas("NENHUM");
+                if (i == 4) {
+                    r.setObservacao("Dor muscular do treino de ontem.");
+                }
+            } else {
+                r.setEnergia(4 + random.nextInt(2));      // 4 a 5
+                r.setHumor(4 + random.nextInt(2));
+                r.setEstresse(1 + random.nextInt(2));     // 1 a 2
+                r.setDor(NivelDor.NENHUMA);
+                r.setLocaisDor("");
+                r.setSintomas("NENHUM");
+            }
+            sintomaRepository.save(r);
+        }
     }
 
     private void gerarMetas(UserModel usuario, LocalDate hoje) {

@@ -41,6 +41,7 @@
         rel="stylesheet"
         href="css/perfil.css"
     >
+    <link rel="stylesheet" href="css/perfil-medidas.css">
 
 </head>
 
@@ -108,6 +109,13 @@
                 <i class="fa-solid fa-dumbbell"></i>
 
                 Treinos
+
+            </a>
+            <a href="sintomas.html">
+
+                <i class="fa-solid fa-heart-pulse"></i>
+
+                Sinais Corporais
 
             </a>
 
@@ -364,6 +372,31 @@
 
                     </div>
 
+
+                </div>
+
+                <div class="perfil-divider"></div>
+
+                <!-- MEDIDAS CORPORAIS: um campo só; ao clicar abre o modal com peso, altura e IMC -->
+                <div class="perfil-secao" id="secaoMedidas">
+
+                    <span class="perfil-secao-titulo">
+                        MEDIDAS CORPORAIS
+                    </span>
+
+                    <button type="button" class="perfil-acao" id="btnEditarMedidas"
+                            aria-haspopup="dialog" aria-controls="modalMedidas">
+                        <div class="perfil-acao-esquerda">
+                            <span class="perfil-acao-icone">
+                                <i class="fa-solid fa-weight-scale"></i>
+                            </span>
+                            <div>
+                                <strong id="btnMedidasTitulo">Adicionar peso e altura</strong>
+                                <small id="resumoMedidas">Toque para informar seu peso e sua altura</small>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
 
                 </div>
 
@@ -900,6 +933,124 @@
 
 </div>
 
+<!-- MODAL - PESO E ALTURA -->
+<div class="modal-overlay" id="modalMedidas">
+
+    <div class="modal-perfil" role="dialog" aria-modal="true" aria-labelledby="tituloModalMedidas">
+
+        <div class="modal-header">
+            <div>
+                <span class="label">MEDIDAS CORPORAIS</span>
+                <h2 id="tituloModalMedidas">Peso e altura</h2>
+            </div>
+            <button type="button" class="modal-close" id="btnFecharMedidas" aria-label="Fechar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <form id="formMedidas" novalidate>
+
+            <div class="form-group">
+                <label for="pesoInput">Peso</label>
+                <div class="input-wrapper medidas-wrapper">
+                    <i class="fa-solid fa-weight-scale"></i>
+                    <input type="text" id="pesoInput" inputmode="decimal" autocomplete="off" maxlength="6"
+                           placeholder="Ex.: 72,5">
+                    <span class="medidas-unidade">kg</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="alturaInput">Altura</label>
+                <div class="input-wrapper medidas-wrapper">
+                    <i class="fa-solid fa-ruler-vertical"></i>
+                    <input type="text" id="alturaInput" inputmode="numeric" autocomplete="off" maxlength="3"
+                           placeholder="Ex.: 175">
+                    <span class="medidas-unidade">cm</span>
+                </div>
+            </div>
+
+            <!-- IMC: atualiza enquanto digita -->
+            <div class="imc-bloco" id="imcBloco">
+
+                <div class="imc-topo">
+                    <span class="imc-rotulo">
+                        IMC
+                        <button type="button" class="imc-ajuda-btn" id="btnAjudaImc"
+                                aria-expanded="false" aria-controls="imcAjuda" aria-label="Como o IMC é calculado?">
+                            <i class="fa-solid fa-circle-question"></i>
+                        </button>
+                    </span>
+                    <span class="imc-valor" id="imcValor">--</span>
+                </div>
+
+                <span class="imc-faixa" id="imcFaixa">Preencha peso e altura</span>
+
+                <!-- barra com as 4 faixas da OMS; o marcador mostra onde a pessoa está -->
+                <div class="imc-escala" aria-hidden="true">
+                    <div class="imc-barra">
+                        <span class="seg abaixo"></span>
+                        <span class="seg adequado"></span>
+                        <span class="seg sobrepeso"></span>
+                        <span class="seg obesidade"></span>
+                        <span class="imc-marcador" id="imcMarcador" hidden></span>
+                    </div>
+                    <div class="imc-legenda">
+                        <span class="abaixo">Abaixo<br><small>&lt; 18,5</small></span>
+                        <span class="adequado">Adequado<br><small>18,5–24,9</small></span>
+                        <span class="sobrepeso">Sobrepeso<br><small>25–29,9</small></span>
+                        <span class="obesidade">Obesidade<br><small>30 ou +</small></span>
+                    </div>
+                </div>
+
+                <div class="imc-ajuda" id="imcAjuda" hidden>
+                    <p><strong>IMC (Índice de Massa Corporal)</strong> compara seu peso com sua altura.</p>
+                    <p class="imc-formula">IMC = peso ÷ (altura × altura)</p>
+                    <p id="imcExemplo">Ex.: 75 kg e 1,80 m → 75 ÷ (1,80 × 1,80) = 75 ÷ 3,24 = 23,1</p>
+                    <p class="imc-obs">É uma referência para adultos (faixas da OMS). Não diferencia músculo de gordura.</p>
+                </div>
+
+            </div>
+
+            <!-- SUGESTÕES DE METAS: calculadas no back-end (SugestoesCalculator) para os valores digitados -->
+            <div class="sugestoes-bloco" id="sugestoesBloco">
+                <div class="sugestoes-topo">
+                    <span class="sugestoes-titulo">
+                        <i class="fa-solid fa-bullseye"></i>
+                        Sugestões de metas
+                    </span>
+                    <a href="conquistas.html" class="sugestoes-link">Ver metas <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <p class="sugestoes-vazio" id="sugestoesVazio">Preencha seu peso (e sua altura) para ver sugestões.</p>
+                <ul class="sugestoes-lista" id="sugestoesLista" aria-live="polite"></ul>
+            </div>
+
+            <p class="medidas-erro" id="medidasErro" role="alert" hidden></p>
+
+            <div class="modal-info">
+                <i class="fa-solid fa-circle-info"></i>
+                <p>
+                    Deixe em branco o que não quiser informar. As sugestões são gerais
+                    e não substituem a orientação de um profissional de saúde.
+                </p>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-cancelar" id="btnCancelarMedidas">
+                    Cancelar
+                </button>
+                <button type="submit" class="btn-salvar" id="btnSalvarMedidas">
+                    <i class="fa-solid fa-check"></i>
+                    Salvar medidas
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
 <!-- MODAL DE EXCLUSÃO DE CONTA -->
 <div
     class="modal-overlay"
@@ -978,6 +1129,7 @@
         </form>
     </div>
 </div>
+</div>
 
 <div
     class="overlay"
@@ -988,6 +1140,7 @@
 <script src="js/notificacoes.js"></script>
 
 <script src="js/perfil.js"></script>
+<script src="js/perfil-medidas.js"></script>
 
 
 </body>

@@ -61,6 +61,9 @@
 
     async function darFeedback() {
         if (!sessionStorage.getItem("jwtToken")) return;
+        if (window.SimbaFeedbackAtivo) return;
+        window.SimbaFeedbackAtivo = true;
+        setTimeout(() => { window.SimbaFeedbackAtivo = false; }, 6500);
         const [streak, conquistas, metas] = await Promise.all([
             buscar("/api/streak"), buscar("/api/conquistas"), buscar("/api/metas")
         ]);

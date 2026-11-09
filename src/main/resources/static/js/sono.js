@@ -88,6 +88,79 @@ function headersAutenticacao() {
 
 }
 
+function abrirToastConquista(conquista) {
+
+    const container = document.getElementById("toast-container");
+
+    if (!container || !conquista || !conquista.nome) {
+        return;
+    }
+
+    const toast = document.createElement("div");
+    toast.className = "toast-notification";
+
+    const icone = document.createElement("i");
+    icone.className = "fa-solid fa-trophy";
+
+    const texto = document.createElement("div");
+
+    const titulo = document.createElement("strong");
+    titulo.textContent = "Conquista desbloqueada!";
+
+    const descricao = document.createElement("span");
+    descricao.textContent = conquista.nome;
+
+    texto.append(titulo, descricao);
+    toast.append(icone, texto);
+    container.appendChild(toast);
+
+    setTimeout(() => toast.classList.add("show"), 10);
+    setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 300);
+    }, 5000);
+}
+
+async function verificarConquistasNovas() {
+
+    if (window.SimbaFeedbackAtivo) {
+        return;
+    }
+
+    const token = obterToken();
+
+    if (!token) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch("/api/conquistas", {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            return;
+        }
+
+        const dados = await response.json();
+        const novas = Array.isArray(dados?.conquistas)
+            ? dados.conquistas.filter(conquista => conquista.nova)
+            : [];
+
+        novas.slice(0, 3).forEach((conquista, indice) => {
+            setTimeout(() => abrirToastConquista(conquista), 300 + indice * 900);
+        });
+
+    }
+    catch (erro) {
+        console.error("Não foi possível verificar conquistas novas.", erro);
+    }
+
+}
+
 async function carregarUsuario() {
 
     const token = obterToken();
@@ -799,6 +872,7 @@ formSono.addEventListener(
 
             fecharModal();
 
+            await verificarConquistasNovas();
             await carregarRegistros();
 
         }

@@ -1,5 +1,6 @@
 const API_USUARIO = "/users/me";
 const API_SENHA = "/users/me/password";
+const API_EXCLUIR_CONTA = "/users/me";
 
 let usuarioAtual = null;
 
@@ -75,6 +76,31 @@ const novaSenhaInput =
 
 const confirmarSenhaInput =
     document.getElementById("confirmarSenha");
+
+// EXCLUSÃO DE CONTA
+const btnExcluirConta =
+    document.getElementById("btnExcluirConta");
+
+const modalExcluirConta =
+    document.getElementById("modalExcluirConta");
+
+const formExcluirConta =
+    document.getElementById("formExcluirConta");
+
+const btnFecharExcluir =
+    document.getElementById("btnFecharExcluir");
+
+const btnCancelarExcluir =
+    document.getElementById("btnCancelarExcluir");
+
+const btnConfirmarExcluir =
+    document.getElementById("btnConfirmarExcluir");
+
+const senhaExcluir =
+    document.getElementById("senhaExcluir");
+
+const confirmacaoExcluir =
+    document.getElementById("confirmacaoExcluir");
 
 // AUTENTICAÇÃO
 function obterToken() {
@@ -304,6 +330,20 @@ function fecharModalSenha() {
 
 
     formSenha.reset();
+}
+
+// EXCLUSÃO DE CONTA
+function abrirModalExcluirConta() {
+
+    formExcluirConta.reset();
+    modalExcluirConta.classList.add("active");
+    senhaExcluir.focus();
+}
+
+function fecharModalExcluirConta() {
+
+    modalExcluirConta.classList.remove("active");
+    formExcluirConta.reset();
 }
 
 // SALVAR DADOS DO USUÁRIO
@@ -592,6 +632,91 @@ formSenha.addEventListener(
     }
 );
 
+// EXCLUIR CONTA
+formExcluirConta.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+        const senha = senhaExcluir.value;
+        const confirmacao = confirmacaoExcluir.value.trim();
+
+        if (!senha) {
+            exibirMensagem(
+                "Informe sua senha atual.",
+                "erro"
+            );
+            return;
+        }
+
+        if (confirmacao !== "EXCLUIR") {
+            exibirMensagem(
+                "Digite EXCLUIR para confirmar.",
+                "erro"
+            );
+            return;
+        }
+
+        const confirmar = window.confirm(
+            "Tem certeza de que deseja excluir definitivamente sua conta?"
+        );
+
+        if (!confirmar) {
+            return;
+        }
+
+        btnConfirmarExcluir.disabled = true;
+        btnConfirmarExcluir.textContent = "Excluindo...";
+
+        try {
+            const response = await fetch(
+                API_EXCLUIR_CONTA,
+                {
+                    method: "DELETE",
+                    headers: headersAutenticacao(),
+                    body: JSON.stringify({ senha })
+                }
+            );
+
+            if (!response.ok) {
+                const mensagem = await lerMensagemErro(response);
+                throw new Error(mensagem);
+            }
+
+            try {
+                sessionStorage.removeItem("jwtToken");
+                sessionStorage.removeItem("usuarioLogado");
+            }
+            catch (error) {
+                console.error(
+                    "Não foi possível limpar os dados da sessão:",
+                    error
+                );
+            }
+
+            window.location.replace(
+                "entrar.html?contaExcluida=1"
+            );
+        }
+        catch (error) {
+            console.error(
+                "Erro ao excluir conta:",
+                error
+            );
+
+            exibirMensagem(
+                error.message ||
+                "Não foi possível excluir sua conta.",
+                "erro"
+            );
+
+            btnConfirmarExcluir.disabled = false;
+            btnConfirmarExcluir.textContent = "Excluir definitivamente";
+        }
+    }
+);
+
 // MOSTRAR / ESCONDER SENHA
 const botoesMostrarSenha =
     document.querySelectorAll(
@@ -815,6 +940,21 @@ btnCancelarSenha.addEventListener(
     fecharModalSenha
 );
 
+btnExcluirConta.addEventListener(
+    "click",
+    abrirModalExcluirConta
+);
+
+btnFecharExcluir.addEventListener(
+    "click",
+    fecharModalExcluirConta
+);
+
+btnCancelarExcluir.addEventListener(
+    "click",
+    fecharModalExcluirConta
+);
+
 // FECHAR CLICANDO FORA
 modalDados.addEventListener(
     "click",
@@ -844,6 +984,16 @@ modalSenha.addEventListener(
             fecharModalSenha();
         }
 
+    }
+);
+
+modalExcluirConta.addEventListener(
+    "click",
+    function(event) {
+
+        if (event.target === modalExcluirConta) {
+            fecharModalExcluirConta();
+        }
     }
 );
 
@@ -882,6 +1032,14 @@ document.addEventListener(
         ) {
 
             fecharModalSenha();
+        }
+
+        if (
+            modalExcluirConta
+                .classList
+                .contains("active")
+        ) {
+            fecharModalExcluirConta();
         }
 
     }

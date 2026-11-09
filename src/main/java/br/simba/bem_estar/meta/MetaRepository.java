@@ -10,4 +10,6 @@ public interface MetaRepository extends JpaRepository<MetaModel, Long> {
     List<MetaModel> findByUsuarioId(Long usuarioId);
 
     Optional<MetaModel> findByIdAndUsuarioId(Long id, Long usuarioId);
+
+    void deleteByUsuarioId(Long usuarioId);
 }

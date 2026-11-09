@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SIMBA - Sinais Corporais</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/sintomas.css">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="logo">
+            <img src="img/LeaoLogoPNG.png" alt="SIMBA">
+            <img src="img/NomeLogoPNG.png" alt="SIMBA" class="logo-name">
+        </div>
+
+        <nav>
+
+            <a href="index.html">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </a>
+
+            <a href="hidratacao.html">
+                <i class="fa-solid fa-droplet"></i>
+                Hidratação
+            </a>
+
+            <a href="sono.html">
+                <i class="fa-solid fa-moon"></i>
+                Sono
+            </a>
+
+            <a href="treinos.html">
+                <i class="fa-solid fa-dumbbell"></i>
+                Treinos
+            </a>
+
+            <a href="sintomas.html" class="active">
+                <i class="fa-solid fa-heart-pulse"></i>
+                Sinais Corporais
+            </a>
+
+            <a href="rotinas.html">
+                <i class="fa-solid fa-calendar-check"></i>
+                Rotina
+            </a>
+
+            <a href="lembretes.html">
+                <i class="fa-solid fa-bell"></i>
+                Lembretes
+            </a>
+
+            <a href="progresso.html">
+                <i class="fa-solid fa-chart-line"></i>
+                Progresso
+            </a>
+
+            <a href="conquistas.html">
+                <i class="fa-solid fa-trophy"></i>
+                Conquistas
+            </a>
+
+        </nav>
+
+        <div class="bottom-menu">
+
+            <a href="perfil.html">
+                <i class="fa-solid fa-user"></i>
+                Meu perfil
+            </a>
+
+            <a href="entrar.html" id="sair">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Sair
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- CONTEÚDO -->
+    <main class="sintomas-main">
+
+        <header>
+
+            <button class="menu-button" id="menuButton">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div>
+                <span class="label">SINAIS CORPORAIS</span>
+                <h1>Como está seu corpo hoje?</h1>
+                <p>Um check-in rápido por dia para você perceber seus padrões.</p>
+            </div>
+
+            <div class="user">
+
+                <button class="notification" id="btnNotificacao" type="button" aria-label="Abrir notificações" aria-expanded="false" aria-controls="dropdown-notificacoes">
+                    <i class="fa-regular fa-bell" aria-hidden="true"></i>
+                    <span id="badge-notificacao" class="badge" aria-live="polite">0</span>
+                </button>
+
+                <div id="dropdown-notificacoes" class="notificacoes-dropdown">
+                    <div class="dropdown-header">
+                        <h3>Notificações</h3>
+                        <a href="lembretes.html">Ver todas</a>
+                    </div>
+                    <div class="dropdown-body" id="dropdown-lista">
+                        <div class="dropdown-empty">A carregar notificações...</div>
+                    </div>
+                </div>
+
+                <div class="avatar" id="avatarUsuario">U</div>
+
+                <a class="login-button" id="loginButton" href="entrar.html">Entrar</a>
+
+            </div>
+
+        </header>
+
+
+        <!-- Aviso quando não está logado / erro geral -->
+        <div class="sx-aviso" id="avisoGeral" hidden></div>
+
+        <div class="sx-layout">
+
+            <!-- ======================= COLUNA PRINCIPAL ======================= -->
+            <div class="sx-coluna">
+
+                <!-- QUESTIONÁRIO / RESUMO DE HOJE -->
+                <section class="sx-card sx-hoje">
+
+                    <div id="estadoCarregando" class="sx-carregando">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Carregando...
+                    </div>
+
+                    <!-- Questionário -->
+                    <form id="formSintomas" class="sx-form" hidden novalidate>
+
+                        <div class="sx-card-topo">
+                            <div>
+                                <span class="label">CHECK-IN DE HOJE</span>
+                                <h2 id="formTitulo">Leva menos de 1 minuto</h2>
+                            </div>
+                            <span class="sx-data" id="formData"></span>
+                        </div>
+
+                        <fieldset class="sx-pergunta">
+                            <legend><i class="fa-solid fa-bolt"></i> Energia hoje</legend>
+                            <div class="sx-escala" data-campo="energia" role="radiogroup" aria-label="Energia de 1 a 5"></div>
+                        </fieldset>
+
+                        <fieldset class="sx-pergunta">
+                            <legend><i class="fa-solid fa-face-smile"></i> Humor</legend>
+                            <div class="sx-escala" data-campo="humor" role="radiogroup" aria-label="Humor de 1 a 5"></div>
+                        </fieldset>
+
+                        <fieldset class="sx-pergunta">
+                            <legend><i class="fa-solid fa-brain"></i> Estresse / ansiedade <small>(5 = muito estressado)</small></legend>
+                            <div class="sx-escala" data-campo="estresse" role="radiogroup" aria-label="Estresse de 1 a 5"></div>
+                        </fieldset>
+
+                        <fieldset class="sx-pergunta">
+                            <legend><i class="fa-solid fa-hand-holding-medical"></i> Está sentindo dor?</legend>
+                            <div class="sx-segmentos" id="opcoesDor" role="radiogroup" aria-label="Intensidade da dor"></div>
+                            <div class="sx-locais" id="campoLocais" hidden>
+                                <span class="sx-locais-rotulo" id="rotuloLocais">Onde dói? <small>(pode marcar vários)</small></span>
+                                <button type="button" class="sx-locais-campo" id="btnLocais"
+                                        aria-haspopup="true" aria-expanded="false" aria-controls="listaLocais" aria-labelledby="rotuloLocais textoLocais">
+                                    <span id="textoLocais" class="sx-locais-texto">Toque para escolher as partes do corpo</span>
+                                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                                </button>
+                                <div class="sx-locais-lista" id="listaLocais" role="group" aria-label="Partes do corpo" hidden></div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="sx-pergunta">
+                            <legend><i class="fa-solid fa-notes-medical"></i> Sintomas do dia <small>(marque quantos quiser)</small></legend>
+                            <div class="sx-chips" id="opcoesSintomas"></div>
+                        </fieldset>
+
+                        <fieldset class="sx-pergunta">
+                            <legend><i class="fa-solid fa-pen"></i> Observação <small>(opcional)</small></legend>
+                            <textarea id="observacao" maxlength="300" rows="2" placeholder="Algo que queira lembrar sobre hoje?"></textarea>
+                            <span class="sx-contador" id="contadorObs">0/300</span>
+                        </fieldset>
+
+                        <p class="sx-erro" id="erroForm" role="alert" hidden></p>
+
+                        <div class="sx-acoes">
+                            <button type="button" class="sx-btn sx-btn-secundario" id="btnCancelar" hidden>Cancelar</button>
+                            <button type="submit" class="sx-btn" id="btnSalvar">
+                                <i class="fa-solid fa-check"></i><span id="btnSalvarTexto">Salvar check-in</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Resumo de hoje -->
+                    <div id="resumoHoje" class="sx-resumo" hidden>
+                        <div class="sx-card-topo">
+                            <div>
+                                <span class="label">CHECK-IN DE HOJE</span>
+                                <h2><i class="fa-solid fa-circle-check sx-ok"></i> Respondido!</h2>
+                            </div>
+                            <button type="button" class="sx-btn sx-btn-secundario" id="btnEditar">
+                                <i class="fa-solid fa-pen"></i> Editar
+                            </button>
+                        </div>
+
+                        <div class="sx-medidores" id="resumoMedidores"></div>
+                        <div class="sx-resumo-linha" id="resumoDor"></div>
+                        <div class="sx-resumo-linha" id="resumoSintomas"></div>
+                        <p class="sx-resumo-obs" id="resumoObs" hidden></p>
+                    </div>
+                </section>
+
+                <!-- RESUMO DA SEMANA -->
+                <section class="sx-card sx-semana">
+                    <div class="sx-semana-texto">
+                        <span class="label">ÚLTIMOS 7 DIAS</span>
+                        <h2>Sua semana</h2>
+                        <p class="sx-mensagem" id="semanaMensagem">Carregando...</p>
+                        <ul class="sx-semana-lista">
+                            <li><i class="fa-solid fa-calendar-check"></i> <span id="semanaDias">–</span></li>
+                            <li><i class="fa-solid fa-hand-holding-medical"></i> <span id="semanaDor">–</span></li>
+                            <li><i class="fa-solid fa-notes-medical"></i> <span id="semanaSintoma">–</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="sx-medias">
+                        <div class="sx-media">
+                            <i class="fa-solid fa-bolt"></i>
+                            <strong id="mediaEnergia">–</strong>
+                            <span>Energia média</span>
+                        </div>
+                        <div class="sx-media">
+                            <i class="fa-solid fa-face-smile"></i>
+                            <strong id="mediaHumor">–</strong>
+                            <span>Humor médio</span>
+                        </div>
+                        <div class="sx-media">
+                            <i class="fa-solid fa-brain"></i>
+                            <strong id="mediaEstresse">–</strong>
+                            <span>Estresse médio</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- HISTÓRICO -->
+                <section class="sx-historico">
+                    <div class="sx-historico-topo">
+                        <div>
+                            <span class="label">HISTÓRICO</span>
+                            <h2>Seus últimos dias</h2>
+                        </div>
+                        <span class="sx-legenda">
+                            <span><i class="fa-solid fa-bolt"></i> energia</span>
+                            <span><i class="fa-solid fa-face-smile"></i> humor</span>
+                            <span><i class="fa-solid fa-brain"></i> estresse</span>
+                        </span>
+                    </div>
+                    <div class="sx-lista" id="listaHistorico">
+                        <p class="sx-vazio">Carregando...</p>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<script src="js/script.js"></script>
+<script src="js/notificacoes.js"></script>
+<script src="js/sintomas.js"></script>
+
+</body>
+</html>

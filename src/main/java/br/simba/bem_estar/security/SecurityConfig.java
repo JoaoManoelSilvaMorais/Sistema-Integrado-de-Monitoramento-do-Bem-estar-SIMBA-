@@ -47,6 +47,7 @@ public class SecurityConfig {
                     "/rotinas.html",
                     "/conquistas.html",
                     "/hidratacao.html",
+                    "/sintomas.html",
                     "/img/**",
                     "/css/**",
                     "/js/**",

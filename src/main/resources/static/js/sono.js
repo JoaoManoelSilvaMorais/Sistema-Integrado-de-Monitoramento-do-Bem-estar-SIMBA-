@@ -88,11 +88,11 @@ function headersAutenticacao() {
 
 }
 
-function abrirToastConquista(conquista) {
+function abrirToastQualidadeSono(mensagem) {
 
     const container = document.getElementById("toast-container");
 
-    if (!container || !conquista || !conquista.nome) {
+    if (!container || !mensagem) {
         return;
     }
 
@@ -100,15 +100,15 @@ function abrirToastConquista(conquista) {
     toast.className = "toast-notification";
 
     const icone = document.createElement("i");
-    icone.className = "fa-solid fa-trophy";
+    icone.className = "fa-solid fa-moon";
 
     const texto = document.createElement("div");
 
     const titulo = document.createElement("strong");
-    titulo.textContent = "Conquista desbloqueada!";
+    titulo.textContent = "Qualidade do sono";
 
     const descricao = document.createElement("span");
-    descricao.textContent = conquista.nome;
+    descricao.textContent = mensagem;
 
     texto.append(titulo, descricao);
     toast.append(icone, texto);
@@ -121,44 +121,51 @@ function abrirToastConquista(conquista) {
     }, 5000);
 }
 
-async function verificarConquistasNovas() {
+function ehNoiteRuim(registro) {
+    const duracaoMinutos = calcularDuracaoMinutos(registro.horaDormir, registro.horaAcordar);
+    const horas = duracaoMinutos / 60;
+    const nota = Number(registro.notaSono || 0);
+    return horas < 7 || nota <= 2;
+}
 
-    if (window.SimbaFeedbackAtivo) {
+function verificarQualidadeSono(registroNovo) {
+    if (!Array.isArray(registrosSono) || registrosSono.length === 0) {
         return;
     }
 
-    const token = obterToken();
+    const noitesRecentes = [...registrosSono]
+        .sort((a, b) => new Date(b.horaAcordar) - new Date(a.horaAcordar))
+        .slice(0, 4);
 
-    if (!token) {
-        return;
-    }
-
-    try {
-
-        const response = await fetch("/api/conquistas", {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        });
-
-        if (!response.ok) {
-            return;
+    let noitesRuinsConsecutivas = 0;
+    for (const noite of noitesRecentes) {
+        if (!ehNoiteRuim(noite)) {
+            break;
         }
-
-        const dados = await response.json();
-        const novas = Array.isArray(dados?.conquistas)
-            ? dados.conquistas.filter(conquista => conquista.nova)
-            : [];
-
-        novas.slice(0, 3).forEach((conquista, indice) => {
-            setTimeout(() => abrirToastConquista(conquista), 300 + indice * 900);
-        });
-
-    }
-    catch (erro) {
-        console.error("Não foi possível verificar conquistas novas.", erro);
+        noitesRuinsConsecutivas++;
     }
 
+    const duracaoMinutos = calcularDuracaoMinutos(registroNovo.horaDormir, registroNovo.horaAcordar);
+    const nota = Number(registroNovo.notaSono);
+    let mensagem;
+
+    if (duracaoMinutos < 7 * 60 && nota <= 2) {
+        mensagem = `Seu sono precisa de atenção: você descansou ${formatarDuracao(duracaoMinutos)} e deu nota ${nota}/5.`;
+    } else if (duracaoMinutos < 7 * 60) {
+        mensagem = `Você dormiu ${formatarDuracao(duracaoMinutos)}. Tente se aproximar de 7 horas de descanso.`;
+    } else if (nota <= 2) {
+        mensagem = `Você dormiu ${formatarDuracao(duracaoMinutos)}, mas avaliou a noite com nota ${nota}/5. Observe como está se sentindo.`;
+    } else if (nota >= 4) {
+        mensagem = `Boa noite de sono: ${formatarDuracao(duracaoMinutos)} de descanso e nota ${nota}/5.`;
+    } else {
+        mensagem = `Seu sono durou ${formatarDuracao(duracaoMinutos)} e recebeu nota ${nota}/5. Continue acompanhando seu descanso.`;
+    }
+
+    if (noitesRuinsConsecutivas >= 4) {
+        mensagem += " Você teve quatro noites consecutivas abaixo do ideal.";
+    }
+
+    abrirToastQualidadeSono(mensagem);
 }
 
 async function carregarUsuario() {
@@ -872,8 +879,8 @@ formSono.addEventListener(
 
             fecharModal();
 
-            await verificarConquistasNovas();
             await carregarRegistros();
+            verificarQualidadeSono(registro);
 
         }
         catch (error) {

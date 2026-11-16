@@ -19,6 +19,32 @@ MODELO (copie para o topo a cada entrega):
 
 ---
 
+## 2026-11-16 — Execução completa dos testes e exportação da saída do terminal para Markdown
+
+### O que foi alterado
+- Criado o arquivo [`EXECUCAO-TESTES.md`](EXECUCAO-TESTES.md) na raiz do repositório com o resumo das 55 classes de teste e a saída integral do terminal gerada por `.\mvnw.cmd test` (`188` testes passando).
+- `src/main/resources/static/js/progresso.js`: adicionada verificação `typeof Chart === "undefined"` nas funções `criarGraficoSono` e `criarGraficoHidratacao` para que indisponibilidade ou atraso do script externo `Chart.js` não interrompa o preenchimento dos cards de resumo e do heatmap de treinos.
+- `src/test/java/br/simba/bem_estar/e2e/ConquistasProgressoE2ETest.java`: aguardado o carregamento inicial de `#mediaHidratacaoResumo` antes de alternar o filtro para `7 dias`.
+
+### Por que
+Atender à solicitação de executar toda a suíte e exportar o log completo do terminal em Markdown, além de eliminar uma falha intermitente na tela de progresso quando o script externo do Chart.js não estava disponível no momento da renderização.
+
+### O que foi usado
+- Maven Wrapper (`.\mvnw.cmd test`) com JUnit 5, MockMvc e Selenium WebDriver (`EdgeDriver`).
+- `node --check src/main/resources/static/js/progresso.js`.
+
+### Como testar
+```powershell
+.\mvnw.cmd test
+```
+Consulte o log completo exportado em [`EXECUCAO-TESTES.md`](EXECUCAO-TESTES.md).
+
+### Verificado × não verificado
+- **Verificado:** `node --check src/main/resources/static/js/progresso.js` e `.\mvnw.cmd test` (fora do sandbox restrito para permitir loopback do Tomcat/WebDriver): `Tests run: 188, Failures: 0, Errors: 0, Skipped: 0` (`BUILD SUCCESS` em `02:22 min`, após a alteração final de código e teste).
+- **Não verificado:** nada pendente para esta entrega.
+
+---
+
 ## 2026-11-16 — Implementação de Selenium WebDriver e testes Ponta a Ponta (E2E) das interfaces web
 
 ### O que foi alterado

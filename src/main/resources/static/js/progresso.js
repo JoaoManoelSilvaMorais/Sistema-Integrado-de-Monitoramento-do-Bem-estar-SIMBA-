@@ -385,7 +385,7 @@ function criarGraficoSono(sono) {
     const canvas =
         document.getElementById("graficoSono");
 
-    if (!canvas) {
+    if (!canvas || typeof Chart === "undefined") {
         return;
     }
 
@@ -531,7 +531,7 @@ function criarGraficoHidratacao(
         );
 
 
-    if (!canvas) {
+    if (!canvas || typeof Chart === "undefined") {
         return;
     }
 

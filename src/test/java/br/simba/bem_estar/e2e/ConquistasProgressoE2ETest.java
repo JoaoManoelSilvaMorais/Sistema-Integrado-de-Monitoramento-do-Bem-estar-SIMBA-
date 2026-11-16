@@ -63,7 +63,10 @@ class ConquistasProgressoE2ETest extends BaseE2ETest {
         esperarTexto(By.id("resumoAgua"), "0.3 L");
 
         abrir("/progresso.html");
-        esperarVisivel(By.id("mediaHidratacaoResumo"));
+        espera.until(d -> {
+            String media = d.findElement(By.id("mediaHidratacaoResumo")).getText().trim();
+            return !media.isEmpty() && !media.equals("--");
+        });
         espera.until(d -> d.findElements(By.cssSelector("#comparativoGrade .comparativo-card")).size() == 4);
 
         WebElement botao7Dias = esperarClicavel(By.cssSelector("#periodoFiltro .periodo-btn[data-dias='7']"));

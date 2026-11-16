@@ -19,6 +19,101 @@ MODELO (copie para o topo a cada entrega):
 
 ---
 
+## 2026-11-16 — Implementação de Selenium WebDriver e testes Ponta a Ponta (E2E) das interfaces web
+
+### O que foi alterado
+- `pom.xml`: adicionada a dependência `org.seleniumhq.selenium:selenium-java` em escopo `test` (versão gerenciada `4.43.0` pelo BOM do Spring Boot).
+- Criada a base `src/test/java/br/simba/bem_estar/e2e/BaseE2ETest.java`: sobe a aplicação completa em porta aleatória (`@SpringBootTest(webEnvironment = RANDOM_PORT)`), inicializa o Microsoft Edge headless (`--headless=new` com `PageLoadStrategy.EAGER` e descoberta automática de `msedge.exe`), limpa armazenamento do navegador e banco H2 antes de cada teste e centraliza utilitários de espera, interação e autenticação pela interface.
+- Criadas 5 classes de testes Ponta a Ponta cobrindo as 12 páginas HTML em `src/main/resources/static/`:
+  - `AuthPerfilE2ETest.java` (`2` testes): validação de senhas divergentes em `login.html`, fluxo completo em `entrar.html`, `index.html` e `perfil.html` (edição de dados pessoais, modal de peso/altura com prévia de IMC e criação de meta sugerida, alteração de senha e logout com novo login).
+  - `DashboardHidratacaoSonoTreinoE2ETest.java` (`4` testes): registro rápido `+250 ml` no dashboard com atualização de resumo/streak (`index.html`); adição rápida, criação, edição, exclusão e configuração/restauração de meta em `hidratacao.html`; planejador de ciclos e CRUD completo em `sono.html`; CRUD completo de atividade física em `treinos.html`.
+  - `SintomasRotinasLembretesE2ETest.java` (`3` testes): check-in diário, seleção de dor/locais, sintomas, histórico e edição em `sintomas.html`; criação de rotina, lembrete recorrente por dia da semana, alternância de status e exclusões em `rotinas.html`; criação, atualização do sininho do cabeçalho e exclusão em `lembretes.html`.
+  - `ConquistasProgressoE2ETest.java` (`2` testes): desbloqueio de conquistas, filtros e criação/remoção de metas em `conquistas.html`; resumo, comparativo semanal, troca de período e heatmap em `progresso.html`.
+  - `DemoFluxoE2ETest.java` (`1` teste): fluxo completo autenticado como `demo / demo123` (`@ActiveProfiles("demo")` em banco H2 dedicado) percorrendo dashboard, conquistas, progresso, rotinas, sinais corporais e registro rápido de água.
+
+### Por que
+Para validar o funcionamento integrado entre telas HTML/JS/CSS, controle de sessão (`sessionStorage`), endpoints REST, regras de negócio e persistência no fluxo real do usuário no navegador.
+
+### O que foi usado
+- **Selenium WebDriver** (`org.seleniumhq.selenium:selenium-java` `4.43.0`) com `EdgeDriver` e Selenium Manager (driver cacheado localmente).
+- **Microsoft Edge** instalado na máquina em modo headless (`--headless=new`).
+- **Spring Boot Test** (`@SpringBootTest(webEnvironment = RANDOM_PORT)`) + **H2 em memória**.
+
+### Como testar
+- Todos os testes Ponta a Ponta:
+  ```powershell
+  .\mvnw.cmd test "-Dtest=*E2ETest"
+  ```
+- Suíte completa (unidade + integração + E2E):
+  ```powershell
+  .\mvnw.cmd test
+  ```
+  *(Em ambiente com sandbox de rede/loopback restrito, executar com permissão de socket local/rede para inicialização do Tomcat em porta aleatória e comunicação com o WebDriver.)*
+
+### Verificado × não verificado
+- **Verificado:** execução completa da suíte (testes de unidade, integração e os 12 testes E2E em navegador real).
+- **Não verificado:** exclusão definitiva de conta no modal `#modalExcluirConta` (restringida ao nível de UI neste momento para priorizar o fluxo principal de edição, medidas e troca de senha) e execução nos navegadores Chrome/Firefox (ausentes no ambiente).
+
+---
+
+## 2026-11-16 — Suíte de testes de integração das funcionalidades
+**Pedido / história:** escrever testes de integração para todas as funcionalidades da aplicação.
+**Alterado:**
+- `src/test/java/br/simba/bem_estar/BaseIntegrationTest.java` — base com `@SpringBootTest`, `@AutoConfigureMockMvc`, limpeza do H2 em ordem segura antes de cada teste e utilitários de cadastro/login JWT.
+- `src/test/java/br/simba/bem_estar/security/AuthUserIntegrationTest.java` — 3 testes ponta a ponta cobrindo rotas públicas/protegidas, registro com BCrypt, login JWT, atualização de usuário com novo token, troca de senha e exclusão completa da conta em cascata.
+- `src/test/java/br/simba/bem_estar/perfil/PerfilMedidasIntegrationTest.java` — 2 testes cobrindo medidas iniciais, prévia de IMC/sugestões sem gravar, persistência de peso/altura e reflexo automático na meta de água sugerida.
+- `src/test/java/br/simba/bem_estar/progresso/RegistrosMonitoramentoIntegrationTest.java` — 1 teste cobrindo CRUD de hidratação, sono e treinos, bloqueio anti-IDOR entre usuários (403) e consolidação no `/progresso`.
+- `src/test/java/br/simba/bem_estar/rotina/RotinaLembreteIntegrationTest.java` — 2 testes cobrindo rotinas com lembretes recorrentes (ordenação, deduplicação de dias, exclusão em cascata), lembretes avulsos e isolamento entre usuários.
+- `src/test/java/br/simba/bem_estar/sintoma/SintomasIntegrationTest.java` — 1 teste cobrindo questionário diário (criação, atualização no mesmo dia sem duplicar, validações 422), status de hoje e resumo semanal do histórico.
+- `src/test/java/br/simba/bem_estar/conquista/GamificacaoDashboardIntegrationTest.java` — 1 teste de integração cruzada cobrindo meta de água personalizada, metas, registros, rotina, streak, conquistas (desbloqueio + `nova`), comparativo semanal e próximo passo.
+- `src/test/java/br/simba/bem_estar/demo/DemoDataSeederIntegrationTest.java` — 1 teste com `@ActiveProfiles("demo")` validando o seeding automático e a leitura de todas as telas com o usuário `demo`.
+**Usado:** `@SpringBootTest`, `@AutoConfigureMockMvc`, `MockMvc`, H2 em memória, Spring Security + JWT, Jackson 3 (`tools.jackson.databind.ObjectMapper`), Maven (`.\mvnw.cmd test`).
+**Como testar:**
+1. Para rodar apenas os testes de integração: `.\mvnw.cmd test "-Dtest=*IntegrationTest"`.
+2. Para rodar toda a suíte (unidade + integração): `.\mvnw.cmd test`.
+3. Confira `Tests run: 176, Failures: 0, Errors: 0, Skipped: 0` e `BUILD SUCCESS`.
+**Verificado:** testes de integração (`.\mvnw.cmd test -o "-Dtest=*IntegrationTest"`, 11/11 OK) e suíte completa (`.\mvnw.cmd test -o`, `Tests run: 176, Failures: 0, Errors: 0, Skipped: 0`). **Não verificado:** testes de interface no navegador (frontend).
+**Pendências / atenção:** durante os testes foram observados três comportamentos já existentes na aplicação (não alterados): `POST /auth/login` com senha incorreta retorna HTTP 500 porque `RestExceptionHandler` captura `BadCredentialsException` como `RuntimeException`; `PUT /perfil/me` serializa relação bidirecional `PerfilModel <-> UserModel` (a tela atual usa `/perfil/me/medidas`); e `UserAccountService.excluirConta` ainda não exclui registros de `tb_registro_sintoma`.
+
+## 2026-11-16 — JUnit configurado e suíte de testes de unidade para todo o projeto
+**Pedido / história:** implementar o JUnit no projeto e escrever testes de unidade para as funcionalidades da aplicação.
+**Alterado:**
+- `pom.xml` — adicionadas explicitamente as dependências `spring-boot-starter-test` e `junit-jupiter` em escopo `test`.
+- `src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker` e `org.mockito.plugins.MemberAccessor` — configurados `mock-maker-subclass` e `member-accessor-reflection` para o Mockito rodar sem attach dinâmico do agente no Java 21 (evita bloqueio/aviso em ambientes Windows com caminho acentuado).
+- `src/test/java/br/simba/bem_estar/historico/` (`HistoricoCalculosTest`, `HistoricoServiceTest`) — 9 testes cobrindo agregação diária de água, metas, sono, boa noite, sequências e carregamento via repositórios.
+- `src/test/java/br/simba/bem_estar/streak/` (`StreakCalculatorTest`, `StreakControllerTest`, `StreakServiceTest`) — 14 testes cobrindo ofensiva, janela semanal de 7 dias, tolerância de 2 faltas, risco/última chance, quebra e marcação dos registros de hoje.
+- `src/test/java/br/simba/bem_estar/conquista/` (`ConquistaCalculatorTest`, `ConquistaServiceTest`, `ConquistaControllerTest`) — 8 testes cobrindo as 26 conquistas, meta personalizada de água, persistência sem duplicação e preservação de conquistas já desbloqueadas.
+- `src/test/java/br/simba/bem_estar/meta/` (`MetaAguaCalculatorTest`, `MetaAguaServiceTest`, `MetaCalculatorTest`, `MetaServiceTest`, `MetaControllerTest`) — 20 testes cobrindo cálculo/limites de meta de água, criação/listagem/conclusão/exclusão de metas, limite de 5 ativas e duplicidade.
+- `src/test/java/br/simba/bem_estar/comparativo/` (`ComparativoCalculatorTest`, `ComparativoServiceTest`, `ComparativoControllerTest`) — 6 testes cobrindo comparação entre últimos 7 dias e 7 anteriores e tendências (`subiu`, `caiu`, `igual`, `novo`, `sem`).
+- `src/test/java/br/simba/bem_estar/proximopasso/` (`ProximoPassoCalculatorTest`, `ProximoPassoServiceTest`, `ProximoPassoControllerTest`) — 10 testes cobrindo prioridade de recomendações, formatação e consulta sem gravação.
+- `src/test/java/br/simba/bem_estar/progresso/` (`ProgressoServiceTest`, `ProgressoControllerTest`) — 4 testes cobrindo séries contínuas de sono, água e treinos e validação de intervalo de datas.
+- `src/test/java/br/simba/bem_estar/perfil/` (`PerfilServiceTest`, `PerfilControllerTest`) — 8 testes cobrindo CRUD de perfil, busca/salvamento de medidas, IMC e prévia sem salvar.
+- `src/test/java/br/simba/bem_estar/rotina/` (`RotinaServiceTest`, `RotinaControllerTest`) — 9 testes cobrindo CRUD de rotinas, ordenação/validação de lembretes recorrentes e status HTTP.
+- `src/test/java/br/simba/bem_estar/sintoma/` (`RegistroSintomaServiceTest`, `RegistroSintomaControllerTest`) — 7 testes cobrindo resposta diária (criar/atualizar), status de hoje e histórico de 30 dias.
+- `src/test/java/br/simba/bem_estar/lembrete/LembreteControllerTest.java`, `registroAgua/RegistroAguaControllerTest.java`, `registroSono/RegistroSonoControllerTest.java`, `registroExercicio/RegistroExercicioControllerTest.java` — 11 testes cobrindo CRUD, validações e proteção contra acesso de outro usuário (`AcessoNegadoException`).
+- `src/test/java/br/simba/bem_estar/security/` (`JWTServiceTest`, `JwtAuthenticationFilterTest`, `AuthControllerTest`) — 10 testes cobrindo geração/validação/expiração/adulteração de JWT, filtro de autenticação e registro/login.
+- `src/test/java/br/simba/bem_estar/user/` (`UserDetailsServiceImplTest`, `UserAccountServiceTest`, `UserControllerTest`) — 10 testes cobrindo autenticação, atualização de perfil/emissão de novo token, troca de senha e exclusão completa da conta.
+- `src/test/java/br/simba/bem_estar/infra/RestExceptionHandlerTest.java` e `demo/DemoDataSeederTest.java` — 3 testes cobrindo mapeamento global de exceções (422, 404, 403, 409, 500) e seeding do usuário demo.
+**Usado:** JUnit Jupiter 6.0.3 (via Spring Boot 4.1.1), Mockito 5.23.0, Spring Test (`MockMvcBuilders.standaloneSetup`, `ReflectionTestUtils`, `MockHttpServletRequest`), Maven (`.\mvnw.cmd clean test`).
+**Como testar:**
+1. Na raiz do projeto, execute `.\mvnw.cmd clean test`.
+2. Para rodar apenas uma classe específica, execute por exemplo `.\mvnw.cmd test -Dtest=StreakCalculatorTest`.
+3. Confira o resumo final `Tests run: 165, Failures: 0, Errors: 0, Skipped: 0` e `BUILD SUCCESS`.
+**Verificado:** suíte completa compilada e executada com `.\mvnw.cmd clean test -o` (`Tests run: 165, Failures: 0, Errors: 0, Skipped: 0` em 43 classes, incluindo `BemEstarApplicationTests`, os 35 testes existentes e os 129 novos testes de unidade). **Não verificado:** testes de integração HTTP ponta a ponta com servidor em execução e frontend.
+**Pendências / atenção:** os arquivos em `src/test/resources/mockito-extensions/` configuram `mock-maker-subclass`, o que evita attach dinâmico no Java 21, mas não permite mockar classes `final` ou métodos estáticos (nenhum teste atual precisa disso).
+
+## 2026-11-09 — Alerta após noites consecutivas de baixa qualidade
+**Pedido / história:** avisar o usuário quando ele adicionar vários registros de sono com baixa qualidade.
+**Alterado:**
+- `src/main/resources/static/js/sono.js` — conta a sequência mais recente de notas 1 ou 2 e exibe um toast de alerta ao atingir 3 noites consecutivas, somente na transição para a situação de alerta.
+**Usado:** JavaScript nativo, toast existente da tela de sono; nenhuma rota ou tabela nova.
+**Como testar:**
+1. Execute `.\mvnw spring-boot:run` e entre no app.
+2. Em Sono, adicione três registros consecutivos com nota 1 ou 2.
+3. Após o terceiro salvamento, confira o popup “Atenção com seu sono”.
+**Verificado:** `node --check src/main/resources/static/js/sono.js`. **Não verificado:** fluxo manual no navegador e compilação do Spring Boot.
+**Pendências / atenção:** notas 1 e 2 são tratadas como baixa qualidade; o alerta considera a sequência mais recente e não reaparece em cada novo registro enquanto a sequência já estiver alertada.
+
 ## 2026-11-09 — Sugestões de metas: botão "Criar meta" grava em Conquistas
 **Pedido:** ao clicar em criar meta nas sugestões, salvar a meta de verdade na aba Conquistas.
 **Alterado:**

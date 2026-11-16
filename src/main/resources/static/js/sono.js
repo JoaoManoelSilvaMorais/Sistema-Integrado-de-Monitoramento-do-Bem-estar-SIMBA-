@@ -62,6 +62,54 @@ let registrosSono = [];
 
 let usuarioAtual = null;
 
+function calcularSequenciaSonoBaixa(registros) {
+    return registros
+        .slice()
+        .sort((a, b) => {
+            const dataA = new Date(a.horaAcordar || a.horaDormir).getTime();
+            const dataB = new Date(b.horaAcordar || b.horaDormir).getTime();
+            return dataB - dataA;
+        })
+        .reduce((sequencia, registro) => {
+            if (Number(registro.notaSono) <= 2) {
+                return sequencia + 1;
+            }
+            return sequencia;
+        }, 0);
+}
+
+function mostrarAlertaSonoBaixa() {
+    const container = document.getElementById("toast-container");
+
+    if (!container) {
+        return;
+    }
+
+    const toast = document.createElement("div");
+    toast.className = "toast-notification";
+
+    const icone = document.createElement("i");
+    icone.className = "fa-solid fa-moon";
+
+    const texto = document.createElement("div");
+    const titulo = document.createElement("strong");
+    titulo.textContent = "Atenção com seu sono";
+
+    const descricao = document.createElement("span");
+    descricao.textContent =
+        "Suas últimas noites tiveram baixa qualidade. Que tal ajustar sua rotina de descanso?";
+
+    texto.append(titulo, descricao);
+    toast.append(icone, texto);
+    container.appendChild(toast);
+
+    setTimeout(() => toast.classList.add("show"), 10);
+    setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 300);
+    }, 6000);
+}
+
 function obterToken() {
 
     return sessionStorage.getItem("jwtToken");
@@ -744,6 +792,8 @@ formSono.addEventListener(
 
         event.preventDefault();
 
+        const sequenciaBaixaAntes =
+            calcularSequenciaSonoBaixa(registrosSono);
 
         const horaDormir =
             horaDormirInput.value;
@@ -874,6 +924,13 @@ formSono.addEventListener(
 
             await verificarConquistasNovas();
             await carregarRegistros();
+
+            if (
+                sequenciaBaixaAntes < 3 &&
+                calcularSequenciaSonoBaixa(registrosSono) >= 3
+            ) {
+                mostrarAlertaSonoBaixa();
+            }
 
         }
         catch (error) {

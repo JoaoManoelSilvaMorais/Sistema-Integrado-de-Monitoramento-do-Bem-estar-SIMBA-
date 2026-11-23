@@ -19,6 +19,18 @@ MODELO (copie para o topo a cada entrega):
 
 ---
 
+## 2026-11-22 — Atualização completa do README.md com a documentação do Checkpoint 02
+**Pedido / história:** atualizar o `README.md` do projeto para condizer totalmente com a documentação final enviada (Checkpoint 02) e com o código atual do repositório.
+**Alterado:**
+- `README.md` — atualizado com identificação da disciplina/UEG/Mufasa Softwares, Documento de Visão v1.1, usuários e escopo real (entregue × fora do escopo), checklist completo de 28/28 requisitos (RF01–RF17 e RNF01–RNF11), papéis SCRUM e 20 Histórias de Usuário, leitura do Modelo Conceitual (BRModelo), diagramas UML de Casos de Uso e de Classes atualizados em Mermaid, arquitetura/tecnologias/pacotes/telas/endpoints REST, regras de negócio, instruções de execução (normal e perfil `demo`), resultados de testes (`188` testes / `55` classes), riscos/validação/resumo de entregas e histórico de contribuições das Sprints 1 a 7.
+**Usado:** leitura direta da documentação enviada e inspeção de `pom.xml`, modelos JPA, controllers, calculators, `SecurityConfig`, `DemoDataSeeder`, `EXECUCAO-TESTES.md` e telas estáticas.
+**Como testar:**
+1. Abrir `README.md` na visualização Markdown (VS Code ou GitHub) e conferir que todas as seções, tabelas e diagramas Mermaid renderizam corretamente.
+**Verificado:** revisão integral do `README.md` contra o código-fonte do repositório e a documentação enviada · **Não verificado:** renderização visual dos diagramas Mermaid diretamente no navegador do GitHub.
+**Pendências / atenção:** nenhuma pendência de arquivo; caso novas entidades sejam adicionadas após o Checkpoint 02, atualizar o diagrama de classes no `README.md`.
+
+---
+
 ## 2026-11-16 — Execução completa dos testes e exportação da saída do terminal para Markdown
 
 ### O que foi alterado

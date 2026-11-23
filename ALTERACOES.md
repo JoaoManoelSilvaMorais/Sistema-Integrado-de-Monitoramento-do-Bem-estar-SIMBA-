@@ -19,6 +19,19 @@ MODELO (copie para o topo a cada entrega):
 
 ---
 
+## 2026-11-22 — Substituição dos diagramas Mermaid pelas imagens oficiais em `docs/`
+**Pedido / história:** substituir os diagramas de Casos de Uso e de Classes em Mermaid no `README.md` pelas duas imagens oficiais enviadas (incluindo o ator em boneco palito).
+**Alterado:**
+- `docs/diagrama-casos-de-uso.jpg` — adicionada a imagem oficial do Diagrama de Casos de Uso.
+- `docs/diagrama-classes.jpg` — adicionada a imagem oficial do Diagrama de Classes (análise).
+- `README.md` — substituídos os blocos Mermaid da Seção 5 pelas referências às imagens `docs/diagrama-casos-de-uso.jpg` e `docs/diagrama-classes.jpg`.
+- `ALTERACOES.md` — registrada a entrega no topo.
+**Usado:** PowerShell (`Copy-Item`), Markdown.
+**Como testar:**
+1. Abrir `README.md` no preview Markdown do VS Code ou após `git push` no GitHub e conferir a exibição das duas imagens na Seção 5.
+**Verificado:** existência e tamanho dos arquivos em `docs/` e `git status --short` · **Não verificado:** exibição na interface web do GitHub antes do push.
+**Pendências / atenção:** lembrar de incluir a pasta `docs/` no próximo `git add` / `git commit`.
+
 ## 2026-11-22 — Correção dos diagramas UML de Casos de Uso e de Classes no README.md
 **Pedido / história:** corrigir os diagramas de Casos de Uso e de Classes no `README.md` para condizerem fielmente com a sintaxe UML e com os diagramas oficiais da documentação.
 **Alterado:**

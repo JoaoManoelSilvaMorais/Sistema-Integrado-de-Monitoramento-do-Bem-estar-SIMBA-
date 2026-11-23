@@ -202,141 +202,141 @@ Na modelagem conceitual do banco de dados:
 
 ### Diagrama de Casos de Uso (UML)
 
+Segue a notação UML oficial do projeto: um ator (**Usuário**), fronteira do sistema (**SIMBA**), associações sólidas entre ator e casos de uso principais, e dependências tracejadas **`«include»`** (seta do caso base para o incluído) e **`«extend»`** (seta do caso complementar para o caso base). *(Na implementação do repositório, há ainda o módulo complementar de check-in de Sinais Corporais, detalhado na Seção 6.)*
+
 ```mermaid
 flowchart LR
-    classDef actorStyle fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#000;
-    classDef usecaseStyle fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#000;
+    classDef actorStyle fill:#ffffff,stroke:#333333,stroke-width:2px,color:#111111;
+    classDef principal fill:#dce8f7,stroke:#3b6ea5,stroke-width:1.5px,color:#111111;
+    classDef complementar fill:#fcedc5,stroke:#b08938,stroke-width:1.5px,color:#111111;
+    classDef notaStyle fill:#fef9e7,stroke:#b5a472,stroke-width:1px,color:#333333;
 
-    User((Usuário)):::actorStyle
+    User(("Usuário")):::actorStyle
 
-    subgraph SIMBA["Sistema SIMBA (Acesso autenticado via JWT)"]
+    subgraph SIMBA["SIMBA"]
         direction TB
 
-        UC_Auth(["Autenticar-se"]):::usecaseStyle
+        UC1(["Cadastrar-se"]):::principal
+        UC2(["Autenticar-se"]):::principal
+        UC3(["Gerenciar perfil e senha"]):::principal
+        UC4(["Gerenciar registros de sono"]):::principal
+        UC5(["Gerenciar registros de água"]):::principal
+        UC6(["Gerenciar treinos"]):::principal
+        UC7(["Gerenciar rotinas"]):::principal
+        UC8(["Gerenciar lembretes avulsos"]):::principal
+        UC9(["Receber notificações de lembretes"]):::principal
+        UC10(["Visualizar dashboard"]):::principal
+        UC11(["Visualizar progresso e gráficos"]):::principal
+        UC12(["Acompanhar ofensiva (streak)"]):::principal
+        UC13(["Visualizar conquistas"]):::principal
+        UC14(["Gerenciar metas e desafios"]):::principal
 
-        UC_Agua(["Gerenciar registros de água e meta diária"]):::usecaseStyle
-        UC_Sono(["Gerenciar registros de sono"]):::usecaseStyle
-        UC_SonoPlan(["Planejar horário de dormir — ciclos ~90 min"]):::usecaseStyle
-        UC_Treino(["Gerenciar registros de treinos"]):::usecaseStyle
-        UC_Catalogo(["Consultar modalidades de exercícios"]):::usecaseStyle
-        UC_Perfil(["Manter perfil biométrico, IMC e senha"]):::usecaseStyle
-        UC_Rotina(["Gerenciar rotinas e lembretes recorrentes"]):::usecaseStyle
-        UC_Lembrete(["Receber notificações de lembretes no sino"]):::usecaseStyle
-        UC_Progresso(["Visualizar progresso, gráficos e comparativo semanal"]):::usecaseStyle
-        UC_Streak(["Acompanhar ofensiva — streak"]):::usecaseStyle
-        UC_Metas(["Gerenciar metas personalizadas e conquistas"]):::usecaseStyle
-        UC_Sintomas(["Responder check-in de sinais corporais"]):::usecaseStyle
-        UC_Alerta(["Receber alerta preventivo"]):::usecaseStyle
-        UC_Profissional(["Orientação para procurar profissional de saúde"]):::usecaseStyle
+        UC15(["Planejar horário de dormir"]):::complementar
+        UC16(["Receber alerta preventivo (procurar profissional)"]):::complementar
+        UC17(["Consultar catálogo de exercícios"]):::complementar
+        UC18(["Adicionar lembrete à rotina"]):::complementar
+
+        Nota["Todos os casos de uso, exceto «Cadastrar-se» e «Autenticar-se»,<br/>incluem «Autenticar-se»: o acesso aos dados exige login (token JWT)<br/>e cada usuário vê apenas os próprios registros."]:::notaStyle
     end
 
-    User --> UC_Auth
-    User --> UC_Agua
-    User --> UC_Sono
-    User --> UC_Treino
-    User --> UC_Perfil
-    User --> UC_Rotina
-    User --> UC_Lembrete
-    User --> UC_Progresso
-    User --> UC_Streak
-    User --> UC_Metas
-    User --> UC_Sintomas
+    %% Associações Ator — Caso de Uso (linha contínua sem seta)
+    User --- UC1
+    User --- UC2
+    User --- UC3
+    User --- UC4
+    User --- UC5
+    User --- UC6
+    User --- UC7
+    User --- UC8
+    User --- UC9
+    User --- UC10
+    User --- UC11
+    User --- UC12
+    User --- UC13
+    User --- UC14
 
-    UC_Agua -.->|"«include»"| UC_Auth
-    UC_Sono -.->|"«include»"| UC_Auth
-    UC_Treino -.->|"«include»"| UC_Auth
-    UC_Perfil -.->|"«include»"| UC_Auth
-    UC_Rotina -.->|"«include»"| UC_Auth
-    UC_Lembrete -.->|"«include»"| UC_Auth
-    UC_Progresso -.->|"«include»"| UC_Auth
-    UC_Streak -.->|"«include»"| UC_Auth
-    UC_Metas -.->|"«include»"| UC_Auth
-    UC_Sintomas -.->|"«include»"| UC_Auth
+    %% Âncora da nota em Autenticar-se
+    UC2 -.- Nota
 
-    UC_SonoPlan -.->|"«extend»"| UC_Sono
-    UC_Catalogo -.->|"«extend»"| UC_Treino
-    UC_Alerta -.->|"«extend»"| UC_Progresso
-    UC_Alerta -.->|"«extend»"| UC_Sono
-    UC_Profissional -.->|"«extend»"| UC_Alerta
+    %% Dependências «include» e «extend» (seta tracejada para o caso base ou incluído)
+    UC15 -.->|"«extend»"| UC4
+    UC16 -.->|"«extend»"| UC4
+    UC16 -.->|"«extend»"| UC5
+    UC16 -.->|"«extend»"| UC6
+    UC6 -.->|"«include»"| UC17
+    UC18 -.->|"«extend»"| UC7
+
+    style SIMBA fill:#fafafa,stroke:#555555,stroke-width:1.5px,color:#111111
 ```
 
-### Diagrama de Classes (UML)
+### Diagrama de Classes (análise — UML)
 
-Reflete a modelagem de domínio da documentação integrada às entidades JPA e enums implementados no repositório:
+Segue a notação UML de análise da documentação: classes de domínio com visibilidade (`-` privado, `+` público) e tipos, associações com multiplicidades (`1`, `0..1`, `0..*`), composição (`*--`) entre `Rotina` e `RotinaLembrete`, estereótipos (`«enumeration»`, `«catálogo»`, `«calculado»`) e dependências tracejadas (`..>`). Na implementação Java/JPA, essas classes correspondem aos modelos `*Model`, enums e calculadores listados na Seção 6 (além da entidade complementar `RegistroSintomaModel`).
 
 ```mermaid
 classDiagram
-    direction TB
+    direction LR
 
-    class UserModel {
-        +Long id
-        +String name
-        +String username
-        +String email
-        +String password
+    class Usuario {
+        -nome : String
+        -username : String
+        -email : String
+        -senha : String
         +cadastrar()
         +autenticar()
     }
 
-    class PerfilModel {
-        +Long id
-        +double peso
-        +double altura
-        +Integer idade
-        +Integer streak
+    class Perfil {
+        -peso : double
+        -altura : double
+        -idade : int
+        -streak : int
     }
 
-    class RegistroAguaModel {
-        +Long id
-        +double quantidadeMl
-        +LocalDateTime dataHora
+    class RegistroAgua {
+        -quantidadeMl : double
+        -dataHora : DateTime
     }
 
-    class RegistroSonoModel {
-        +Long id
-        +LocalDateTime horaDormir
-        +LocalDateTime horaAcordar
-        +Integer notaSono
+    class RegistroSono {
+        -horaDormir : DateTime
+        -horaAcordar : DateTime
+        -notaSono : int
         +calcularDuracao()
     }
 
-    class RegistroExercicioModel {
-        +Long id
-        +String modalidade
-        +Integer duracaominutos
-        +float gastoCaloricoExtimado
-        +LocalDateTime dataHora
+    class RegistroExercicio {
+        -modalidade : String
+        -duracaoMinutos : int
+        -gastoCaloricoEstimado : float
+        -dataHora : DateTime
         +estimarGastoCalorico()
     }
 
-    class RotinaModel {
-        +UUID id
-        +String nome
-        +String descricao
-        +boolean ativa
+    class Rotina {
+        -nome : String
+        -descricao : String
+        -ativa : boolean
     }
 
-    class RotinaLembreteModel {
-        +UUID id
-        +String titulo
-        +String mensagem
-        +LocalTime hora
-        +String diasSemana
+    class RotinaLembrete {
+        -titulo : String
+        -mensagem : String
+        -hora : Time
+        -diasSemana : String
     }
 
-    class LembreteModel {
-        +Long id
-        +String titulo
-        +String mensagem
-        +LocalDateTime horario
+    class Lembrete {
+        -titulo : String
+        -mensagem : String
+        -horario : DateTime
     }
 
-    class MetaModel {
-        +Long id
-        +TipoMeta tipo
-        +int alvo
-        +LocalDate dataInicio
-        +LocalDateTime concluidaEm
+    class Meta {
+        -tipo : TipoMeta
+        -alvo : int
+        -dataInicio : Date
+        -concluidaEm : DateTime
         +calcularProgresso()
     }
 
@@ -348,63 +348,44 @@ classDiagram
         TREINO_TOTAL
     }
 
-    class MetaAguaModel {
-        +Long id
-        +int metaMl
+    class MetaAgua {
+        -metaMl : int
     }
 
-    class ConquistaUsuarioModel {
-        +Long id
-        +String codigo
-        +LocalDateTime dataDesbloqueio
+    class ConquistaUsuario {
+        -codigo : String
+        -dataDesbloqueio : DateTime
     }
 
     class Conquista {
-        <<enumeration>>
-        +String nome
-        +String descricao
-        +String categoria
-        +String icone
-        +int meta
-        +String unidade
-    }
-
-    class RegistroSintomaModel {
-        +Long id
-        +LocalDate dataRegistro
-        +int energia
-        +int humor
-        +int estresse
-        +NivelDor dor
-        +String locaisDor
-        +String sintomas
-        +String observacao
+        <<catálogo>>
+        -nome : String
+        -descricao : String
+        -categoria : String
+        -meta : int
     }
 
     class Alerta {
-        <<domínio / feedback>>
-        +String tipo
-        +String titulo
-        +String mensagem
-        +String orientacao
+        <<calculado>>
+        -tipo : TipoAlerta
+        -titulo : String
+        -mensagem : String
+        -orientacao : String
     }
 
-    UserModel "1" -- "0..1" PerfilModel : possui
-    UserModel "1" -- "0..1" MetaAguaModel : define
-    UserModel "1" -- "*" RegistroAguaModel : registra
-    UserModel "1" -- "*" RegistroSonoModel : registra
-    UserModel "1" -- "*" RegistroExercicioModel : realiza
-    UserModel "1" -- "*" RotinaModel : cria
-    RotinaModel "1" *-- "*" RotinaLembreteModel : agenda
-    UserModel "1" -- "*" LembreteModel : cadastra
-    UserModel "1" -- "*" MetaModel : define
-    MetaModel --> TipoMeta : usa
-    UserModel "1" -- "*" ConquistaUsuarioModel : desbloqueia
-    ConquistaUsuarioModel ..> Conquista : refere-se a (código)
-    UserModel "1" -- "*" RegistroSintomaModel : registra
-    Alerta ..> RegistroSonoModel : analisa
-    Alerta ..> RegistroAguaModel : analisa
-    Alerta ..> RegistroExercicioModel : analisa
+    Usuario "1" -- "0..1" Perfil : possui
+    Usuario "1" -- "0..*" RegistroAgua : registra
+    Usuario "1" -- "0..*" RegistroSono : registra
+    Usuario "1" -- "0..*" RegistroExercicio : realiza
+    Usuario "1" -- "0..*" Rotina : cria
+    Rotina "1" *-- "0..*" RotinaLembrete : agenda
+    Usuario "1" -- "0..*" Lembrete : cadastra
+    Usuario "1" -- "0..*" Meta : define
+    Meta ..> TipoMeta : «usa»
+    Usuario "1" -- "0..1" MetaAgua : configura
+    Usuario "1" -- "0..*" ConquistaUsuario : desbloqueia
+    ConquistaUsuario ..> Conquista : «refere-se a» (pelo código)
+    Usuario "1" -- "0..*" Alerta : recebe
 ```
 
 ---

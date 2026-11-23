@@ -19,6 +19,16 @@ MODELO (copie para o topo a cada entrega):
 
 ---
 
+## 2026-11-22 — Correção dos diagramas UML de Casos de Uso e de Classes no README.md
+**Pedido / história:** corrigir os diagramas de Casos de Uso e de Classes no `README.md` para condizerem fielmente com a sintaxe UML e com os diagramas oficiais da documentação.
+**Alterado:**
+- `README.md` — atualizado o Diagrama de Casos de Uso (`flowchart LR` com 1 ator `Usuário`, associações sem seta `---`, fronteira `SIMBA`, os 14 casos principais, os 4 complementares, nota sobre `«include» Autenticar-se` e setas `«include»`/`«extend»` corretas) e o Diagrama de Classes (`classDiagram` em `direction LR` com as 14 classes de análise, visibilidade `-`/`+`, multiplicidades `1`, `0..1`, `0..*`, composição `*--`, estereótipos `«enumeration»`/`«catálogo»`/`«calculado»` e dependências tracejadas `..>`).
+**Usado:** inspeção visual das imagens oficiais dos diagramas UML do Checkpoint 02 e sintaxe Mermaid (`flowchart` e `classDiagram`).
+**Como testar:**
+1. Abrir `README.md` no preview Markdown do VS Code ou no GitHub e conferir a renderização dos dois diagramas na Seção 5 (*Modelagem do Sistema*).
+**Verificado:** conferência elemento a elemento contra os diagramas enviados e sintaxe Mermaid · **Não verificado:** renderização visual no navegador do GitHub.
+**Pendências / atenção:** nenhuma.
+
 ## 2026-11-22 — Atualização completa do README.md com a documentação do Checkpoint 02
 **Pedido / história:** atualizar o `README.md` do projeto para condizer totalmente com a documentação final enviada (Checkpoint 02) e com o código atual do repositório.
 **Alterado:**

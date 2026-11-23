@@ -34,3 +34,26 @@ build/
 
 ### graphify (grafo de conhecimento gerado localmente) ###
 graphify-out/
+
+### Configurações locais com senhas e chaves (não versionar) ###
+config/simba-local.properties
+.env
+.env.*
+
+### Claude Code (configurações e arquivos locais de cada máquina) ###
+# O CLAUDE.md da raiz continua no git de propósito: são as instruções do projeto para todos.
+.claude/
+CLAUDE.local.md
+
+### Node / front-end (dependências baixadas, nunca vão para o git) ###
+node_modules/
+npm-debug.log*
+
+### Logs e arquivos temporários ###
+*.log
+*.tmp
+
+### Sistema operacional ###
+Thumbs.db
+desktop.ini
+.DS_Store

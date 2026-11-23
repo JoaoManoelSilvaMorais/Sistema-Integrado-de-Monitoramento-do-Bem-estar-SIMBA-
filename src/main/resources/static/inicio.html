@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMBA · Tudo que cuida de você, num lugar só</title>
+    <meta name="description" content="Água, sono, treinos, rotinas, lembretes e sinais do corpo num app só. O SIMBA junta suas ferramentas de saúde e ajuda você a manter uma rotina saudável todo dia.">
+    <meta name="theme-color" content="#f6efe5">
+    <link rel="icon" href="img/LeaoLogoPNG.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/inicio.css">
+</head>
+<body>
+
+    <header class="topo" id="topo">
+        <a class="marca" href="inicio.html" aria-label="SIMBA, página inicial">
+            <img src="img/LeaoLogoPNG.png" alt="" class="marca-leao" width="36" height="36">
+            <img src="img/NomeLogoPNG.png" alt="SIMBA" class="marca-nome">
+        </a>
+        <nav class="topo-links" aria-label="Seções">
+            <a href="#ferramentas">Ferramentas</a>
+            <a href="#dia">Um dia no SIMBA</a>
+            <a href="#ofensiva">Ofensiva</a>
+        </nav>
+        <div class="topo-acoes">
+            <a class="link-entrar" href="entrar.html">Entrar</a>
+            <a class="btn btn-primario btn-pequeno" href="login.html">Criar conta</a>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- 1. Topo: a savana do app, o título no céu e o app subindo da borda com os avisos de verdade -->
+        <section class="hero">
+            <div class="hero-foto" aria-hidden="true"></div>
+            <div class="hero-texto">
+                <h1>Tudo que cuida de você, <em>num lugar só.</em></h1>
+                <p>Água, sono, treinos, rotinas, lembretes e como seu corpo está hoje. O SIMBA junta essas ferramentas numa tela e ajuda você a manter uma rotina saudável, um dia de cada vez.</p>
+                <div class="botoes">
+                    <a class="btn btn-primario" href="login.html">Criar conta grátis <i class="fa-solid fa-arrow-right"></i></a>
+                    <a class="btn btn-secundario" href="entrar.html">Já tenho conta</a>
+                </div>
+            </div>
+            <div class="hero-lado">
+                <!-- avisos iguais aos do app, aparecendo um de cada vez sobre a savana -->
+                <div class="avisos" id="avisos" aria-hidden="true">
+                    <div class="aviso"><i class="fa-solid fa-droplet"></i><div><strong>+250 ml registrado</strong><span>1,8 L de 2,5 L hoje</span></div></div>
+                    <div class="aviso"><i class="fa-solid fa-fire"></i><div><strong>Ofensiva garantida hoje</strong><span>27 dias seguidos</span></div></div>
+                    <div class="aviso"><i class="fa-solid fa-trophy"></i><div><strong>Conquista desbloqueada</strong><span>Primeiro gole</span></div></div>
+                    <div class="aviso"><i class="fa-solid fa-bell"></i><div><strong>Hora de treinar</strong><span>Rotina Treinos · 18:00</span></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. O problema: os apps espalhados entram no SIMBA -->
+        <section class="secao problema" id="juntar">
+            <div class="problema-texto revelar">
+                <span class="rotulo">O problema</span>
+                <h2>Sua saúde não cabe em cinco apps diferentes</h2>
+                <p>Um app para a água, outro para o sono, uma planilha de treino, o despertador para lembrar e um bloco de notas para o resto. Com tudo separado, fica fácil perder o foco e desistir.</p>
+                <p class="destaque"><i class="fa-solid fa-paw"></i> O SIMBA junta tudo numa tela só: <strong>5 lugares → 1 app</strong>.</p>
+            </div>
+            <div class="mesa" id="mesa" aria-hidden="true">
+                <div class="papel p1"><i class="fa-solid fa-droplet"></i> App de água</div>
+                <div class="papel p2"><i class="fa-solid fa-table"></i> Planilha de treino</div>
+                <div class="papel p3"><i class="fa-regular fa-clock"></i> Despertador</div>
+                <div class="papel p4"><i class="fa-regular fa-note-sticky"></i> Bloco de notas</div>
+                <div class="papel p5"><i class="fa-solid fa-bed"></i> App de sono</div>
+                <div class="celular celular-mesa">
+                    <img src="img/inicio/cel-hidratacao.jpg" alt="" width="480" height="1039" loading="lazy">
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. As ferramentas -->
+        <section class="secao ferramentas" id="ferramentas">
+            <div class="cabeca revelar">
+                <span class="rotulo">8 ferramentas, 1 objetivo</span>
+                <h2>Cada uma cuida de uma parte. Juntas, cuidam de você.</h2>
+            </div>
+            <div class="ferramentas-corpo">
+                <ul class="lista-ferr">
+                    <li class="revelar" style="--d:0"><i class="fa-solid fa-droplet"></i><div><strong>Hidratação</strong><span>Um toque por copo. A meta vem do seu peso.</span></div></li>
+                    <li class="revelar" style="--d:1"><i class="fa-solid fa-moon"></i><div><strong>Sono</strong><span>Hora de dormir, de acordar e uma nota para a noite.</span></div></li>
+                    <li class="revelar" style="--d:2"><i class="fa-solid fa-dumbbell"></i><div><strong>Treinos</strong><span>Modalidade, minutos e calorias.</span></div></li>
+                    <li class="revelar" style="--d:3"><i class="fa-solid fa-heart-pulse"></i><div><strong>Sinais corporais</strong><span>Energia, humor, estresse e dores em menos de 1 minuto.</span></div></li>
+                    <li class="revelar" style="--d:4"><i class="fa-solid fa-calendar-check"></i><div><strong>Rotinas</strong><span>Lembretes que se repetem nos dias que você escolhe.</span></div></li>
+                    <li class="revelar" style="--d:5"><i class="fa-solid fa-bell"></i><div><strong>Lembretes</strong><span>Um aviso na hora marcada.</span></div></li>
+                    <li class="revelar" style="--d:6"><i class="fa-solid fa-chart-line"></i><div><strong>Progresso</strong><span>Gráficos e esta semana × semana passada.</span></div></li>
+                    <li class="revelar" style="--d:7"><i class="fa-solid fa-trophy"></i><div><strong>Conquistas e metas</strong><span>26 conquistas e desafios que você escolhe.</span></div></li>
+                </ul>
+                <figure class="janela revelar">
+                    <div class="janela-barra"><span></span><span></span><span></span></div>
+                    <img src="img/inicio/dia.jpg" alt="Cartões da dashboard do SIMBA: boas-vindas, hidratação, sono, treinos, rotina do dia e progresso" width="1400" height="836" loading="lazy">
+                    <figcaption><i class="fa-solid fa-display"></i> Tudo isso na primeira tela, todo dia.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <!-- 4. Um dia no SIMBA: o sol anda no céu conforme você rola -->
+        <section class="secao dia" id="dia">
+            <div class="ceu" aria-hidden="true">
+                <svg class="arco" viewBox="0 0 1000 200" preserveAspectRatio="none"><path id="arcoSol" d="M20 190 Q 500 -60 980 190"/></svg>
+                <div class="astro" id="astro"><i class="fa-solid fa-sun"></i></div>
+            </div>
+            <div class="cabeca revelar">
+                <span class="rotulo">Um dia no SIMBA</span>
+                <h2>Do café da manhã à hora de dormir.</h2>
+            </div>
+            <ol class="linha-dia">
+                <li class="momento revelar" style="--d:0">
+                    <span class="hora">07:00</span>
+                    <div class="celular"><img src="img/inicio/cel-dashboard.jpg" alt="Dashboard com a ofensiva de 27 dias" width="480" height="1039" loading="lazy"></div>
+                    <p><strong>Acordou?</strong> O Simba mostra sua ofensiva e o que fazer hoje.</p>
+                </li>
+                <li class="momento revelar" style="--d:1">
+                    <span class="hora">10:30</span>
+                    <div class="celular"><img src="img/inicio/cel-hidratacao.jpg" alt="Hidratação com 1.750 de 2.550 ml" width="480" height="1039" loading="lazy"></div>
+                    <p><strong>Um copo d'água.</strong> Um toque e a meta do dia sobe.</p>
+                </li>
+                <li class="momento revelar" style="--d:2">
+                    <span class="hora">18:00</span>
+                    <div class="celular"><img src="img/inicio/cel-rotinas.jpg" alt="Rotina de treinos com lembretes às 7h e às 18h" width="480" height="1039" loading="lazy"></div>
+                    <p><strong>Hora de treinar.</strong> O lembrete da sua rotina avisa.</p>
+                </li>
+                <li class="momento revelar" style="--d:3">
+                    <span class="hora">21:00</span>
+                    <div class="celular"><img src="img/inicio/cel-sinais.jpg" alt="Check-in de sinais corporais" width="480" height="1039" loading="lazy"></div>
+                    <p><strong>Como foi o dia?</strong> Energia, humor e estresse num check-in rápido.</p>
+                </li>
+                <li class="momento revelar" style="--d:4">
+                    <span class="hora">22:00</span>
+                    <div class="celular"><img src="img/inicio/cel-progresso.jpg" alt="Comparativo da semana atual com a passada" width="480" height="1039" loading="lazy"></div>
+                    <p><strong>Antes de dormir.</strong> Veja se esta semana foi melhor que a passada.</p>
+                </li>
+            </ol>
+        </section>
+
+        <!-- 5. Ofensiva: o leão do app -->
+        <section class="secao ofensiva" id="ofensiva">
+            <div class="ofensiva-texto revelar">
+                <span class="rotulo">Ofensiva</span>
+                <h2>Todo leão começa pequeno.</h2>
+                <p>Cada dia com pelo menos um registro soma um dia na sua ofensiva, e o Simba reage: fica feliz, animado e vira <em>rei da savana</em> aos 30 dias. Esqueceu um dia? A ofensiva fica em risco, mas não zera na hora.</p>
+                <img class="ofensiva-app" src="img/inicio/ofensiva.jpg" alt="Quadro da ofensiva no app: 27 dias, novo recorde, registrado hoje" width="1400" height="195" loading="lazy">
+            </div>
+            <div class="cartao-leao revelar" id="contador">
+                <div class="cartao-leao-topo">
+                    <div class="leao" id="contadorLeao" title="Contar de novo"></div>
+                    <div>
+                        <div class="dias"><span id="contadorDias">27</span> <small id="contadorUnidade">dias</small></div>
+                        <div class="humor" id="contadorHumor">Animado</div>
+                    </div>
+                </div>
+                <div class="semana">
+                    <span class="semana-rotulo">Últimos 7 dias</span>
+                    <ol class="pegadas" id="pegadas" aria-label="Registrou nos últimos 7 dias">
+                        <li><i class="fa-solid fa-paw"></i><span>Dom</span></li>
+                        <li><i class="fa-solid fa-paw"></i><span>Seg</span></li>
+                        <li><i class="fa-solid fa-paw"></i><span>Ter</span></li>
+                        <li><i class="fa-solid fa-paw"></i><span>Qua</span></li>
+                        <li><i class="fa-solid fa-paw"></i><span>Qui</span></li>
+                        <li><i class="fa-solid fa-paw"></i><span>Sex</span></li>
+                        <li><i class="fa-solid fa-paw"></i><span>Sáb</span></li>
+                    </ol>
+                </div>
+                <dl class="fases" id="fases">
+                    <div data-fase="inicio"><dt>0 dias</dt><dd>Começando</dd></div>
+                    <div data-fase="feliz"><dt>1 a 6</dt><dd>Feliz</dd></div>
+                    <div data-fase="animado"><dt>7 a 29</dt><dd>Animado</dd></div>
+                    <div data-fase="rei"><dt>30 ou mais</dt><dd>Rei da savana</dd></div>
+                </dl>
+            </div>
+        </section>
+
+        <!-- 6. Conquistas e metas -->
+        <section class="secao conquistas">
+            <figure class="janela conquistas-app revelar">
+                <div class="janela-barra"><span></span><span></span><span></span></div>
+                <img src="img/inicio/metas.jpg" alt="Metas: fazer 10 treinos (3 de 10) e bater a meta de água 5 dias seguidos" width="1200" height="203" loading="lazy">
+                <img src="img/inicio/conquistas-grade.jpg" alt="Conquistas de hidratação, algumas desbloqueadas e outras com barra de progresso" width="1200" height="468" loading="lazy">
+            </figure>
+            <div class="conquistas-texto">
+                <span class="rotulo revelar">Conquistas e metas</span>
+                <h2 class="revelar">Motivo para voltar amanhã.</h2>
+                <ul class="pontos">
+                    <li class="revelar" style="--d:0"><i class="fa-solid fa-trophy"></i>26 conquistas que se desbloqueiam sozinhas</li>
+                    <li class="revelar" style="--d:1"><i class="fa-solid fa-bullseye"></i>Metas como "treinar 5 dias seguidos", acompanhadas pelo app</li>
+                    <li class="revelar" style="--d:2"><i class="fa-solid fa-chart-line"></i>Comparativo com a semana passada</li>
+                    <li class="revelar" style="--d:3"><i class="fa-solid fa-lightbulb"></i>Um "próximo passo" sugerido todo dia</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 7. Noite: convite final -->
+        <section class="noite">
+            <div class="estrelas" aria-hidden="true"></div>
+            <div class="lua" aria-hidden="true"></div>
+            <div class="noite-conteudo revelar">
+                <div class="leao-noite" id="leaoNoite" aria-hidden="true"></div>
+                <h2>Amanhã o Simba te espera.</h2>
+                <p>Crie sua conta e faça o primeiro registro hoje. Um copo d'água já conta, e no primeiro acesso o Simba mostra o caminho.</p>
+                <div class="botoes">
+                    <a class="btn btn-primario" href="login.html">Criar conta grátis <i class="fa-solid fa-arrow-right"></i></a>
+                    <a class="btn btn-lua" href="entrar.html">Entrar</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="rodape">
+        <span><i class="fa-solid fa-paw"></i> SIMBA · Sistema Integrado de Monitoramento do Bem-estar Automatizado</span>
+        <span>Projeto acadêmico · UEG · Sistemas de Informação</span>
+    </footer>
+
+    <script src="js/streak.js"></script>
+    <script src="js/inicio.js"></script>
+</body>
+</html>

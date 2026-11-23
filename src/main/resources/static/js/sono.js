@@ -99,7 +99,19 @@ function mostrarAlertaSonoBaixa() {
     descricao.textContent =
         "Suas últimas noites tiveram baixa qualidade. Que tal ajustar sua rotina de descanso?";
 
-    texto.append(titulo, descricao);
+    // RF17: orientação de saúde + aviso de que o SIMBA é preventivo
+    const orientacao = document.createElement("span");
+    orientacao.className = "toast-orientacao";
+    orientacao.textContent =
+        "Se isso continuar, vale conversar com um médico ou outro profissional de saúde.";
+
+    const aviso = document.createElement("span");
+    aviso.className = "toast-aviso";
+    aviso.textContent =
+        "O SIMBA tem finalidade preventiva e de autocuidado. Estas orientações não substituem "
+        + "a avaliação nem o diagnóstico de um profissional de saúde.";
+
+    texto.append(titulo, descricao, orientacao, aviso);
     toast.append(icone, texto);
     container.appendChild(toast);
 
@@ -107,7 +119,7 @@ function mostrarAlertaSonoBaixa() {
     setTimeout(() => {
         toast.classList.remove("show");
         setTimeout(() => toast.remove(), 300);
-    }, 6000);
+    }, 12000); // mais tempo na tela: agora o aviso tem mais texto para ler
 }
 
 function obterToken() {

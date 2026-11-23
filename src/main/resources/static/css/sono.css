@@ -1155,3 +1155,19 @@
     color: #71817c;
     font-size: 11px;
 }
+
+/* Aviso de sono ruim: orientação de saúde e aviso preventivo (RF17) */
+.toast-notification .toast-orientacao {
+    display: block;
+    margin-top: 6px;
+    color: #713819;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.toast-notification .toast-aviso {
+    display: block;
+    margin-top: 4px;
+    font-size: 10px;
+    line-height: 1.4;
+}

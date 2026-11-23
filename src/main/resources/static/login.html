@@ -381,14 +381,19 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
+                    const erro = new Error(`HTTP ${response.status}`);
+                    // 429 = muitos cadastros seguidos: mostra o aviso do servidor
+                    if (response.status === 429) {
+                        erro.mensagem = (await response.json().catch(() => ({}))).message;
+                    }
+                    throw erro;
                 }
 
                 showToast("Conta criada com sucesso! Redirecionando...", "sucesso");
                 setTimeout(() => window.location.href = "entrar.html", 1200);
             } catch (error) {
                 console.error("Erro ao criar usuário:", error);
-                showToast("Não foi possível criar a conta. Tente novamente.");
+                showToast(error.mensagem || "Não foi possível criar a conta. Tente novamente.");
                 submitButton.disabled = false;
             }
         });

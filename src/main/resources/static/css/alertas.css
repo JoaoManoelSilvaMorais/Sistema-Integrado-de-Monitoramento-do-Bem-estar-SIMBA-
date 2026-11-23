@@ -1,0 +1,77 @@
+/* Alertas preventivos (sono, hidratação, treinos) - usado por js/alertas.js */
+.simba-alertas {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 1900;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: min(380px, calc(100vw - 32px));
+}
+
+.simba-alerta {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    border-left: 5px solid #d8782f;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.simba-alerta > i {
+    margin-top: 2px;
+    color: #d8782f;
+    font-size: 24px;
+}
+
+.simba-alerta-corpo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.simba-alerta strong {
+    color: var(--dark, #1f2d2a);
+    font-size: 15px;
+}
+
+.simba-alerta p {
+    margin: 0;
+    color: var(--dark, #1f2d2a);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.simba-alerta .simba-alerta-orientacao {
+    font-weight: 600;
+}
+
+.simba-alerta small {
+    color: var(--muted, #6b7a76);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.simba-alerta-fechar {
+    align-self: flex-start;
+    margin-top: 4px;
+    padding: 7px 16px;
+    border: 1px solid var(--border, #d9e2df);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--dark, #1f2d2a);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.simba-alerta-fechar:hover,
+.simba-alerta-fechar:focus-visible {
+    background: #fdf1e6;
+    border-color: #d8782f;
+}

@@ -19,6 +19,237 @@ MODELO (copie para o topo a cada entrega):
 
 ---
 
+## 2026-11-23 — Manual do usuário 1.1 + `.gitignore` revisado
+**Pedido:** atualizar o manual do usuário em PDF e ver o que precisa ir para o `.gitignore` (arquivos do Claude etc.).
+**Alterado:**
+- `.gitignore` — novos: `.claude/` e `CLAUDE.local.md` (configurações locais do Claude Code; o `CLAUDE.md` da raiz continua no git de propósito), `node_modules/`, `npm-debug.log*`, `*.log`, `*.tmp`, `.env`, `.env.*`, `Thumbs.db`, `desktop.ini`, `.DS_Store`.
+- `src/main/frontend/` — **tirada do git** (`git rm -r --cached`, os arquivos continuam no disco): só tinha `node_modules` (1.114 arquivos, 94 MB) que entrou por engano no commit "implementa notificacao de sono" e não é usado pelo projeto.
+- `docs/manual-do-usuario/MANUAL-DO-USUARIO.md` (versão 1.1) — novo 2.2 Página de apresentação; 2.3 Iniciando o sistema com PostgreSQL (criar `config/simba-local.properties` e o banco `simba` na primeira vez) e "os dados ficam guardados" no lugar de "os dados são apagados"; 3.2 limite de 5 senhas erradas; 4.3 alertas no canto inferior; novo 5.5 Alertas de saúde (RF16/RF17, tabela das 3 regras + orientação + aviso preventivo); novo 6.5 alerta de hidratação; 7.4 aviso de sono com a orientação do RF17; novo 8.3 alerta de treino; Dúvidas frequentes: dados guardados, bloqueio de login, alertas. Figuras renumeradas (agora 24).
+- `docs/manual-do-usuario/prints/` — novos `22-apresentacao.jpg`, `23-alertas-dashboard.jpg`, `24-alerta-hidratacao.jpg`, `25-aviso-sono.png`.
+- `docs/manual-do-usuario/MANUAL-DO-USUARIO.pdf` — gerado de novo (39 páginas, com capa "Versão 1.1").
+**Usado:** `git rm --cached`, `git check-ignore`; Python `markdown` + Edge headless (`--print-to-pdf`) para o PDF; PyMuPDF para conferir.
+**Como testar:** abrir `docs\manual-do-usuario\MANUAL-DO-USUARIO.pdf` (itens 2.2, 2.3, 5.5, 6.5, 7.4, 8.3 e Dúvidas). No git: `git status` não mostra mais `.claude/` e mostra `src/main/frontend/...` como removidos do repositório.
+**Verificado:** texto do PDF conferido (tem "Alertas de saúde", "Página de apresentação", "Muitas tentativas", "não substituem"; o único "são apagados" é o do Excluir conta, que é verdade); página dos alertas renderizada e conferida; `.claude/launch.json` e `node_modules` ignorados (`git check-ignore`). · **Não verificado:** a versão online do manual (Claude Docs) não foi atualizada — o PDF é a versão de entrega.
+**Pendências / atenção:** quando fizer o commit, a remoção de `src/main/frontend/` vai junto (os colegas que derem pull ficam sem essa pasta no git, mas ninguém usa). Se quiser liberar 94 MB no disco, pode apagar a pasta `src\main\frontend` depois.
+
+---
+
+## 2026-11-23 — Aviso de sono do Pedro com a orientação do RF17
+**Pedido:** colocar no aviso "Atenção com seu sono" (tela de Sono) a orientação de procurar um profissional e o aviso preventivo do RF17.
+**Alterado:**
+- `static/js/sono.js` (`mostrarAlertaSonoBaixa`) — 2 linhas novas no aviso: "Se isso continuar, vale conversar com um médico ou outro profissional de saúde." e "O SIMBA tem finalidade preventiva e de autocuidado. Estas orientações não substituem a avaliação nem o diagnóstico de um profissional de saúde." (mesmos textos do `AlertaCalculator`). O aviso fica 12 s na tela (antes 6 s), por ter mais texto. A regra de quando aparece não mudou.
+- `static/css/sono.css` — estilos `.toast-orientacao` e `.toast-aviso`.
+**Como testar:** Sono → registrar noites até a 3ª com nota 1 ou 2 → o aviso aparece no canto com a orientação e o aviso preventivo.
+**Verificado:** `node --check js/sono.js`; `sono.html` aberta no Edge com o aviso disparado: os 4 textos aparecem e cabem no cartão. · **Não verificado:** o aviso aparecendo pelo fluxo real de registro com o app rodando.
+
+---
+
+## 2026-11-23 — Tela de Sono: fica só o aviso do Pedro
+**Pedido:** na tela de Sono, deixar só o aviso que já existia ("Atenção com seu sono", do Pedro), sem o cartão novo do RF16.
+**Alterado:**
+- `static/sono.html` — tirados o `css/alertas.css` e o `js/alertas.js`.
+- `static/js/alertas.js` — `sono.html` saiu da lista de telas; comentário explica a decisão.
+**Continua igual:** a dashboard segue mostrando o alerta de sono do RF16 (com a orientação de procurar um profissional e o aviso preventivo do RF17); Hidratação e Treinos seguem com os seus.
+**Como testar:** entrar com o demo → Sono não mostra o cartão no canto inferior direito; ao registrar a 3ª noite com nota 1 ou 2 aparece o aviso do Pedro. Dashboard continua com o cartão de sono.
+**Verificado:** `node --check js/alertas.js`; `sono.html` sem referência aos alertas. · **Não verificado:** não subi o app de novo para esta mudança (é só a retirada de 2 linhas e de uma entrada da lista).
+**Atenção:** o aviso do Pedro não traz o texto do RF17 (procurar um profissional + "não substitui avaliação"); esse texto aparece só no cartão da dashboard.
+
+---
+
+## 2026-11-23 — RF16 e RF17: alertas preventivos por métrica + orientação de saúde
+**Pedido / história:** trazer as novidades do GitHub e implementar o RF16 (avisar quando sono, hidratação ou treinos ficam abaixo do esperado de forma recorrente) e o RF17 (sugerir procurar um profissional e deixar claro que o SIMBA é preventivo e não substitui avaliação nem diagnóstico), usando o `simba-alertas-rf16-rf17.patch` / `.zip` recebidos.
+**Alterado:**
+- GitHub: trazidos 3 commits novos da `main` (README atualizado com o Checkpoint 02, `docs/diagrama-casos-de-uso.jpg`, `docs/diagrama-classes.jpg` e 3 entradas neste arquivo). O trabalho local foi guardado com `git stash`, o pull foi feito e o trabalho voltou; o único conflito (este `ALTERACOES.md`) foi resolvido mantendo todas as entradas.
+- Aplicado o **patch** (o zip não foi usado: ele traz `sono.html`, `hidratacao.html` e `treinos.html` inteiros de 16/11, que apagariam as mudanças feitas depois):
+  - `alerta/AlertaCalculator.java` (novo, Java puro) — sono: últimas 4 noites registradas com menos de 7 h ou nota 1–2; água: últimos 3 dias com registro (sem contar hoje) abaixo de 50% da meta; treino: 14 dias sem treino para quem usa o app há 14+ dias. Sono e água só alertam se o problema for recente (até 3 dias). Texto fixo do RF17 em `AVISO`.
+  - `alerta/AlertaService.java`, `AlertaController.java` (`GET /api/alertas`, só do usuário logado), `AlertaDTO`, `AlertasResponseDTO`, `TipoAlerta` (novos).
+  - `static/js/alertas.js` + `static/css/alertas.css` (novos) — cartão no canto inferior direito com o que foi percebido, a orientação de procurar um profissional, o aviso preventivo e o botão "Entendi" (esconde aquele alerta no resto do dia). Atualiza sozinho depois de registrar algo.
+  - `static/sono.html`, `hidratacao.html`, `treinos.html` — incluem o CSS e o JS dos alertas (1 linha cada).
+  - `demo/DemoDataSeeder.java` — o demo agora tem as 4 últimas noites ruins e os 3 últimos dias com pouca água, para demonstrar os alertas (`CENARIO_ALERTAS = true`).
+  - `test/.../alerta/AlertaCalculatorTest.java` (novo, 22 casos).
+- **Ajuste meu:** `static/js/alertas.js` + `static/index.html` — a **dashboard mostra todos os alertas ativos** (o patch só mostrava dentro de cada tela; o RF16 pede para notificar a pessoa).
+- `CLAUDE.md` — pacote `alerta` na tabela da §3.
+**Usado:** `git fetch`, `git stash`, `git pull --ff-only`, `git apply`; JUnit; PostgreSQL temporário (porta 5433, já apagado) e Edge headless para os prints.
+**Como testar:**
+1. Como o banco agora guarda tudo, recrie o demo para pegar o cenário novo: no pgAdmin ou `psql`, `DROP DATABASE simba;` e `CREATE DATABASE simba;`.
+2. `.\mvnw clean spring-boot:run "-Dspring-boot.run.profiles=demo"` → entrar com `demo` / `demo123`.
+3. Dashboard: aparecem 2 cartões ("Seu sono precisa de atenção" e "Hidratação abaixo do esperado"), cada um com a orientação de procurar um profissional e o aviso de que o SIMBA não substitui avaliação nem diagnóstico.
+4. Sono mostra só o de sono; Hidratação só o de água; Treinos nenhum (o demo treinou recentemente). "Entendi" esconde o alerta no resto do dia.
+**Verificado:** `mvnw clean test` completo — **219 testes, 0 falhas** (inclui os 22 novos). App rodado com PostgreSQL e o demo novo: `/api/alertas` devolve SONO e AGUA para o demo, lista vazia para um usuário novo e 403 sem login; dashboard com 2 cartões, Sono com 1, Hidratação com 1, Treinos com 0; "Entendi" some com o alerta. · **Não verificado:** o alerta de treino na tela (o demo não tem 14 dias sem treino; a regra está coberta pelos testes); no seu PostgreSQL da porta 5432.
+**Pendências / atenção:** a tela de Sono já tinha o aviso do Pedro ("Atenção com seu sono", depois de 3 notas baixas) — agora os dois podem aparecer juntos. O `git stash` com o trabalho de antes do pull ficou guardado como cópia de segurança (`stash@{0}`); pode apagar com `git stash drop` depois de conferir. O manual do usuário ainda não fala dos alertas.
+
+---
+
+## 2026-11-23 — Segurança + troca do H2 pelo PostgreSQL
+**Pedido:** fechar o `/h2-console`, exigir um `JWT_SECRET` próprio, trocar o H2 em memória pelo PostgreSQL instalado no PC, desligar o SQL no log e limitar tentativas de login/cadastro.
+**Alterado:**
+- `pom.xml` — removido `spring-boot-h2console`; H2 agora só em `test` (o driver do PostgreSQL já existia).
+- `src/main/resources/application.properties` — banco PostgreSQL (`DB_URL`, `DB_USER`, `DB_PASSWORD`), console H2 desligado, `show-sql` desligado (liga com `SHOW_SQL=true`), `jwt.secret` sem valor padrão, lê `config/simba-local.properties`.
+- `config/simba-local.properties` — **novo, fora do git**: senha do Postgres (falta você preencher) e um `JWT_SECRET` aleatório gerado para esta máquina.
+- `config/simba-local.example.properties` — novo: modelo do arquivo acima (vai para o git, sem segredos).
+- `.gitignore` — ignora `config/simba-local.properties`.
+- `src/test/resources/application.properties` — novo: os testes continuam em H2 em memória, com chave JWT só de teste.
+- `security/SecurityConfig.java` — tirado `/h2-console/**` do `permitAll` e a liberação de iframe (que era só para o console).
+- `security/JWTService.java` — o app não inicia sem `JWT_SECRET`, com menos de 32 caracteres ou com a chave antiga que estava no GitHub (mensagem explica o que fazer).
+- `security/LimiteTentativas.java` — novo (Java puro): conta tentativas por chave numa janela de tempo.
+- `security/AuthController.java` — login: 5 senhas erradas em 15 min (usuário + IP) bloqueiam até 15 min; cadastro: 10 contas por hora por IP. Senha errada continua respondendo como antes (500).
+- `exceptions/MuitasTentativasException.java` + `infra/RestExceptionHandler.java` — resposta 429 com a mensagem "Tente de novo em X minutos".
+- `static/entrar.html`, `static/login.html` — mostram a mensagem do servidor quando der 429.
+- `test/.../AuthControllerTest.java` — ajustado para o novo construtor + teste do bloqueio; `test/.../LimiteTentativasTest.java` — novo (8 casos, inclui a validação da chave JWT).
+- `CLAUDE.md` — §2 e §6 atualizados (PostgreSQL, arquivo local, limites).
+**Usado:** PostgreSQL 18 (instalado no PC), Spring `spring.config.import`, variáveis de ambiente, JUnit/Mockito. Para o teste, um PostgreSQL temporário na porta 5433 (já apagado).
+**Como testar:**
+1. Abrir `config\simba-local.properties` e trocar `coloque-aqui-a-senha-do-postgres` pela senha do usuário `postgres` (a que você definiu ao instalar).
+2. Criar o banco (vai pedir a senha): `& "C:\Program Files\PostgreSQL\18\bin\createdb.exe" -U postgres -h localhost simba`
+3. `.\mvnw clean spring-boot:run "-Dspring-boot.run.profiles=demo"` → `http://localhost:8080` → entrar com `demo` / `demo123`.
+4. Registrar água, parar o app (Ctrl+C), subir de novo: o registro continua lá.
+5. Errar a senha 5 vezes: na 6ª aparece "Muitas tentativas de login erradas. Tente de novo em 15 minutos."
+6. Abrir `http://localhost:8080/h2-console`: dá acesso negado.
+**Verificado:** `mvnw test` completo: 197 testes, 0 falhas. App rodado num PostgreSQL 18 de verdade (porta 5433): demo carregado, todas as rotas principais respondendo 200, cadastro/login/registro de água ok, 6ª senha errada → 429, `/h2-console` → 403, e depois de reiniciar o app os dados continuaram lá. · **Não verificado:** no seu PostgreSQL da porta 5432 (precisa da sua senha); a tela de login mostrando o aviso de 429 no navegador (testado só pela API).
+**Pendências / atenção:** o manual do usuário (item 2.2 e Dúvidas) ainda diz que os dados somem ao reiniciar — precisa atualizar. Cada colega precisa criar o próprio `config/simba-local.properties` a partir do modelo.
+
+---
+
+## 2026-11-22 — Página de apresentação: celular tirado do topo
+**Pedido:** tirar o celular da primeira tela da apresentação.
+**Alterado:**
+- `static/inicio.html` — o celular com a dashboard saiu do topo; os avisos do app ("Ofensiva garantida hoje", "+250 ml registrado"…) continuam aparecendo um de cada vez, agora à direita, sobre o céu da savana (no celular, logo abaixo dos botões).
+- `static/css/inicio.css` — regras do celular do topo trocadas por `.hero-lado`; a seção "O problema" voltou ao espaçamento normal (não precisa mais da folga para o celular invadindo).
+**Como testar:** subir o app → `http://localhost:8080` → o topo mostra só o texto, a savana e os avisos trocando.
+**Verificado:** capturas em 1440×860 e 390×844 de todas as seções; sem erros no console. · **Não verificado:** celular de verdade.
+
+---
+
+## 2026-11-22 — Página de apresentação: meio-termo entre as duas versões + animações criativas
+**Pedido:** a passada "unslop" piorou a página. Desinstalar a skill unslop e fazer um meio-termo entre a versão nova e a antiga, com as animações criativas de volta.
+**Alterado:**
+- Skill `unslop` removida de `C:\Users\rubens\.claude\skills\unslop` (fora do projeto).
+- `static/inicio.html` — base da versão nova (foto da savana do app no topo, celular real subindo da borda, ferramentas, "um dia no SIMBA", cartão da ofensiva, conquistas) com a personalidade da antiga: "num lugar só." em laranja itálico (sem o traço desenhado), os apps espalhados voltando a entrar no celular, o sol andando no céu ao rolar e a noite com estrelas, lua e o leão rei.
+- `static/css/inicio.css` — reescrito no meio-termo: títulos em peso 600, botões laranja com leve sombra e "subida" no hover, ferramentas em cartões com ícone colorido, janelas e celulares com moldura.
+- `static/js/inicio.js` — animações: avisos iguais aos do app saindo do celular um de cada vez (+250 ml, ofensiva garantida, conquista, lembrete), foto do topo se aproximando devagar, celular subindo ao abrir, revelar ao rolar em sequência, apps espalhados entrando no celular, sol → lua no arco ao rolar, contador da ofensiva 0 → 27 com o leão mudando de cara (pula a cada fase, destaca a fase atual e acende as pegadas; clicar no leão conta de novo), topo que ganha fundo ao rolar. Com "reduzir movimento" ligado, tudo aparece parado.
+**Ficaram de fora (o que você não gostou):** árvore/morros desenhados em SVG, traço embaixo de "num lugar só", leão com ícones girando em volta.
+**Usado:** HTML/CSS/JS puros, `IntersectionObserver`, `requestAnimationFrame`, leão SVG do `js/streak.js`. Capturas conferidas com Edge headless.
+**Como testar:** subir o app → `http://localhost:8080` → esperar alguns segundos no topo (os avisos trocam) e rolar a página devagar; testar também no modo celular (F12).
+**Verificado:** app rodando; capturas em 1440×860 e 390×844 de todas as seções (antes/depois das animações); sem erros no console. · **Não verificado:** celular de verdade; navegadores além do Edge/Chromium.
+
+---
+
+## 2026-11-22 — Página de apresentação: passada "unslop" (tira a cara de gerada)
+**Pedido:** a árvore desenhada, o grifo em "num lugar só" e o leão com ícones girando ficaram com cara de "slop". Aplicar a correção na página inteira.
+**Direção (aprovada):** caloroso, constante, encorajador; o mundo é a **foto da savana que o app já usa**; dois momentos ricos — a savana com o app subindo no topo e o leão da ofensiva —; assinatura: a pegada = dia com registro.
+**Alterado:**
+- `static/inicio.html` — mesmas seções, na mesma ordem. Topo: foto da savana em tela cheia, título sem grifo nem itálico, um botão principal e um secundário, e o celular com a dashboard real subindo e passando da borda. "O problema" virou uma tabela simples "Hoje você usa → No SIMBA" (5 lugares → 1 tela) no lugar dos cartões voando. Ferramentas em lista com ícones discretos + a dashboard numa janela reta. "Um dia no SIMBA" com régua de horários (sem sol andando). Ofensiva: o leão do app num cartão com o número de dias, as pegadas dos últimos 7 dias e as fases. Conquistas numa janela reta (sem pilha inclinada). Final em fundo terra, sem estrelas/lua.
+- `static/css/inicio.css` — reescrito: rampa neutra de areia, um laranja de destaque (escurecido para o texto branco passar de 4,5:1), títulos em peso 500, botões de 48 px sem sombra 3D, espaçamento na grade de 4 px, raios encaixados, uma só animação de entrada no topo; tudo desliga com "reduzir movimento".
+- `static/js/inicio.js` — reescrito: só o "Abrir o SIMBA" para quem já entrou e o número da ofensiva que sobe uma vez (0 → 27) com o leão mudando nas mesmas faixas do app.
+- `static/img/inicio/comparativo.jpg` — removido (não é mais usado).
+**Saiu:** árvore e morros em SVG, grifo, itálico, órbita de ícones, sol pulsando, leão flutuando, balão trocando, sol andando ao rolar, cartões voando, estrelas piscando, revelar em toda seção, pilha inclinada, botão 3D.
+**Usado:** método/skill "unslop" (Damir Sokolovsky, CC BY 4.0); a foto da savana do Unsplash que o app já usava.
+**Como testar:** subir o app → `http://localhost:8080` → rolar a página; testar também em F12 → modo celular.
+**Verificado:** app rodando, 1440 px e 375 px, sem rolagem lateral, imagens carregando, sem erros no console. · **Não verificado:** celular de verdade; navegadores além do Edge/Chromium. A foto vem da internet (Unsplash): sem internet o topo fica só na cor de areia.
+
+---
+
+## 2026-11-22 — Página de apresentação refeita: "um dia na savana", com animações e prints do celular
+**Pedido:** a primeira versão ficou parecida demais com a do Ziggur e os prints ficaram "soltos". Fazer algo com a cara do SIMBA, com prints do celular e animações criativas, mostrando o objetivo do app: **unir várias ferramentas para ajudar a pessoa a manter o foco numa vida mais saudável**.
+**Alterado:**
+- `static/inicio.html` — reescrita. A página segue um dia na savana (amanhecer → noite):
+  1. Topo: "Tudo que cuida de você, num lugar só." (grifo desenhado na hora) + o leão Simba no centro de um sol, com as 8 ferramentas girando em volta; o leão troca de expressão e fala num balão.
+  2. "O problema": cartões de "app de água", "planilha de treino", "despertador"… espalhados que voam para dentro de um celular com o SIMBA quando a seção aparece.
+  3. "8 ferramentas, 1 objetivo": lista das ferramentas + os cartões reais da dashboard.
+  4. "Um dia no SIMBA": 5 prints do celular (07:00 → 22:00); um sol anda num arco conforme a pessoa rola e vira lua no fim.
+  5. "Todo leão começa pequeno": contador de 0 a 30 dias em que o leão muda de cara (início → feliz → animado → rei) e pegadas se acendem; clicar no leão conta de novo. Abaixo, o quadro real da ofensiva.
+  6. "Motivo para voltar amanhã": conquistas, metas e comparativo reais em "pilha".
+  7. Noite com estrelas piscando, lua e o leão rei: convite final.
+- `static/css/inicio.css` — reescrito (céu muda de cor por seção, celulares desenhados em CSS, animações; tudo desliga com "reduzir movimento" do sistema).
+- `static/js/inicio.js` — novo: animações (balão do leão, revelar ao rolar, apps entrando no celular, sol no arco, contador da ofensiva) e o "Abrir o SIMBA" para quem já entrou.
+- `static/img/inicio/` — trocados os prints: 5 telas de celular (390×844, 3x) e 6 recortes em alta resolução (2x) de partes da dashboard, ofensiva, metas, conquistas e comparativo. Total ≈ 490 KB.
+**Usado:** HTML/CSS/JS puros, `IntersectionObserver`, o leão SVG do `js/streak.js` (`window.SimbaLeao`), Edge headless (DevTools Protocol) para os prints, Pillow para recortar/comprimir. Os prints usam a conta `demo` (com 1,75 L de água registrada no dia para o leão aparecer feliz).
+**Como testar:** subir o app → `http://localhost:8080` → rolar a página toda devagar; testar também com F12 → modo celular.
+**Verificado:** app rodando; todas as seções aparecem e animam em 1366 px e 375 px; sem rolagem lateral no celular; sem erros no console. · **Não verificado:** navegadores além do Edge/Chromium; celular de verdade.
+
+---
+
+## 2026-11-22 — Página de apresentação + ordem das páginas (login obrigatório)
+**Pedido:** ao abrir `localhost:8080` o app ia direto para o sistema sem login. Agora abre uma página de apresentação (inspirada na do Ziggur, mais simples) com Entrar / Criar conta, e as telas internas exigem login.
+**Alterado:**
+- `static/inicio.html` + `static/css/inicio.css` — novos: página de apresentação (topo com Entrar/Criar conta, chamada "Cuide de você. Todo dia.", print da dashboard, faixa com as funções, 5 seções com prints — Registros, Ofensiva, Rotinas, Progresso, Conquistas e metas —, convite final e rodapé simples). Quem já entrou vê "Abrir o SIMBA".
+- `static/img/inicio/*.jpg` — 6 prints recortados e comprimidos (≈ 60 KB cada) para a página.
+- `java/.../config/PaginasConfig.java` — novo: `/` agora mostra `inicio.html` (antes mostrava a dashboard).
+- `java/.../security/SecurityConfig.java` — `/inicio.html` liberada no `permitAll`.
+- `static/js/protecao.js` — novo: sem token (ou com token vencido) manda para `entrar.html`; o link "Sair" passa a apagar o token em todas as telas (antes algumas telas não apagavam).
+- `static/index.html`, `hidratacao.html`, `sono.html`, `treinos.html`, `sintomas.html`, `rotinas.html`, `lembretes.html`, `progresso.html`, `conquistas.html`, `perfil.html` — 1 linha no `<head>`: `<script src="js/protecao.js"></script>`.
+- `static/js/tutorial.js` — não abre sozinho em navegador de teste automático (`navigator.webdriver`), para não atrapalhar o teste Selenium `DemoFluxoE2ETest`.
+**Usado:** `WebMvcConfigurer.addViewControllers` (Spring MVC), Google Fonts (Fraunces para os títulos), Pillow (Python) para recortar os prints. Nenhuma tabela ou dependência nova.
+**Como testar:**
+1. `.\mvnw clean spring-boot:run "-Dspring-boot.run.profiles=demo"` → abrir `http://localhost:8080` → aparece a apresentação.
+2. Sem entrar, abrir `http://localhost:8080/index.html` → vai para a tela Entrar.
+3. Entrar com `demo` / `demo123` → dashboard. Clicar em Sair → volta ao Entrar; abrir `/index.html` de novo → pede login.
+**Verificado:** app rodando; `/` abre a apresentação (1366 px e 375 px, sem rolagem lateral); as 10 telas internas redirecionam para o Entrar sem login; login pelo formulário abre a dashboard; Sair apaga o token; "Abrir o SIMBA" aparece para quem já entrou; `AuthUserIntegrationTest` passou (3/3). · **Não verificado:** a suíte inteira de testes (`mvnw test`) e o teste Selenium.
+**Pendências / atenção:** a proteção das telas é no navegador; os dados já eram protegidos no servidor pelo JWT. O manual do usuário ainda não mostra a página de apresentação.
+
+---
+
+## 2026-11-22 — Manual do Usuário atualizado (tutorial + prints sem rodapé)
+**Pedido:** atualizar o manual depois do tutorial de primeiro uso e da retirada do rodapé.
+**Alterado:**
+- `docs/manual-do-usuario/MANUAL-DO-USUARIO.md` — novo item 3.3 "Tutorial de primeiro uso" (passos e botões), "Sair" virou 3.4; novo 13.4 "Rever tutorial", "Excluir minha conta" virou 13.5; 2 perguntas novas nas dúvidas frequentes; figuras renumeradas (agora 20).
+- `docs/manual-do-usuario/prints/` — todos os prints refeitos sem o rodapé; novos `20-tutorial-inicio.png` e `21-tutorial-destaque.png`; o print do perfil já mostra "Rever tutorial".
+- `docs/manual-do-usuario/MANUAL-DO-USUARIO.pdf` — gerado de novo (35 páginas, com capa).
+- Versão online (Claude Docs) — mesmo texto novo e prints trocados nas telas que tinham rodapé.
+**Usado:** o mesmo processo da entrega do manual (Edge headless para prints e PDF, Python `markdown`).
+**Como testar:** abrir o PDF: item 3.3 com as 2 figuras do tutorial, item 13.4, e nenhuma tela com "CTO - Mufasa Softwares".
+**Verificado:** busca no texto do PDF sem o rodapé antigo; 22 imagens no PDF; capa sozinha na página 1. · **Não verificado:** na versão online a numeração das figuras não foi refeita (o PDF é a versão de entrega).
+
+---
+
+## 2026-11-22 — Rodapé "CTO - Mufasa Softwares© 2026" removido
+**Pedido:** tirar a marca d'água do rodapé de todas as telas.
+**Alterado:**
+- `static/index.html`, `hidratacao.html`, `sono.html`, `treinos.html`, `rotinas.html`, `lembretes.html`, `progresso.html`, `conquistas.html`, `perfil.html` — removido o bloco `<footer>` com o texto. Nada mais mudou nessas telas (`entrar`, `login` e `sintomas` não tinham o rodapé).
+**Usado:** script Python temporário que apaga só os `<footer>` com esse texto (mantém o fim de linha dos arquivos).
+**Como testar:** subir o app, abrir cada tela do menu e rolar até o fim: o texto não aparece mais.
+**Verificado:** busca no código sem nenhuma ocorrência; as 10 telas servidas pelo app sem o texto; tela Lembretes conferida no navegador. · **Não verificado:** a regra `footer` do CSS continua nos arquivos `.css` (sem efeito, não há mais `<footer>`).
+**Pendências / atenção:** os prints do manual do usuário ainda mostram o rodapé antigo em algumas telas.
+
+---
+
+## 2026-11-22 — Tutorial de primeiro uso (o Simba guia o usuário)
+**Pedido / história:** "Como usuário novo, quero ser guiado no primeiro acesso para entender o app e já começar minha ofensiva" (estilo Duolingo). Ajuda a manter o hábito: o tutorial termina convidando a fazer o primeiro registro.
+**Alterado:**
+- `static/js/tutorial.js` — novo: 9 passos na dashboard (boas-vindas, ofensiva, próximo passo, +250 ml, menu de registros, rotinas/lembretes, progresso/conquistas, perfil, final). Escurece a tela e destaca cada parte; botões Voltar / Próximo / Pular / X; teclado (setas e Esc); no celular abre o menu lateral sozinho e põe o cartão embaixo. O passo final tem "Beber 250 ml agora", que usa o mesmo botão "+ 250 ml" da dashboard. Abre sozinho só na primeira vez (por usuário, neste navegador: `localStorage` `simba.tutorial.<username>`); `index.html?tutorial=1` força abrir.
+- `static/css/tutorial.css` — novo: visual do destaque e do cartão, com as variáveis de `style.css`.
+- `static/js/streak.js` — 1 linha: expõe `window.SimbaLeao` para o tutorial usar o mesmo leão em SVG.
+- `static/index.html` — inclui `css/tutorial.css` e `js/tutorial.js`.
+- `static/perfil.html` — novo item "Rever tutorial" em Configurações (volta à dashboard com o tutorial aberto) + inclui `js/tutorial.js`.
+**Usado:** JS e CSS puros (sem biblioteca), `localStorage` com `try/catch`, Font Awesome que já existia. Nenhuma rota, tabela ou dependência nova.
+**Como testar:**
+1. `.\mvnw clean spring-boot:run "-Dspring-boot.run.profiles=demo"` → `http://localhost:8080/entrar.html` → `demo` / `demo123` (ou crie uma conta nova).
+2. A dashboard abre com o Simba: "Oi! Eu sou o Simba". Clique em Vamos lá / Próximo até o fim e, no último passo, em "Beber 250 ml agora": a água entra e aparecem os avisos de ofensiva.
+3. Recarregue a página (F5): o tutorial **não** abre de novo.
+4. Meu perfil → "Rever tutorial": volta à dashboard com o tutorial aberto.
+5. No celular (ou F12 → modo celular), os passos do menu abrem o menu lateral.
+**Verificado:** rodei o app (perfil demo) e passei pelos 9 passos em 1366×820 e em 375×812; "Beber 250 ml agora" registrou a água (ofensiva 26 → 27); não reabre ao recarregar; "Rever tutorial" funciona; `node --check` ok; sem erros do tutorial no console. · **Não verificado:** celular de verdade (só emulado); navegadores além do Edge/Chromium.
+**Pendências / atenção:** o "já visto" fica no navegador, então em outro computador o tutorial aparece de novo (é o comportamento mais simples; dá para guardar no banco depois). O manual do usuário ainda não cita o tutorial nem o item "Rever tutorial".
+
+---
+
+## 2026-11-22 — Manual do Usuário (fase de implantação)
+**Pedido / história:** entrega da atividade de implantação: manual do usuário no estilo do manual do SEI, adaptado ao SIMBA, com prints das telas, em `.md` e `.pdf`.
+**Alterado:**
+- `docs/manual-do-usuario/MANUAL-DO-USUARIO.md` — novo: manual em 14 capítulos (visão geral, acesso, primeiro acesso, menu, Dashboard, Hidratação, Sono, Treinos, Rotinas/Lembretes, Sinais Corporais, Progresso, Conquistas/metas, Perfil, dúvidas frequentes) com 18 figuras.
+- `docs/manual-do-usuario/MANUAL-DO-USUARIO.pdf` — novo: o mesmo conteúdo em PDF A4 (32 páginas, com capa).
+- `docs/manual-do-usuario/prints/*.png` — novo: 18 prints das telas, feitos com a conta `demo`.
+- `docs/manual-do-usuario/img/` — cópia do leão e do nome do SIMBA (`static/img`), usados na capa. A capa traz UEG, curso, disciplina, título, versão, equipe e data.
+- Nenhum código do sistema foi alterado.
+**Usado:** app rodando com o perfil `demo`; Microsoft Edge em modo headless (prints via DevTools Protocol e `--print-to-pdf`); Python `markdown` para gerar o HTML do PDF. Também existe uma versão online editável (Claude Docs) com o mesmo texto e os prints.
+**Como testar:**
+1. Abrir `docs\manual-do-usuario\MANUAL-DO-USUARIO.pdf` e conferir as páginas e figuras.
+2. Seguir algum passo a passo do manual no app (`.\mvnw clean spring-boot:run "-Dspring-boot.run.profiles=demo"`, entrar com `demo` / `demo123`).
+**Verificado:** os textos foram tirados do código atual da `main` e conferidos com os prints de cada tela; o PDF foi gerado com as 18 imagens. · **Não verificado:** os passos não foram clicados um a um (criar conta, salvar registros, excluir conta); a tela no celular não foi fotografada.
+**Pendências / atenção:** os prints mostram dados da conta demo (datas de novembro/2026). Se o visual mudar, refazer os prints. Próximo passo pedido: tutorial guiado de primeiro uso.
+
+---
+
 ## 2026-11-22 — Substituição dos diagramas Mermaid pelas imagens oficiais em `docs/`
 **Pedido / história:** substituir os diagramas de Casos de Uso e de Classes em Mermaid no `README.md` pelas duas imagens oficiais enviadas (incluindo o ator em boneco palito).
 **Alterado:**

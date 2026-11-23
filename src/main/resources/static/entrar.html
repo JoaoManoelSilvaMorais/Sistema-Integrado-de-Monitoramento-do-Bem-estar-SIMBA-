@@ -351,7 +351,12 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
+                    const erro = new Error(`HTTP ${response.status}`);
+                    // 429 = muitas tentativas erradas: mostra o aviso do servidor ("Tente de novo em X minutos")
+                    if (response.status === 429) {
+                        erro.mensagem = (await response.json().catch(() => ({}))).message;
+                    }
+                    throw erro;
                 }
 
                 const token = await response.text();
@@ -373,7 +378,7 @@
                 setTimeout(() => window.location.href = 'index.html', 1000);
             } catch (error) {
                 console.error("Erro ao validar usuário:", error);
-                showToast("Não foi possível entrar. Verifique seu usuário e senha.");
+                showToast(error.mensagem || "Não foi possível entrar. Verifique seu usuário e senha.");
                 submitButton.disabled = false;
             }
         });

@@ -42,7 +42,12 @@ medicamentos, orientações preditivas/alertas, perfil "Suporte".
 ## 2. Stack e como rodar
 
 - **Java 25**, **Spring Boot 4.1.1**, Spring Data JPA (Hibernate 7), Spring Security + **JWT**, Maven (`mvnw`).
-- Banco **H2 em memória** (`jdbc:h2:mem:simba`, `ddl-auto=update`) → **os dados somem a cada reinício**. (O README cita PostgreSQL como destino; hoje é H2 para prototipagem.)
+- Banco **PostgreSQL** (local: `jdbc:postgresql://localhost:5432/simba`, `ddl-auto=update`) → os dados **ficam guardados** entre reinícios.
+  Os testes automáticos (`mvnw test`) continuam em **H2 em memória** (`src/test/resources/application.properties`).
+- **Senhas e chaves fora do código:** `config/simba-local.properties` (no `.gitignore`; modelo em `config/simba-local.example.properties`)
+  com `DB_URL`, `DB_USER`, `DB_PASSWORD` e `JWT_SECRET`. Variáveis de ambiente com esses nomes valem mais que o arquivo (use num servidor).
+  **Sem `JWT_SECRET` (32+ caracteres) o app não inicia.** Console do H2 desligado; `show-sql` só com `SHOW_SQL=true`.
+- Login: 5 senhas erradas em 15 min (por usuário + IP) bloqueiam por até 15 min (429); cadastro: 10 por hora por IP (`security/LimiteTentativas`).
 - Frontend **estático** em `src/main/resources/static` (HTML + CSS + JS puro, sem framework). Token JWT em `sessionStorage.jwtToken`.
 - Máquina do dono do projeto: **Windows** (PowerShell). Comandos:
 
@@ -77,6 +82,7 @@ Pacote base: `src/main/java/br/simba/bem_estar/` (nomes de pacote **em minúscul
 | `meta` | Metas do usuário (`tb_meta`) + meta de água (`tb_meta_agua`). `/api/metas`, `/api/metas/agua`. |
 | `comparativo` | Últimos 7 dias × 7 anteriores. `GET /api/comparativo`. |
 | `proximopasso` | Escolhe **uma** sugestão para a dashboard. `GET /api/proximo-passo`. |
+| `alerta` | Alertas preventivos **RF16/RF17**: `AlertaCalculator` (sono: 4 últimas noites ruins; água: 3 últimos dias fechados < 50% da meta; treino: 14 dias sem treino para quem usa há 14+ dias), `GET /api/alertas` (alertas + aviso "não substitui profissional"). Front: `js/alertas.js` + `css/alertas.css` (dashboard mostra todos; Sono/Hidratação/Treinos só o seu). |
 | `exceptions` | `RestExceptionHandler` global (§5). |
 | `demo` | Seeder do perfil `demo`. |
 
@@ -149,7 +155,8 @@ basta incluir `css/feedback.css` e `js/feedback.js` **antes** dos outros scripts
 1. **Pasta `Lembrete` x `lembrete`:** o pacote declarado é `...lembrete` mas a pasta veio como `Lembrete`. No Windows isso
    funciona por um tempo e depois quebra a inicialização ("declared package does not match expected package"). Renomear em duas etapas
    (`git mv Lembrete tmp && git mv tmp lembrete`), apagar `target` e rodar `.\mvnw clean spring-boot:run`.
-2. **H2 em memória:** reiniciar apaga tudo. Para teste use o perfil `demo`.
+2. **PostgreSQL guarda tudo:** o perfil `demo` só cria o usuário demo **na primeira vez** (as datas dos registros ficam presas ao dia em que ele foi criado).
+   Para recriar o demo com datas de hoje, apague o banco (`DROP DATABASE simba; CREATE DATABASE simba;`) e suba de novo com `-Dspring-boot.run.profiles=demo`.
 3. **Meta de água antiga:** existiam 2000 ml (dashboard) e 3000 ml (`hidratacao.js`) fixos. Agora ambos leem `/api/metas/agua`; os valores fixos são só fallback.
 4. **Código escrito sem compilar:** a primeira versão destas funcionalidades (ofensiva v2, conquistas v2, metas, comparativo, próximo passo, feedback) foi
    escrita num ambiente sem Maven/Spring. A lógica pura foi testada (117 casos) e as telas testadas com jsdom,

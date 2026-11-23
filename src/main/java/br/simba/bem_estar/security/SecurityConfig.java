@@ -34,8 +34,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/auth/**",
-                    "/h2-console/**",
                     "/",
+                    "/inicio.html",
                     "/index.html",
                     "/treinos.html",
                     "/progresso.html",
@@ -61,7 +61,8 @@ public class SecurityConfig {
             .authenticationProvider(authenticationProvider())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-        http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
+        // O console do H2 (que precisava de iframe liberado) foi removido; o padrão do Spring
+        // volta a bloquear o site dentro de iframes de outros sites (proteção contra clickjacking).
 
         return http.build();
     }

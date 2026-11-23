@@ -178,6 +178,7 @@
     if (typeof module !== "undefined" && module.exports) {
         module.exports = { leaoSVG, situacao, escolherFrase, HUMORES, FRASES };
     } else {
+        window.SimbaLeao = leaoSVG; // o tutorial (js/tutorial.js) usa o mesmo leão
         iniciar();
         window.atualizarStreak = iniciar; // a dashboard chama depois do "+250 ml"
     }

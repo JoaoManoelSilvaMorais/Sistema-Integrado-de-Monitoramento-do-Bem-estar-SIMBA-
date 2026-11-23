@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <script src="js/protecao.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIMBA - Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,6 +12,8 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/streak.css">
     <link rel="stylesheet" href="css/feedback.css">
+    <link rel="stylesheet" href="css/tutorial.css">
+    <link rel="stylesheet" href="css/alertas.css">
     <style>
         .toast-container {
             position: absolute;
@@ -224,9 +227,6 @@
                 </article>
             </section>
 
-            <footer>
-                <span>CTO - Mufasa Softwares© 2026</span>
-            </footer>
         </main>
     </div>
 
@@ -234,6 +234,7 @@
     <script src="js/script.js"></script>
     <script src="js/notificacoes.js"></script>
     <script src="js/feedback.js"></script>
+    <script src="js/alertas.js"></script>
     <script src="js/streak.js"></script>
     <script>
         const token = sessionStorage.getItem('jwtToken');
@@ -677,5 +678,6 @@
             });
         });
     </script>
+    <script src="js/tutorial.js"></script>
 </body>
 </html>

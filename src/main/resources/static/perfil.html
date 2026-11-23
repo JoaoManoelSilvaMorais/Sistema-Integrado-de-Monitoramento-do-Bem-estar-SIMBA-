@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <script src="js/protecao.js"></script>
 
     <meta
         name="viewport"
@@ -492,6 +493,23 @@
 
                     <button
                         type="button"
+                        class="perfil-acao"
+                        id="btnRevertutorial"
+                    >
+                        <div class="perfil-acao-esquerda">
+                            <span class="perfil-acao-icone">
+                                <i class="fa-solid fa-circle-play"></i>
+                            </span>
+                            <div>
+                                <strong>Rever tutorial</strong>
+                                <small>Mostre de novo o passo a passo do Simba</small>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+
+                    <button
+                        type="button"
                         class="perfil-acao btn-excluir-conta"
                         id="btnExcluirConta"
                     >
@@ -526,13 +544,6 @@
 
         </div>
 
-        <footer>
-
-            <span>
-                CTO - Mufasa Softwares© 2026
-            </span>
-
-        </footer>
 
 
     </main>
@@ -1141,6 +1152,11 @@
 
 <script src="js/perfil.js"></script>
 <script src="js/perfil-medidas.js"></script>
+<script src="js/tutorial.js"></script>
+<script>
+    // Meu perfil → "Rever tutorial": volta para a dashboard com o tutorial aberto
+    document.getElementById("btnRevertutorial").addEventListener("click", () => window.SimbaTutorial.rever());
+</script>
 
 
 </body>

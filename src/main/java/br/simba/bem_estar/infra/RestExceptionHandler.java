@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import br.simba.bem_estar.exceptions.AcessoNegadoException;
 import br.simba.bem_estar.exceptions.DadoNaoEncontradoException;
 import br.simba.bem_estar.exceptions.DadosDuplicadosException;
+import br.simba.bem_estar.exceptions.MuitasTentativasException;
 import br.simba.bem_estar.exceptions.RegraDeNegocioException;
 
 @RestControllerAdvice 
@@ -45,6 +46,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler{
         return ResponseEntity.status(HttpStatus.CONFLICT).body(threatResponse);
     }
 
+
+    //muitas tentativas seguidas de login ou cadastro (proteção contra adivinhar senhas)
+    @ExceptionHandler(MuitasTentativasException.class)
+    private ResponseEntity<RestErrorMessage> handlerMuitasTentativas(MuitasTentativasException exception){
+        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.TOO_MANY_REQUESTS, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(threatResponse);
+    }
 
     //tratamento generico pra outros erros genericos,oculta as informaçoes da aplicação
     @ExceptionHandler(RuntimeException.class)

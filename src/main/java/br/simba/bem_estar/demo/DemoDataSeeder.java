@@ -47,6 +47,11 @@ public class DemoDataSeeder implements CommandLineRunner {
     private static final String SENHA = "demo123";
     private static final int DIAS = 30;
 
+    // Cenário para demonstrar os alertas preventivos (RF16/RF17): as últimas 4 noites registradas
+    // ficam curtas e com nota baixa, e os últimos 3 dias com registro ficam com pouca água.
+    // Mude para false se quiser a demonstração sem alertas.
+    private static final boolean CENARIO_ALERTAS = true;
+
     private final UserRepository userRepository;
     private final PerfilRepository perfilRepository;
     private final RegistroSonoRepository sonoRepository;
@@ -113,8 +118,11 @@ public class DemoDataSeeder implements CommandLineRunner {
             if (i == 14 || i == 13 || i == 22 || i == 1 || i == 0) {
                 continue;
             }
-            gerarSono(usuario, dia, random);
-            gerarAgua(usuario, dia, random, ehHoje);
+            // Ontem e hoje ficam vazios (acima), então os últimos dias com registro são i = 2, 3, 4 e 5.
+            boolean noiteRuim = CENARIO_ALERTAS && i >= 2 && i <= 5;
+            boolean aguaBaixa = CENARIO_ALERTAS && i >= 2 && i <= 4;
+            gerarSono(usuario, dia, random, noiteRuim);
+            gerarAgua(usuario, dia, random, ehHoje, aguaBaixa);
             gerarTreino(usuario, dia, random, ehHoje);
         }
         gerarRotinas(usuario);
@@ -124,23 +132,33 @@ public class DemoDataSeeder implements CommandLineRunner {
         System.out.println(">>> [demo] Usuário criado: " + USERNAME + " / " + SENHA);
     }
 
-    private void gerarSono(UserModel usuario, LocalDate dia, Random random) {
+    private void gerarSono(UserModel usuario, LocalDate dia, Random random, boolean noiteRuim) {
         // Dormiu na noite anterior e acordou na manhã deste dia.
         LocalDateTime dormir = dia.minusDays(1).atTime(22, 0)
                 .plusMinutes(random.nextInt(150));
         LocalDateTime acordar = dia.atTime(6, 0).plusMinutes(random.nextInt(90));
+        int nota = 2 + random.nextInt(4); // 2 a 5
+        if (noiteRuim) {
+            // Sorteios acima já foram consumidos, então os outros dias não mudam.
+            dormir = dia.atTime(0, 30);
+            acordar = dia.atTime(5, 30); // 5 horas
+            nota = 2;
+        }
         RegistroSonoModel sono = new RegistroSonoModel();
         sono.setHoraDormir(dormir);
         sono.setHoraAcordar(acordar);
-        sono.setNotaSono(2 + random.nextInt(4)); // 2 a 5
+        sono.setNotaSono(nota);
         sono.setUsuario(usuario);
         sonoRepository.save(sono);
     }
 
-    private void gerarAgua(UserModel usuario, LocalDate dia, Random random, boolean ehHoje) {
+    private void gerarAgua(UserModel usuario, LocalDate dia, Random random, boolean ehHoje, boolean aguaBaixa) {
         int[] horas = {8, 10, 12, 14, 16, 18, 20};
         int limite = ehHoje ? Math.min(horas.length, 1 + LocalTime.now().getHour() / 4) : horas.length;
         int copos = ehHoje ? limite : 4 + random.nextInt(4);
+        if (aguaBaixa) {
+            copos = 2; // 600 a 1000 ml, abaixo de metade da meta sugerida para o peso do demo
+        }
         for (int c = 0; c < copos && c < horas.length; c++) {
             if (ehHoje && horas[c] > LocalTime.now().getHour()) break;
             RegistroAguaModel agua = new RegistroAguaModel();

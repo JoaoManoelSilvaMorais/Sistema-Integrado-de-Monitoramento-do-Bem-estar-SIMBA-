@@ -1,0 +1,214 @@
+/* Tutorial de primeiro uso — ver js/tutorial.js */
+
+.tut-raiz {
+    position: fixed;
+    inset: 0;
+    z-index: 3000; /* acima do menu (10), dropdown (1000) e avisos (2000) */
+}
+
+/* "buraco" que destaca o elemento: a sombra gigante escurece o resto da tela */
+.tut-destaque {
+    position: fixed;
+    border-radius: 16px;
+    box-shadow: 0 0 0 9999px rgba(40, 24, 12, 0.62);
+    outline: 3px solid var(--green);
+    outline-offset: 0;
+    pointer-events: none;
+    transition: left 0.25s ease, top 0.25s ease, width 0.25s ease, height 0.25s ease;
+}
+
+/* passo sem elemento (boas-vindas e final): tela toda escura */
+.tut-sem-alvo .tut-destaque {
+    inset: 0;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    outline: none;
+    box-shadow: none;
+    background: rgba(40, 24, 12, 0.62);
+}
+
+.tut-cartao {
+    position: fixed;
+    width: min(400px, calc(100vw - 32px));
+    padding: 20px;
+    border-radius: 18px;
+    background: #fbf7f2;
+    color: var(--text);
+    box-shadow: 0 18px 40px rgba(40, 24, 12, 0.28);
+    transition: top 0.25s ease, left 0.25s ease;
+    animation: tut-entrar 0.25s ease;
+}
+
+.tut-cartao.tut-centro {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(440px, calc(100vw - 32px));
+}
+
+/* celular: cartão preso embaixo, para não cobrir o que está destacado */
+.tut-cartao.tut-centro.tut-rodape {
+    top: auto;
+    bottom: 16px;
+    transform: translateX(-50%);
+}
+
+.tut-fechar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.tut-fechar:hover {
+    background: rgba(113, 59, 29, 0.08);
+    color: var(--dark);
+}
+
+.tut-topo {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding-right: 24px;
+}
+
+.tut-leao {
+    flex: 0 0 84px;
+    width: 84px;
+    height: 84px;
+}
+
+.tut-leao svg,
+.tut-leao img {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.tut-contador {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--green-dark);
+    margin-bottom: 2px;
+}
+
+.tut-titulo {
+    margin: 0 0 6px;
+    font-size: 19px;
+    line-height: 1.25;
+    color: var(--dark);
+}
+
+.tut-texto {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.tut-pontos {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin: 16px 0 14px;
+}
+
+.tut-ponto {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(113, 59, 29, 0.2);
+    transition: width 0.2s ease, background 0.2s ease;
+}
+
+.tut-ponto.ativo {
+    width: 20px;
+    border-radius: 4px;
+    background: var(--green);
+}
+
+.tut-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.tut-link {
+    margin-right: auto;
+    border: none;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 8px 4px;
+}
+
+.tut-link:hover {
+    color: var(--dark);
+    text-decoration: underline;
+}
+
+.tut-btn {
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--green-dark);
+    color: #fff;
+}
+
+.tut-btn:hover {
+    background: var(--dark);
+}
+
+.tut-btn-sec {
+    background: rgba(113, 59, 29, 0.08);
+    color: var(--dark);
+}
+
+.tut-btn-sec:hover {
+    background: rgba(113, 59, 29, 0.16);
+}
+
+.tut-btn[hidden] {
+    display: none;
+}
+
+.tut-fechar:focus-visible,
+.tut-btn:focus-visible,
+.tut-link:focus-visible {
+    outline: 3px solid var(--green);
+    outline-offset: 2px;
+}
+
+/* com o tutorial aberto, o menu do celular fica acima da página mas abaixo do tutorial */
+body.tut-ativo .sidebar.open {
+    z-index: 2500;
+}
+
+@keyframes tut-entrar {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tut-destaque,
+    .tut-cartao {
+        transition: none;
+        animation: none;
+    }
+}
